@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Blog by Mattes Groeger]]></title>
+  <link href="http://MattesGroeger.github.io/atom.xml" rel="self"/>
+  <link href="http://MattesGroeger.github.io/"/>
+  <updated>2013-10-05T20:19:05+02:00</updated>
+  <id>http://MattesGroeger.github.io/</id>
+  <author>
+    <name><![CDATA[Mattes Groeger]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+</feed>
