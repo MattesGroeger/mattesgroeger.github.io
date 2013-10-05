@@ -1,0 +1,361 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>Icon Badge Library for Air - Blog by Mattes Groeger</title>
+  <meta name="author" content="Mattes Groeger">
+
+  
+  <meta name="description" content="Adobe Air is often used to build feed readers or social media clients. This kind of applications can retrieve new data while they are running in the &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://MattesGroeger.github.io/blog/2010/02/08/icon-badge-library-for-air">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="Blog by Mattes Groeger" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/lib/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+
+  
+  <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-12394086-3']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+  </script>
+
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">Blog by Mattes Groeger</a></h1>
+  
+    <h2>Things I stumble upon as a Software Developer</h2>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="http://google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:MattesGroeger.github.io" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">Icon Badge Library for Air</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2010-02-08T14:06:00+01:00" pubdate data-updated="true">Feb 8<span>th</span>, 2010</time>
+        
+           | <a href="#disqus_thread"
+             data-disqus-identifier="http://MattesGroeger.github.io">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><p><img class="right" src="/images/posts/mail.png"></p>
+
+<p><a href="http://www.adobe.com/products/air/">Adobe Air</a> is often used to build feed readers or social media clients. This kind of applications can retrieve new data while they are running in the background. In that case it would be great to inform the user about the amount of new items. With OS X you can use the dock icon for that purpose. The Cocoa Framework allows to display a user defined text consistently on top of the application dock tile (icon). E.g. the screenshot at the right shows 2 unread mails in the inbox.</p>
+
+<!-- more -->
+
+
+<p><img class="left" src="/images/posts/comparision.png" title="Native and emulated badge" ></p>
+
+<p>Unfortunately the Air runtime allows no access to this native functionality. Thats why the idea for this library came up. It tries to emulate the native badge with the possibilities Air provides (see left image). Until now only the OS X badge is supported but a Windows implementation is possible, too. I will demonstrate the extensibility in one of the following blog posts.</p>
+
+<h3>Usage</h3>
+
+<p>To show the badge label you can use the static facade <code>AirIconBadge</code>. Internally it will create an <code>IconBadge</code> appropriate for the current operating system. <strong>Note:</strong> only one implementation for OS X is provided until now! Windows or Linux users won&rsquo;t see a badge label.</p>
+
+<p>With the static property <code>label</code> you can assign any string that should be displayed. Thats it.</p>
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='as3'><span class='line'><span class="n">AirIconBadge</span><span class="o">.</span><span class="na">label</span> <span class="o">=</span> <span class="s2">&quot;1&quot;</span><span class="o">;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>If you assign an empty string or <code>null</code>, no badge will be displayed. To remove the current badge label you can also call the method <code>clearLabel()</code>.</p>
+
+<p>By default the biggest icon defined within the <a href="http://livedocs.adobe.com/flex/3/html/help.html?content=File_formats_1.html">application descriptor</a> will be loaded and shown. If no icon has been defined or the path is incorrect you must assign a <code>customIcon</code> in order to see the label. You can also assign a <code>customIcon</code> if you want to replace the default icon temporarily. Removing the <code>customIcon</code> will show up the default icon again.</p>
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='as3'><span class='line'><span class="n">AirIconBadge</span><span class="o">.</span><span class="na">customIcon</span> <span class="o">=</span> <span class="k">new</span> <span class="kt">CustomIconBitmap</span><span class="o">();</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>If neither of the icons could be loaded, no badge will be displayed. In this case an error event will be dispatched (<code>UpdateErrorEvent</code>). To get status information about the internals you can register for the InformationEvent. Both events will be dispatched by the <code>IconBadge</code> witch is statically stored within the AirIconBadge.</p>
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+</pre></td><td class='code'><pre><code class='as3'><span class='line'><span class="n">AirIconBadge</span><span class="o">.</span><span class="na">customIcon</span> <span class="o">=</span> <span class="k">new</span> <span class="kt">CustomIconBitmap</span><span class="o">();</span>
+</span><span class='line'>
+</span><span class='line'><span class="kd">var</span> <span class="n">iconBadge</span> <span class="p">:</span> <span class="kt">IconBadge</span> <span class="o">=</span> <span class="n">AirIconBadge</span><span class="o">.</span><span class="na">iconBadge</span><span class="o">;</span>
+</span><span class='line'><span class="n">iconBadge</span><span class="o">.</span><span class="na">addEventListener</span><span class="o">(</span><span class="n">UpdateErrorEvent</span><span class="o">.</span><span class="na">UPDATE_ERROR</span><span class="o">,</span> <span class="n">handleError</span><span class="o">);</span>
+</span><span class='line'><span class="n">iconBadge</span><span class="o">.</span><span class="na">addEventListener</span><span class="o">(</span><span class="n">InformationEvent</span><span class="o">.</span><span class="na">INFORMATION</span><span class="o">,</span> <span class="n">handleInformation</span><span class="o">);</span>
+</span><span class='line'>
+</span><span class='line'><span class="kd">function </span><span class="nf">handleError</span><span class="o">(</span><span class="n">event</span> <span class="o">:</span> <span class="kt">UpdateErrorEvent</span><span class="o">)</span> <span class="o">:</span> <span class="kt">void</span>
+</span><span class='line'><span class="o">{</span>
+</span><span class='line'>  <span class="c1">// do some error handling</span>
+</span><span class='line'><span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'><span class="kd">function </span><span class="nf">handleInformation</span><span class="o">(</span><span class="n">event</span> <span class="o">:</span> <span class="kt">InformationEvent</span><span class="o">)</span> <span class="o">:</span> <span class="kt">void</span>
+</span><span class='line'><span class="o">{</span>
+</span><span class='line'>  <span class="nf">trace</span><span class="o">(</span><span class="n">event</span><span class="o">.</span><span class="na">information</span><span class="o">.</span><span class="na">toString</span><span class="o">());</span>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>Download &amp; Demo</h3>
+
+<p>All sources, binaries and examples are <a href="http://code.google.com/p/air-icon-badge/downloads/list">available for download</a> under the MIT license. If you have a Mac, you can <a href="http://code.google.com/p/air-icon-badge/downloads/detail?name=air-icon-badge-examples.zip&amp;amp;can=2&amp;amp;q=#makechanges">download this Air application</a> where the badge shows up on the real application icon. Running this application on windows will have no visual effect.</p>
+
+<h3>Whats next</h3>
+
+<p>The documentation (especially the ASDocs) will be improved as well as the sources. If you have questions or feature requests, please let my know. The next blog posts will give you a deeper insight in the architecture and extensibility of this library.</p>
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">Mattes Groeger</span></span>
+
+      
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2010-02-08T14:06:00+01:00" pubdate data-updated="true">Feb 8<span>th</span>, 2010</time>
+      
+
+<span class="categories">
+  
+    <a class='category' href='/blog/categories/api/'>API</a>, <a class='category' href='/blog/categories/actionscript/'>ActionScript</a>, <a class='category' href='/blog/categories/air/'>Air</a>, <a class='category' href='/blog/categories/lib/'>Lib</a>
+  
+</span>
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  <a href="//twitter.com/share" class="twitter-share-button" data-url="http://MattesGroeger.github.io/blog/2010/02/08/icon-badge-library-for-air/" data-via="MattesGroeger" data-counturl="http://MattesGroeger.github.io/blog/2010/02/08/icon-badge-library-for-air/" >Tweet</a>
+  
+  
+  <div class="g-plusone" data-size="medium"></div>
+  
+  
+    <div class="fb-like" data-send="true" data-width="450" data-show-faces="false"></div>
+  
+</div>
+
+    
+    <p class="meta">
+      
+      
+        <a class="basic-alignment right" href="/blog/2010/03/14/icon-badge-for-windows/" title="Next Post: Icon Badge for Windows">Icon Badge for Windows &raquo;</a>
+      
+    </p>
+  </footer>
+</article>
+
+  <section>
+    <h1>Comments</h1>
+    <div id="disqus_thread" aria-live="polite"><noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+  </section>
+
+</div>
+
+<aside class="sidebar">
+  
+    <section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2010/03/14/icon-badge-for-windows/">Icon Badge for Windows</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2010/02/08/icon-badge-library-for-air/">Icon Badge Library for Air</a>
+      </li>
+    
+  </ul>
+</section>
+
+<section>
+  <h1>GitHub Repos</h1>
+  <ul id="gh_repos">
+    <li class="loading">Status updating...</li>
+  </ul>
+  
+  <a href="https://github.com/MattesGroeger">@MattesGroeger</a> on GitHub
+  
+  <script type="text/javascript">
+    $(document).ready(function(){
+        if (!window.jXHR){
+            var jxhr = document.createElement('script');
+            jxhr.type = 'text/javascript';
+            jxhr.src = '/javascripts/libs/jXHR.js';
+            var s = document.getElementsByTagName('script')[0];
+            s.parentNode.insertBefore(jxhr, s);
+        }
+
+        github.showRepos({
+            user: 'MattesGroeger',
+            count: 5,
+            skip_forks: true,
+            target: '#gh_repos'
+        });
+    });
+  </script>
+  <script src="/javascripts/github.js" type="text/javascript"> </script>
+</section>
+
+
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2013 - Mattes Groeger -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+<script type="text/javascript">
+      var disqus_shortname = 'mattesgroegerblog';
+      
+        
+        // var disqus_developer = 1;
+        var disqus_identifier = 'http://MattesGroeger.github.io/blog/2010/02/08/icon-badge-library-for-air/';
+        var disqus_url = 'http://MattesGroeger.github.io/blog/2010/02/08/icon-badge-library-for-air/';
+        var disqus_script = 'embed.js';
+      
+    (function () {
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      dsq.src = ('https:' == document.location.protocol ? 'https://' : 'http://') + disqus_shortname + '.disqus.com/' + disqus_script;
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    }());
+</script>
+
+
+
+<div id="fb-root"></div>
+<script>(function(d, s, id) {
+  var js, fjs = d.getElementsByTagName(s)[0];
+  if (d.getElementById(id)) {return;}
+  js = d.createElement(s); js.id = id; js.async = true;
+  js.src = "//connect.facebook.net/en_US/all.js#appId=212934732101925&xfbml=1";
+  fjs.parentNode.insertBefore(js, fjs);
+}(document, 'script', 'facebook-jssdk'));</script>
+
+
+
+  <script type="text/javascript">
+    (function() {
+      var script = document.createElement('script'); script.type = 'text/javascript'; script.async = true;
+      script.src = 'https://apis.google.com/js/plusone.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(script, s);
+    })();
+  </script>
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = '//platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>

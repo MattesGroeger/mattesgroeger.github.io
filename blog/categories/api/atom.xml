@@ -1,0 +1,175 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: Api | Blog by Mattes Groeger]]></title>
+  <link href="http://MattesGroeger.github.io/blog/categories/api/atom.xml" rel="self"/>
+  <link href="http://MattesGroeger.github.io/"/>
+  <updated>2013-10-06T01:44:01+02:00</updated>
+  <id>http://MattesGroeger.github.io/</id>
+  <author>
+    <name><![CDATA[Mattes Groeger]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[Icon Badge for Windows]]></title>
+    <link href="http://MattesGroeger.github.io/blog/2010/03/14/icon-badge-for-windows/"/>
+    <updated>2010-03-14T22:54:00+01:00</updated>
+    <id>http://MattesGroeger.github.io/blog/2010/03/14/icon-badge-for-windows</id>
+    <content type="html"><![CDATA[<p><img class="left" src="/images/posts/WindowsSystemTray.jpg"></p>
+
+<p>Until now the <a href="/blog/2010/02/08/icon-badge-library-for-air/">Air Icon Badge library</a> implementation only supported OS X dock icons. Nevertheless it is easy to extend the implementation for utilizing it as Windows system tray icon. In this article I will demonstrate how this could be realized. And this is how it will look like on Windows XP (Windows Vista and 7 will look the same).</p>
+
+<!-- more -->
+
+
+<h3>Implementation</h3>
+
+<p>The first class that I create is the <code>SystemTrayIconBuilder</code> (it must implement <code>IconBuilder</code> interface). This class is responsible for composing the system tray icon. It also sets the general icon size to 16 by 16 pixels.</p>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+</pre></td><td class='code'><pre><code class='as3'><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="n">SystemTrayIconBuilder</span> <span class="kd">extends</span> <span class="n">AbstractIconBuilder</span> <span class="kd">implements</span> <span class="n">IconBuilder</span>
+</span><span class='line'><span class="o">{</span>
+</span><span class='line'>  <span class="kd">public</span> <span class="kd">override</span> <span class="kd">function </span><span class="nf">createNewIcon</span><span class="o">(</span><span class="n">width</span> <span class="o">:</span> <span class="kt">int</span><span class="o">,</span> <span class="n">height</span> <span class="o">:</span> <span class="kt">int</span><span class="o">)</span> <span class="o">:</span> <span class="kt">void</span>
+</span><span class='line'>  <span class="o">{&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">pre</span><span class="o">&gt;&lt;</span><span class="n">code</span><span class="o">&gt;</span><span class="kd">super</span><span class="o">.</span><span class="na">createNewIcon</span><span class="o">(</span><span class="mi">16</span><span class="o">,</span> <span class="mi">16</span><span class="o">);</span>
+</span><span class='line'><span class="o">&lt;/</span><span class="n">code</span><span class="o">&gt;&lt;/</span><span class="n">pre</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span>  <span class="o">}&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span>  <span class="kd">public</span> <span class="kd">override</span> <span class="kd">function </span><span class="nf">addBackground</span><span class="o">(</span> <span class="n">background</span> <span class="o">:</span> <span class="kt">Bitmap</span><span class="o">)</span> <span class="o">:</span> <span class="kt">void</span>
+</span><span class='line'>  <span class="o">{&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">pre</span><span class="o">&gt;&lt;</span><span class="n">code</span><span class="o">&gt;</span><span class="n">background</span><span class="o">.</span><span class="na">width</span> <span class="o">=</span> <span class="n">background</span><span class="o">.</span><span class="na">height</span> <span class="o">=</span> <span class="mi">16</span><span class="o">;</span>
+</span><span class='line'>
+</span><span class='line'><span class="n">container</span><span class="o">.</span><span class="na">addChild</span><span class="o">(</span><span class="n">background</span><span class="o">);</span>
+</span><span class='line'><span class="o">&lt;/</span><span class="n">code</span><span class="o">&gt;&lt;/</span><span class="n">pre</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span>  <span class="o">}&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span>  <span class="kd">public</span> <span class="kd">override</span> <span class="kd">function </span><span class="nf">addBadge</span><span class="o">(</span><span class="n">label</span> <span class="o">:</span> <span class="kt">String</span><span class="o">)</span> <span class="o">:</span> <span class="kt">void</span>
+</span><span class='line'>  <span class="o">{&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">pre</span><span class="o">&gt;&lt;</span><span class="n">code</span><span class="o">&gt;</span><span class="kd">var</span> <span class="n">badge</span> <span class="p">:</span> <span class="kt">TrayIconBadge</span> <span class="o">=</span> <span class="k">new</span> <span class="kt">TrayIconBadge</span><span class="o">();</span>
+</span><span class='line'><span class="n">badge</span><span class="o">.</span><span class="na">label</span><span class="o">.</span><span class="na">text</span> <span class="o">=</span> <span class="n">label</span><span class="o">;</span>
+</span><span class='line'>
+</span><span class='line'><span class="n">container</span><span class="o">.</span><span class="na">addChild</span><span class="o">(</span><span class="n">badge</span><span class="o">);</span>
+</span><span class='line'><span class="o">&lt;/</span><span class="n">code</span><span class="o">&gt;&lt;/</span><span class="n">pre</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span>  <span class="o">}</span>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<p>Please note the the <code>TrayIconBadge</code> class used in this example (line 17) is a MovieClip designed and exported (swc) with the Flash IDE. I used a pixel font for better readability. Because of the small icon size the visible letter count is also limited.</p>
+
+<p>The next step is to create a custom <code>SystemTrayIconBadge</code> which has to implement the <code>IconBadge</code> interface. To avoid redundancies I extend the <code>DockIconBadge</code> class and override the factory method &ldquo;<code>createIconBuilder()</code>&rdquo;.</p>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+</pre></td><td class='code'><pre><code class='as3'><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="n">SystemTrayIconBadge</span> <span class="kd">extends</span> <span class="n">DockIconBadge</span>
+</span><span class='line'><span class="o">{</span>
+</span><span class='line'>  <span class="kd">protected</span> <span class="kd">override</span> <span class="kd">function </span><span class="nf">createIconBuilder</span><span class="o">()</span> <span class="o">:</span> <span class="kt">IconBuilder</span>
+</span><span class='line'>  <span class="o">{&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">pre</span><span class="o">&gt;&lt;</span><span class="n">code</span><span class="o">&gt;</span><span class="k">return</span> <span class="k">new</span> <span class="kt">SystemTrayIconBuilder</span><span class="o">();</span>
+</span><span class='line'><span class="o">&lt;/</span><span class="n">code</span><span class="o">&gt;&lt;/</span><span class="n">pre</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span>  <span class="o">}</span>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<p>The last step is to build the <code>CrossPlatformIconBadgeFactory</code> which implements <code>IconBadgeFactory</code>. It is responsible for detecting the users operating system and returning the corresponding <code>IconBadge</code>. Again I extend the existing factory class to avoid redundancies:</p>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+</pre></td><td class='code'><pre><code class='as3'><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="n">CrossPlatformIconBadgeFactory</span> <span class="kd">extends</span>
+</span><span class='line'><span class="n">AirIconBadgeFactroy</span>
+</span><span class='line'><span class="o">{</span>
+</span><span class='line'>  <span class="kd">public</span> <span class="kd">override</span> <span class="kd">function </span><span class="nf">create</span><span class="o">()</span> <span class="o">:</span> <span class="kt">IconBadge</span>
+</span><span class='line'>  <span class="o">{&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">pre</span><span class="o">&gt;&lt;</span><span class="n">code</span><span class="o">&gt;</span><span class="k">if</span> <span class="o">(</span><span class="n">NativeApplication</span><span class="o">.</span><span class="na">supportsSystemTrayIcon</span><span class="o">)</span>
+</span><span class='line'>  <span class="k">return</span> <span class="k">new</span> <span class="kt">SystemTrayIconBadge</span><span class="o">();</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="k">return</span> <span class="kd">super</span><span class="o">.</span><span class="na">create</span><span class="o">();</span>
+</span><span class='line'><span class="o">&lt;/</span><span class="n">code</span><span class="o">&gt;&lt;/</span><span class="n">pre</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span>  <span class="o">}</span>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<p>Finally for using the new factory it has to be assigned to the <code>AirIconBadge</code> class.</p>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='as3'><span class='line'><span class="n">AirIconBadge</span><span class="o">.</span><span class="na">factory</span> <span class="o">=</span> <span class="k">new</span> <span class="kt">CrossPlatformIconBadgeFactory</span><span class="o">();</span>
+</span><span class='line'><span class="n">AirIconBadge</span><span class="o">.</span><span class="na">label</span> <span class="o">=</span> <span class="o">&amp;</span><span class="n">ldquo</span><span class="o">;</span><span class="mi">1</span><span class="o">&amp;</span><span class="n">rdquo</span><span class="o">;;</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<h3>Summary</h3>
+
+<p>As you can see, it is very little effort to add the windows system tray icon capability. You are free to (re)use this example. <a href="http://code.google.com/p/air-icon-badge/downloads/list">Binaries</a> and <a href="http://code.google.com/p/air-icon-badge/source/browse/#svn/air-icon-badge-examples/trunk/dev/src/de/mgroeger/air/icon/example/windows">sources</a> can be downloaded from the <a href="http://code.google.com/p/air-icon-badge/">google code project site</a>.</p>
+
+<ul>
+<li><a href="http://code.google.com/p/air-icon-badge/downloads/detail?name=air-icon-badge-examples.zip&amp;amp;can=2&amp;amp;q=#makechanges">Example Download</a> (air/swf)</li>
+<li><a href="http://code.google.com/p/air-icon-badge/source/browse/#svn/air-icon-badge-examples/trunk/dev/src/">Browse Example Sources</a></li>
+<li><a href="http://code.google.com/p/air-icon-badge/downloads/detail?name=air-icon-badge-0.1.zip">Library Download</a></li>
+</ul>
+
+]]></content>
+  </entry>
+  
+</feed>
