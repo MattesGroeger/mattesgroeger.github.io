@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <feed xmlns="http://www.w3.org/2005/Atom">
 
-  <title><![CDATA[Category: Api | Blog by Mattes Groeger]]></title>
+  <title><![CDATA[Category: Api | Mattes Groeger]]></title>
   <link href="http://MattesGroeger.github.io/blog/categories/api/atom.xml" rel="self"/>
   <link href="http://MattesGroeger.github.io/"/>
-  <updated>2013-10-06T01:44:01+02:00</updated>
+  <updated>2013-11-10T23:53:41+01:00</updated>
   <id>http://MattesGroeger.github.io/</id>
   <author>
     <name><![CDATA[Mattes Groeger]]></name>
@@ -29,7 +29,7 @@
 
 <p>The first class that I create is the <code>SystemTrayIconBuilder</code> (it must implement <code>IconBuilder</code> interface). This class is responsible for composing the system tray icon. It also sets the general icon size to 16 by 16 pixels.</p>
 
-<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<p><div class='bogus-wrapper'><notextile><figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
 <span class='line-number'>3</span>
 <span class='line-number'>4</span>
@@ -97,7 +97,7 @@
 
 <p>The next step is to create a custom <code>SystemTrayIconBadge</code> which has to implement the <code>IconBadge</code> interface. To avoid redundancies I extend the <code>DockIconBadge</code> class and override the factory method &ldquo;<code>createIconBuilder()</code>&rdquo;.</p>
 
-<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<p><div class='bogus-wrapper'><notextile><figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
 <span class='line-number'>3</span>
 <span class='line-number'>4</span>
@@ -121,7 +121,7 @@
 
 <p>The last step is to build the <code>CrossPlatformIconBadgeFactory</code> which implements <code>IconBadgeFactory</code>. It is responsible for detecting the users operating system and returning the corresponding <code>IconBadge</code>. Again I extend the existing factory class to avoid redundancies:</p>
 
-<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<p><div class='bogus-wrapper'><notextile><figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
 <span class='line-number'>3</span>
 <span class='line-number'>4</span>
@@ -153,7 +153,7 @@
 
 <p>Finally for using the new factory it has to be assigned to the <code>AirIconBadge</code> class.</p>
 
-<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<p><div class='bogus-wrapper'><notextile><figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
 </pre></td><td class='code'><pre><code class='as3'><span class='line'><span class="n">AirIconBadge</span><span class="o">.</span><span class="na">factory</span> <span class="o">=</span> <span class="k">new</span> <span class="kt">CrossPlatformIconBadgeFactory</span><span class="o">();</span>
 </span><span class='line'><span class="n">AirIconBadge</span><span class="o">.</span><span class="na">label</span> <span class="o">=</span> <span class="o">&amp;</span><span class="n">ldquo</span><span class="o">;</span><span class="mi">1</span><span class="o">&amp;</span><span class="n">rdquo</span><span class="o">;;</span>
