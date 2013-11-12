@@ -12,13 +12,13 @@ Until now the [Air Icon Badge library](/blog/2010/02/08/icon-badge-library-for-a
 
 <!-- more -->
 
-### Demo
+## Demo
 
 I extended the existing example implementation. Just choose "Window Tray Icon" from the right panel for previewing the new icon.
 
 <object style="width: 850px; height: 350px;" width="850" height="350" classid="clsid:d27cdb6e-ae6d-11cf-96b8-444553540000" codebase="http://download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=6,0,40,0"><param name="src" value="/images/posts/WebBadgeExample.swf" /><embed style="width: 850px; height: 350px;" width="850" height="350" type="application/x-shockwave-flash" src="/images/posts/WebBadgeExample.swf" /></object></br>
 
-### Implementation
+## Implementation
 
 The first class that I create is the `SystemTrayIconBuilder` (it must implement `IconBuilder` interface). This class is responsible for composing the system tray icon. It also sets the general icon size to 16 by 16 pixels.
 
@@ -84,7 +84,7 @@ AirIconBadge.factory = new CrossPlatformIconBadgeFactory();
 AirIconBadge.label = "1";
 {% endcodeblock %}
 
-### Summary
+## Summary
 
 As you can see, it is very little effort to add the windows system tray icon capability. You are free to (re)use this example. [Binaries](http://code.google.com/p/air-icon-badge/downloads/list) and [sources](http://code.google.com/p/air-icon-badge/source/browse/#svn/air-icon-badge-examples/trunk/dev/src/de/mgroeger/air/icon/example/windows) can be downloaded from the [google code project site](http://code.google.com/p/air-icon-badge/).
 

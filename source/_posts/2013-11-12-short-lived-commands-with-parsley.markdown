@@ -3,7 +3,7 @@ layout: post
 title: "Short-Lived Commands with Parsley"
 date: 2010-10-31 21:24
 comments: true
-categories: as3 parsley
+categories: ActionScript Parsley Commands
 ---
 
 This week we had to decide on a [MVC Framework](http://en.wikipedia.org/wiki/Model%E2%80%93View%E2%80%93Controller) for our next game at [Wooga](http://www.wooga.com). In the end the options were [Robotlegs](http://www.robotlegs.org/) and [Parsley](http://www.spicefactory.org/parsley/). Both of them had advantages and disadvantages. One aspect we came across was the support of `Short-lived Command Objects`.
