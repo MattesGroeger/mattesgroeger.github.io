@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Air | Mattes Groeger]]></title>
   <link href="http://MattesGroeger.github.io/blog/categories/air/atom.xml" rel="self"/>
   <link href="http://MattesGroeger.github.io/"/>
-  <updated>2013-11-12T23:13:53+01:00</updated>
+  <updated>2013-11-12T23:32:46+01:00</updated>
   <id>http://MattesGroeger.github.io/</id>
   <author>
     <name><![CDATA[Mattes Groeger]]></name>
@@ -25,7 +25,7 @@
 <!-- more -->
 
 
-<h3>Demo</h3>
+<h2>Demo</h2>
 
 <p>I extended the existing example implementation. Just choose &ldquo;Window Tray Icon&rdquo; from the right panel for previewing the new icon.</p>
 
@@ -34,7 +34,7 @@
 
 <p></br></p>
 
-<h3>Implementation</h3>
+<h2>Implementation</h2>
 
 <p>The first class that I create is the <code>SystemTrayIconBuilder</code> (it must implement <code>IconBuilder</code> interface). This class is responsible for composing the system tray icon. It also sets the general icon size to 16 by 16 pixels.</p>
 
@@ -168,7 +168,7 @@
 </span><span class='line'><span class="n">AirIconBadge</span><span class="o">.</span><span class="na">label</span> <span class="o">=</span> <span class="o">&amp;</span><span class="n">ldquo</span><span class="o">;</span><span class="mi">1</span><span class="o">&amp;</span><span class="n">rdquo</span><span class="o">;;</span>
 </span></code></pre></td></tr></table></div></figure></notextile></div></p>
 
-<h3>Summary</h3>
+<h2>Summary</h2>
 
 <p>As you can see, it is very little effort to add the windows system tray icon capability. You are free to (re)use this example. <a href="http://code.google.com/p/air-icon-badge/downloads/list">Binaries</a> and <a href="http://code.google.com/p/air-icon-badge/source/browse/#svn/air-icon-badge-examples/trunk/dev/src/de/mgroeger/air/icon/example/windows">sources</a> can be downloaded from the <a href="http://code.google.com/p/air-icon-badge/">google code project site</a>.</p>
 
@@ -197,7 +197,7 @@
 
 <p>Unfortunately the Air runtime allows no access to this native functionality. Thats why the idea for this library came up. It tries to emulate the native badge with the possibilities Air provides (see left image). Until now only the OS X badge is supported but a Windows implementation is possible, too. I will demonstrate the extensibility in one of the following blog posts.</p>
 
-<h3>Usage</h3>
+<h2>Usage</h2>
 
 <p>To show the badge label you can use the static facade <code>AirIconBadge</code>. Internally it will create an <code>IconBadge</code> appropriate for the current operating system. <strong>Note:</strong> only one implementation for OS X is provided until now! Windows or Linux users won&rsquo;t see a badge label.</p>
 
@@ -249,7 +249,7 @@
 </span><span class='line'><span class="o">}</span>
 </span></code></pre></td></tr></table></div></figure></notextile></div></p>
 
-<h3>Download &amp; Demo</h3>
+<h2>Download &amp; Demo</h2>
 
 <p>All sources, binaries and examples are <a href="http://code.google.com/p/air-icon-badge/downloads/list">available for download</a> under the MIT license. If you have a Mac, you can <a href="http://code.google.com/p/air-icon-badge/downloads/detail?name=air-icon-badge-examples.zip&amp;amp;can=2&amp;amp;q=#makechanges">download this Air application</a> where the badge shows up on the real application icon. Running this application on windows will have no visual effect.</p>
 
@@ -260,7 +260,7 @@
 
 <p></br></p>
 
-<h3>Whats next</h3>
+<h2>Whats next</h2>
 
 <p>The documentation (especially the ASDocs) will be improved as well as the sources. If you have questions or feature requests, please let my know. The next blog posts will give you a deeper insight in the architecture and extensibility of this library.</p>
 ]]></content>
