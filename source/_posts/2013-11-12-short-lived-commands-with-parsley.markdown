@@ -66,9 +66,9 @@ Until now I found no way to map or un-map Commands after the context has been bu
 
 To get a better impression how short-lived commands are used in Parsley, I implemented a small example, which you can [access on GitHub](http://github.com/MattesGroeger/as3-parsley-example). The CommandMap class can be [found here](http://github.com/MattesGroeger/as3-parsley-example/blob/master/src/de/mattesgroeger/parsley/core/CommandMap.as).
 
-And this is how the login example looks like. Invalid credentials lead to an error pop up. Valid login works with **admin** and password **test**:
+And this is how the login example looks like. Invalid credentials lead to an error pop up. Valid login works with *admin* and password *test*:
 
-<object style="width: 580px; height: 250px;" width="850" height="250" classid="clsid:d27cdb6e-ae6d-11cf-96b8-444553540000" codebase="http://download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=6,0,40,0"><param name="src" value="/images/posts/ParsleyExample1.swf" /><embed style="width: 850px; height: 250px;" width="850" height="250" type="application/x-shockwave-flash" src="/images/posts/ParsleyExample1.swf" /> </object>
+<object style="width: 850px; height: 250px;" width="850" height="250" classid="clsid:d27cdb6e-ae6d-11cf-96b8-444553540000" codebase="http://download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=6,0,40,0"><param name="src" value="/images/posts/ParsleyExample1.swf" /><embed style="width: 850px; height: 250px;" width="850" height="250" type="application/x-shockwave-flash" src="/images/posts/ParsleyExample1.swf" /> </object>
 
 ## Summary
 
