@@ -2,6 +2,8 @@
 // Add styles here to make changes without digging in too much
 
 $white: #FFFFFF;
+$highlight1: #94CFEB;
+$highlight2: #81B846;
 
 html {
   background: $white;
@@ -22,7 +24,7 @@ body {
 
     h1 {
       a, a:visited, a:hover {
-        color: #AADA76;
+        color: $highlight1;
         font-family: $heading-font-family;
       }
     }
@@ -124,7 +126,7 @@ article {
 #content {
   div.pagination {
     a:hover {
-      color: #81B846;
+      color: $highlight2;
     }
     background: none repeat scroll 0 0 transparent;
     margin: 0 10px;  
@@ -139,7 +141,7 @@ article {
 
   .blog-index {
     a[rel=full-article]:hover {
-      background:#81B846;
+      background: $highlight2;
     }
     article {
       padding-top: 4em;
@@ -150,7 +152,7 @@ article {
       }
       h1 {
         a:hover {
-          color: #81B846;
+          color: $highlight2;
         }
       }
     }
