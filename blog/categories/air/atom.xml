@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Air | Mattes Groeger]]></title>
   <link href="http://MattesGroeger.github.io/blog/categories/air/atom.xml" rel="self"/>
   <link href="http://MattesGroeger.github.io/"/>
-  <updated>2013-11-12T23:02:36+01:00</updated>
+  <updated>2013-11-12T23:12:30+01:00</updated>
   <id>http://MattesGroeger.github.io/</id>
   <author>
     <name><![CDATA[Mattes Groeger]]></name>
@@ -20,9 +20,16 @@
     <id>http://MattesGroeger.github.io/blog/2010/03/14/icon-badge-for-windows</id>
     <content type="html"><![CDATA[<p><img class="left" src="/images/posts/WindowsSystemTray.jpg"></p>
 
-<p>Until now the <a href="/blog/2010/02/08/icon-badge-library-for-air/">Air Icon Badge library</a> implementation only supported OS X dock icons. Nevertheless it is easy to extend the implementation for utilizing it as Windows system tray icon. In this article I will demonstrate how this could be realized. And this is how it will look like on Windows XP (Windows Vista and 7 will look the same).</p>
+<p>Until now the <a href="/blog/2010/02/08/icon-badge-library-for-air/">Air Icon Badge library</a> implementation only supported OS X dock icons. Nevertheless it is easy to extend the implementation for utilizing it as Windows system tray icon. In this article I will demonstrate how this could be realized.</p>
 
 <!-- more -->
+
+
+<h3>Demo</h3>
+
+<p>I extended the existing example implementation. Just choose &ldquo;Window Tray Icon&rdquo; from the right panel for previewing the new icon.</p>
+
+<object style="width: 850px; height: 350px;" width="850" height="350" classid="clsid:d27cdb6e-ae6d-11cf-96b8-444553540000" codebase="http://download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=6,0,40,0"><param name="src" value="/images/posts/WebBadgeExample.swf" /><embed style="width: 850px; height: 350px;" width="850" height="350" type="application/x-shockwave-flash" src="http://MattesGroeger.github.io/images/posts/WebBadgeExample.swf" /></object>
 
 
 <h3>Implementation</h3>
