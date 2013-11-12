@@ -8,9 +8,16 @@ categories: [ActionScript, Air, Api, Lib]
 
 {% img left /images/posts/WindowsSystemTray.jpg %}
 
-Until now the [Air Icon Badge library](/blog/2010/02/08/icon-badge-library-for-air/) implementation only supported OS X dock icons. Nevertheless it is easy to extend the implementation for utilizing it as Windows system tray icon. In this article I will demonstrate how this could be realized. And this is how it will look like on Windows XP (Windows Vista and 7 will look the same).
+Until now the [Air Icon Badge library](/blog/2010/02/08/icon-badge-library-for-air/) implementation only supported OS X dock icons. Nevertheless it is easy to extend the implementation for utilizing it as Windows system tray icon. In this article I will demonstrate how this could be realized.
 
 <!-- more -->
+
+### Demo
+
+I extended the existing example implementation. Just choose "Window Tray Icon" from the right panel for previewing the new icon.
+
+<object style="width: 850px; height: 350px;" width="850" height="350" classid="clsid:d27cdb6e-ae6d-11cf-96b8-444553540000" codebase="http://download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=6,0,40,0"><param name="src" value="/images/posts/WebBadgeExample.swf" /><embed style="width: 850px; height: 350px;" width="850" height="350" type="application/x-shockwave-flash" src="/images/posts/WebBadgeExample.swf" /></object>
+
 
 ### Implementation
 
