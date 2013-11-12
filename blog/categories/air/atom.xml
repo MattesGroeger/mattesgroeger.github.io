@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Air | Mattes Groeger]]></title>
   <link href="http://MattesGroeger.github.io/blog/categories/air/atom.xml" rel="self"/>
   <link href="http://MattesGroeger.github.io/"/>
-  <updated>2013-11-12T23:12:30+01:00</updated>
+  <updated>2013-11-12T23:13:53+01:00</updated>
   <id>http://MattesGroeger.github.io/</id>
   <author>
     <name><![CDATA[Mattes Groeger]]></name>
@@ -31,6 +31,8 @@
 
 <object style="width: 850px; height: 350px;" width="850" height="350" classid="clsid:d27cdb6e-ae6d-11cf-96b8-444553540000" codebase="http://download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=6,0,40,0"><param name="src" value="/images/posts/WebBadgeExample.swf" /><embed style="width: 850px; height: 350px;" width="850" height="350" type="application/x-shockwave-flash" src="http://MattesGroeger.github.io/images/posts/WebBadgeExample.swf" /></object>
 
+
+<p></br></p>
 
 <h3>Implementation</h3>
 
@@ -255,6 +257,8 @@
 
 <object style="width: 850px; height: 400px;" classid="clsid:d27cdb6e-ae6d-11cf-96b8-444553540000" width="850" height="400" codebase="http://download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=6,0,40,0"><param name="src" value="/images/posts/WebBadgeExample.swf" /><embed style="width: 850px; height: 400px;" type="application/x-shockwave-flash" width="850" height="400" src="http://MattesGroeger.github.io/images/posts/WebBadgeExample.swf"> </embed></object>
 
+
+<p></br></p>
 
 <h3>Whats next</h3>
 
