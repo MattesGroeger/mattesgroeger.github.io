@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Air | Mattes Groeger]]></title>
   <link href="http://MattesGroeger.github.io/blog/categories/air/atom.xml" rel="self"/>
   <link href="http://MattesGroeger.github.io/"/>
-  <updated>2013-11-12T23:32:46+01:00</updated>
+  <updated>2013-11-12T23:54:17+01:00</updated>
   <id>http://MattesGroeger.github.io/</id>
   <author>
     <name><![CDATA[Mattes Groeger]]></name>
@@ -18,12 +18,12 @@
     <link href="http://MattesGroeger.github.io/blog/2010/03/14/icon-badge-for-windows/"/>
     <updated>2010-03-14T22:54:00+01:00</updated>
     <id>http://MattesGroeger.github.io/blog/2010/03/14/icon-badge-for-windows</id>
-    <content type="html"><![CDATA[<p><img class="left" src="/images/posts/WindowsSystemTray.jpg"></p>
-
-<p>Until now the <a href="/blog/2010/02/08/icon-badge-library-for-air/">Air Icon Badge library</a> implementation only supported OS X dock icons. Nevertheless it is easy to extend the implementation for utilizing it as Windows system tray icon. In this article I will demonstrate how this could be realized.</p>
+    <content type="html"><![CDATA[<p>Until now the <a href="/blog/2010/02/08/icon-badge-library-for-air/">Air Icon Badge library</a> implementation only supported OS X dock icons. Nevertheless it is easy to extend the implementation for utilizing it as Windows system tray icon. In this article I will demonstrate how this could be realized.</p>
 
 <!-- more -->
 
+
+<p><img class="center" src="/images/posts/WindowsSystemTray.jpg"></p>
 
 <h2>Demo</h2>
 
@@ -186,12 +186,14 @@
     <link href="http://MattesGroeger.github.io/blog/2010/02/08/icon-badge-library-for-air/"/>
     <updated>2010-02-08T14:06:00+01:00</updated>
     <id>http://MattesGroeger.github.io/blog/2010/02/08/icon-badge-library-for-air</id>
-    <content type="html"><![CDATA[<p><img class="right" src="/images/posts/mail.png"></p>
-
-<p><a href="http://www.adobe.com/products/air/">Adobe Air</a> is often used to build feed readers or social media clients. This kind of applications can retrieve new data while they are running in the background. In that case it would be great to inform the user about the amount of new items. With OS X you can use the dock icon for that purpose. The Cocoa Framework allows to display a user defined text consistently on top of the application dock tile (icon). E.g. the screenshot at the right shows 2 unread mails in the inbox.</p>
+    <content type="html"><![CDATA[<p><a href="http://www.adobe.com/products/air/">Adobe Air</a> is often used to build feed readers or social media clients. This kind of applications can retrieve new data while they are running in the background. In that case it would be great to inform the user about the amount of new items.</p>
 
 <!-- more -->
 
+
+<p><img class="right" src="/images/posts/mail.png"></p>
+
+<p>With OS X you can use the dock icon for that purpose. The Cocoa Framework allows to display a user defined text consistently on top of the application dock tile (icon). E.g. the screenshot at the right shows 2 unread mails in the inbox.</p>
 
 <p><img class="left" src="/images/posts/comparision.png" title="Native and emulated badge" ></p>
 

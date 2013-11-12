@@ -2,11 +2,11 @@
 <urlset xmlns='http://www.sitemaps.org/schemas/sitemap/0.9'>
     <url>
         <loc>http://MattesGroeger.github.io/blog/2010/02/08/icon-badge-library-for-air/</loc>
-        <lastmod>2013-11-12T23:30:53+01:00</lastmod>
+        <lastmod>2013-11-12T23:52:30+01:00</lastmod>
     </url>
     <url>
         <loc>http://MattesGroeger.github.io/blog/2010/03/14/icon-badge-for-windows/</loc>
-        <lastmod>2013-11-12T23:32:46+01:00</lastmod>
+        <lastmod>2013-11-12T23:54:16+01:00</lastmod>
     </url>
     <url>
         <loc>
@@ -19,12 +19,16 @@
         <lastmod>2013-11-12T23:31:37+01:00</lastmod>
     </url>
     <url>
+        <loc>http://MattesGroeger.github.io/blog/2011/01/02/strong-typed-constants/</loc>
+        <lastmod>2013-11-12T23:49:07+01:00</lastmod>
+    </url>
+    <url>
         <loc>http://MattesGroeger.github.io/blog/archives/</loc>
-        <lastmod>2013-11-12T23:32:46+01:00</lastmod>
+        <lastmod>2013-11-12T23:54:16+01:00</lastmod>
     </url>
     <url>
         <loc>http://MattesGroeger.github.io/</loc>
-        <lastmod>2013-11-12T23:32:46+01:00</lastmod>
+        <lastmod>2013-11-12T23:54:16+01:00</lastmod>
     </url>
     <url>
         <loc>http://MattesGroeger.github.io/robots.txt</loc>
