@@ -6,11 +6,13 @@ comments: true
 categories: [ActionScript, Air, API, Lib]
 ---
 
-{% img right /images/posts/mail.png %}
-
-[Adobe Air](http://www.adobe.com/products/air/) is often used to build feed readers or social media clients. This kind of applications can retrieve new data while they are running in the background. In that case it would be great to inform the user about the amount of new items. With OS X you can use the dock icon for that purpose. The Cocoa Framework allows to display a user defined text consistently on top of the application dock tile (icon). E.g. the screenshot at the right shows 2 unread mails in the inbox.
+[Adobe Air](http://www.adobe.com/products/air/) is often used to build feed readers or social media clients. This kind of applications can retrieve new data while they are running in the background. In that case it would be great to inform the user about the amount of new items.
 
 <!-- more -->
+
+{% img right /images/posts/mail.png %}
+
+With OS X you can use the dock icon for that purpose. The Cocoa Framework allows to display a user defined text consistently on top of the application dock tile (icon). E.g. the screenshot at the right shows 2 unread mails in the inbox.
 
 {% img left /images/posts/comparision.png Native and emulated badge %}
 

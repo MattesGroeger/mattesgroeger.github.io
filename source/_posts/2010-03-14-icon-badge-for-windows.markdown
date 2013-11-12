@@ -6,11 +6,11 @@ comments: true
 categories: [ActionScript, Air, Api, Lib]
 ---
 
-{% img left /images/posts/WindowsSystemTray.jpg %}
-
 Until now the [Air Icon Badge library](/blog/2010/02/08/icon-badge-library-for-air/) implementation only supported OS X dock icons. Nevertheless it is easy to extend the implementation for utilizing it as Windows system tray icon. In this article I will demonstrate how this could be realized.
 
 <!-- more -->
+
+{% img center /images/posts/WindowsSystemTray.jpg %}
 
 ## Demo
 
