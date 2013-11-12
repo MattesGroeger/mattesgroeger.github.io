@@ -60,8 +60,7 @@ All sources, binaries and examples are [available for download](http://code.goog
 
 None Mac users can use the following demo that shows a preview of the dock icon:
 
-<object style="width: 850px; height: 400px;" classid="clsid:d27cdb6e-ae6d-11cf-96b8-444553540000" width="850" height="400" codebase="http://download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=6,0,40,0"><param name="src" value="/images/posts/WebBadgeExample.swf" /><embed style="width: 850px; height: 400px;" type="application/x-shockwave-flash" width="850" height="400" src="/images/posts/WebBadgeExample.swf"> </embed></object>
-
+<object style="width: 850px; height: 400px;" classid="clsid:d27cdb6e-ae6d-11cf-96b8-444553540000" width="850" height="400" codebase="http://download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=6,0,40,0"><param name="src" value="/images/posts/WebBadgeExample.swf" /><embed style="width: 850px; height: 400px;" type="application/x-shockwave-flash" width="850" height="400" src="/images/posts/WebBadgeExample.swf"> </embed></object></br>
 
 ### Whats next
 

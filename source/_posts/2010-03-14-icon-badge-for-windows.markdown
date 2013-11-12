@@ -16,8 +16,7 @@ Until now the [Air Icon Badge library](/blog/2010/02/08/icon-badge-library-for-a
 
 I extended the existing example implementation. Just choose "Window Tray Icon" from the right panel for previewing the new icon.
 
-<object style="width: 850px; height: 350px;" width="850" height="350" classid="clsid:d27cdb6e-ae6d-11cf-96b8-444553540000" codebase="http://download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=6,0,40,0"><param name="src" value="/images/posts/WebBadgeExample.swf" /><embed style="width: 850px; height: 350px;" width="850" height="350" type="application/x-shockwave-flash" src="/images/posts/WebBadgeExample.swf" /></object>
-
+<object style="width: 850px; height: 350px;" width="850" height="350" classid="clsid:d27cdb6e-ae6d-11cf-96b8-444553540000" codebase="http://download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=6,0,40,0"><param name="src" value="/images/posts/WebBadgeExample.swf" /><embed style="width: 850px; height: 350px;" width="850" height="350" type="application/x-shockwave-flash" src="/images/posts/WebBadgeExample.swf" /></object></br>
 
 ### Implementation
 
