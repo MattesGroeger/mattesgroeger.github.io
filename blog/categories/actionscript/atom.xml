@@ -4,7 +4,7 @@
   <title><![CDATA[Category: ActionScript | Mattes Groeger]]></title>
   <link href="http://MattesGroeger.github.io/blog/categories/actionscript/atom.xml" rel="self"/>
   <link href="http://MattesGroeger.github.io/"/>
-  <updated>2013-11-13T23:05:01+01:00</updated>
+  <updated>2013-11-13T23:54:59+01:00</updated>
   <id>http://MattesGroeger.github.io/</id>
   <author>
     <name><![CDATA[Mattes Groeger]]></name>
@@ -12,6 +12,319 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Context-Aware Tasks]]></title>
+    <link href="http://MattesGroeger.github.io/blog/2011/03/13/context-aware-tasks/"/>
+    <updated>2011-03-13T20:03:00+01:00</updated>
+    <id>http://MattesGroeger.github.io/blog/2011/03/13/context-aware-tasks</id>
+    <content type="html"><![CDATA[<p>This article shows a useful way on how to combine the <a href="http://www.spicefactory.org/parsley/download.php">Spicelib</a> <a href="http://www.spicefactory.org/parsley/docs/2.3/manual/task.php#intro">Task Framework</a> with <a href="http://www.spicefactory.org/parsley/download.php">Parsley</a>. This way you can access everything from the context during the execution of a Task&hellip;</p>
+
+<!-- more -->
+
+
+<p><blockquote><p>The Task Framework is a general abstraction for asynchronous operations. It allows nesting / grouping of Tasks in TaskGroup instances for concurrent or sequential execution</p><footer><strong>Parsley Documentation <a href="http://www.spicefactory.org/parsley/docs/3.3/manual/task.php#intro">http://www.spicefactory.org/parsley/docs/3.3/manual/task.php#intro</a></strong></footer></blockquote></p>
+
+<p>One way to access the <code>Context</code> from within a <code>Task</code> would be to define it during the <a href="http://www.spicefactory.org/parsley/docs/2.3/manual/config.php" target="_blank">Parsley Configuration</a> (<code>Context</code>). But this would mean, that the <code>Task</code> will not be removed until the context gets destroyed. Because a <code>Task</code> is only active during a limited time, this doesn&rsquo;t make much sense.</p>
+
+<p>Another approach would be, not to define the <code>Task</code> in the <code>Context</code> but passing in all the necessary dependencies within the constructor. Depending on the amount of required dependencies, the constructor can become quite big. Also <code>Parsley</code> features like <a href="http://www.spicefactory.org/parsley/docs/2.3/manual/messaging.php#intro" target="_blank">Messaging</a> are not directly supported anymore.</p>
+
+<h2>Solution</h2>
+
+<p>That&rsquo;s why this solution utilizes the <a href="http://www.spicefactory.org/parsley/docs/2.3/manual/lifecycle.php#dynamic" target="_blank">Dynamic Object</a> feature of Parsley. It allows to add any instance to the <code>Context</code> during runtime and also removing it again, if not required anymore. For a <code>Task</code> this means that it needs to be added before the <code>start()</code> is called, and removed after the <code>complete()</code> has been triggered.</p>
+
+<p>This adding/removing happens through the <code>Context</code> interface of Parsley. It should happen automatically in the <code>Task</code> to reduce the amount of code to write. In order to not have to pass the <code>Context</code> to each <code>Task</code> it could just be set once in the parent <code>TaskGroup</code>. The child <code>Task</code> then accesses it via the <code>parent</code> getter:</p>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+</pre></td><td class='code'><pre><code class='actionscript3'><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="n">SequentialContextTaskGroup</span> <span class="kd">extends</span> <span class="n">SequentialTaskGroup</span> <span class="kd">implements</span> <span class="n">IContextProvider</span>
+</span><span class='line'><span class="o">{</span>
+</span><span class='line'>  <span class="kd">private</span> <span class="kd">var</span> <span class="n">_context</span><span class="p">:</span><span class="kt">Context</span><span class="o">;&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span>  <span class="kd">public</span> <span class="kd">function </span><span class="nf">SequentialContextTaskGroup</span><span class="o">(</span><span class="n">context</span><span class="o">:</span><span class="kt">Context</span><span class="o">,</span> <span class="n">name</span><span class="o">:</span><span class="kt">String</span> <span class="o">=</span> <span class="kc">null</span><span class="o">)</span>
+</span><span class='line'>  <span class="o">{&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">pre</span><span class="o">&gt;&lt;</span><span class="n">code</span><span class="o">&gt;</span><span class="n">_context</span> <span class="o">=</span> <span class="n">context</span><span class="o">;</span>
+</span><span class='line'>
+</span><span class='line'><span class="kd">super</span><span class="o">(</span><span class="n">name</span><span class="o">);</span>
+</span><span class='line'><span class="o">&lt;/</span><span class="n">code</span><span class="o">&gt;&lt;/</span><span class="n">pre</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span>  <span class="o">}&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span>  <span class="kd">public</span> <span class="kd">function</span> <span class="kd">get</span> <span class="n">context</span><span class="o">():</span><span class="n">Context</span>
+</span><span class='line'>  <span class="o">{&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">pre</span><span class="o">&gt;&lt;</span><span class="n">code</span><span class="o">&gt;</span><span class="k">return</span> <span class="n">_context</span><span class="o">;</span>
+</span><span class='line'><span class="o">&lt;/</span><span class="n">code</span><span class="o">&gt;&lt;/</span><span class="n">pre</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span>  <span class="o">}</span>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<p>And this is how the <code>IContextProvider</code> interface looks like:</p>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class='actionscript3'><span class='line'><span class="kd">public</span> <span class="kd">interface</span> <span class="n">IContextProvider</span>
+</span><span class='line'><span class="o">{</span>
+</span><span class='line'>  <span class="kd">function</span> <span class="kd">get</span> <span class="n">context</span><span class="o">():</span><span class="n">Context</span><span class="o">;</span>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<p>The following <code>AbstractContextTask</code> is then responsible for adding itself to the <code>Context</code> as soon as it is started. It also removes itself as soon as the <code>complete()</code>, <code>cancel()</code> or <code>skip()</code> has been called. Furthermore it provides a <code>doStartContext()</code> method (read more in the next paragraph).</p>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+<span class='line-number'>33</span>
+<span class='line-number'>34</span>
+<span class='line-number'>35</span>
+<span class='line-number'>36</span>
+<span class='line-number'>37</span>
+<span class='line-number'>38</span>
+<span class='line-number'>39</span>
+<span class='line-number'>40</span>
+<span class='line-number'>41</span>
+<span class='line-number'>42</span>
+<span class='line-number'>43</span>
+<span class='line-number'>44</span>
+<span class='line-number'>45</span>
+<span class='line-number'>46</span>
+<span class='line-number'>47</span>
+<span class='line-number'>48</span>
+<span class='line-number'>49</span>
+<span class='line-number'>50</span>
+<span class='line-number'>51</span>
+<span class='line-number'>52</span>
+<span class='line-number'>53</span>
+<span class='line-number'>54</span>
+<span class='line-number'>55</span>
+<span class='line-number'>56</span>
+<span class='line-number'>57</span>
+<span class='line-number'>58</span>
+</pre></td><td class='code'><pre><code class='actionscript3'><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="n">AbstractContextTask</span> <span class="kd">extends</span> <span class="n">Task</span>
+</span><span class='line'><span class="o">{</span>
+</span><span class='line'>  <span class="kd">private</span> <span class="kd">var</span> <span class="n">_dynamicObject</span><span class="p">:</span><span class="kt">DynamicObject</span><span class="o">;&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span>  <span class="kd">protected</span> <span class="kd">override</span> <span class="kd">function </span><span class="nf">doStart</span><span class="o">():</span><span class="kt">void</span>
+</span><span class='line'>  <span class="o">{&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">pre</span><span class="o">&gt;&lt;</span><span class="n">code</span><span class="o">&gt;</span><span class="n">_dynamicObject</span> <span class="o">=</span> <span class="n">IContextProvider</span><span class="o">(</span><span class="n">parent</span><span class="o">).</span><span class="n">context</span><span class="o">.</span><span class="na">addDynamicObject</span><span class="o">(</span><span class="k">this</span><span class="o">);</span>
+</span><span class='line'>
+</span><span class='line'><span class="n">doStartContext</span><span class="o">();</span>
+</span><span class='line'><span class="kd">super</span><span class="o">.</span><span class="na">doStart</span><span class="o">();</span>
+</span><span class='line'><span class="o">&lt;/</span><span class="n">code</span><span class="o">&gt;&lt;/</span><span class="n">pre</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span>  <span class="o">}&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span>  <span class="kd">protected</span> <span class="kd">function </span><span class="nf">doStartContext</span><span class="o">():</span><span class="kt">void</span>
+</span><span class='line'>  <span class="o">{&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">pre</span><span class="o">&gt;&lt;</span><span class="n">code</span><span class="o">&gt;/*</span> <span class="n">base</span> <span class="n">implementation</span> <span class="n">does</span> <span class="n">nothing</span> <span class="o">*/</span>
+</span><span class='line'><span class="o">&lt;/</span><span class="n">code</span><span class="o">&gt;&lt;/</span><span class="n">pre</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span>  <span class="o">}&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span>  <span class="kd">protected</span> <span class="kd">override</span> <span class="kd">function </span><span class="nf">doCancel</span><span class="o">():</span><span class="kt">void</span>
+</span><span class='line'>  <span class="o">{&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">pre</span><span class="o">&gt;&lt;</span><span class="n">code</span><span class="o">&gt;</span><span class="n">cleanContext</span><span class="o">();</span>
+</span><span class='line'><span class="kd">super</span><span class="o">.</span><span class="na">doCancel</span><span class="o">();</span>
+</span><span class='line'><span class="o">&lt;/</span><span class="n">code</span><span class="o">&gt;&lt;/</span><span class="n">pre</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span>  <span class="o">}&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span>  <span class="kd">protected</span> <span class="kd">override</span> <span class="kd">function </span><span class="nf">doSkip</span><span class="o">():</span><span class="kt">void</span>
+</span><span class='line'>  <span class="o">{&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">pre</span><span class="o">&gt;&lt;</span><span class="n">code</span><span class="o">&gt;</span><span class="n">cleanContext</span><span class="o">();</span>
+</span><span class='line'><span class="kd">super</span><span class="o">.</span><span class="na">doSkip</span><span class="o">();</span>
+</span><span class='line'><span class="o">&lt;/</span><span class="n">code</span><span class="o">&gt;&lt;/</span><span class="n">pre</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span>  <span class="o">}&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span>  <span class="kd">protected</span> <span class="kd">override</span> <span class="kd">function </span><span class="nf">complete</span><span class="o">():</span><span class="kt">Boolean</span>
+</span><span class='line'>  <span class="o">{&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">pre</span><span class="o">&gt;&lt;</span><span class="n">code</span><span class="o">&gt;</span><span class="n">cleanContext</span><span class="o">();</span>
+</span><span class='line'><span class="k">return</span> <span class="kd">super</span><span class="o">.</span><span class="na">complete</span><span class="o">();</span>
+</span><span class='line'><span class="o">&lt;/</span><span class="n">code</span><span class="o">&gt;&lt;/</span><span class="n">pre</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span>  <span class="o">}&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span>  <span class="kd">private</span> <span class="kd">function </span><span class="nf">cleanContext</span><span class="o">():</span><span class="kt">void</span>
+</span><span class='line'>  <span class="o">{&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">pre</span><span class="o">&gt;&lt;</span><span class="n">code</span><span class="o">&gt;</span><span class="n">_dynamicObject</span><span class="o">.</span><span class="na">remove</span><span class="o">();</span>
+</span><span class='line'><span class="o">&lt;/</span><span class="n">code</span><span class="o">&gt;&lt;/</span><span class="n">pre</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span>  <span class="o">}</span>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<p>The following class is a concrete implementation of <code>AbstractContextTask</code>. That&rsquo;s why it gets the <code>HintComponent</code> injected (line 4). Please also note that this <code>Task</code> overrides the method <code>doStartContext()</code> (line 13). This way we ensure that the class already has been added to the <code>Context</code>.</p>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+</pre></td><td class='code'><pre><code class='actionscript3'><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="n">ShowHintTask</span> <span class="kd">extends</span> <span class="n">AbstractContextTask</span>
+</span><span class='line'><span class="o">{</span>
+</span><span class='line'>  <span class="o">[</span><span class="n">Inject</span><span class="o">]</span>
+</span><span class='line'>  <span class="kd">public</span> <span class="kd">var</span> <span class="n">hint</span><span class="p">:</span><span class="kt">HintComponent</span><span class="o">;&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span>  <span class="kd">private</span> <span class="kd">var</span> <span class="n">type</span><span class="p">:</span><span class="kt">HintType</span><span class="o">;&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span>  <span class="kd">public</span> <span class="kd">function </span><span class="nf">ShowHintTask</span><span class="o">(</span><span class="n">type</span><span class="o">:</span><span class="kt">HintType</span><span class="o">)</span>
+</span><span class='line'>  <span class="o">{&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">pre</span><span class="o">&gt;&lt;</span><span class="n">code</span><span class="o">&gt;</span><span class="k">this</span><span class="o">.</span><span class="na">type</span> <span class="o">=</span> <span class="n">type</span><span class="o">;</span>
+</span><span class='line'><span class="o">&lt;/</span><span class="n">code</span><span class="o">&gt;&lt;/</span><span class="n">pre</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span>  <span class="o">}&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span>  <span class="kd">protected</span> <span class="kd">override</span> <span class="kd">function </span><span class="nf">doStartContext</span><span class="o">():</span><span class="kt">void</span>
+</span><span class='line'>  <span class="o">{&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">pre</span><span class="o">&gt;&lt;</span><span class="n">code</span><span class="o">&gt;</span><span class="n">hint</span><span class="o">.</span><span class="na">showHint</span><span class="o">(</span><span class="n">type</span><span class="o">);</span>
+</span><span class='line'>
+</span><span class='line'><span class="n">complete</span><span class="o">();</span>
+</span><span class='line'><span class="o">&lt;/</span><span class="n">code</span><span class="o">&gt;&lt;/</span><span class="n">pre</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span>  <span class="o">}</span>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<p>The following code shows how everything can be glued together. Note, that you don&rsquo;t have to pass the <code>Context</code> to each task.</p>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+</pre></td><td class='code'><pre><code class='actionscript3'><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="n">TaskController</span>
+</span><span class='line'><span class="o">{</span>
+</span><span class='line'>  <span class="o">[</span><span class="n">Inject</span><span class="o">]</span>
+</span><span class='line'>  <span class="kd">public</span> <span class="kd">var</span> <span class="n">context</span><span class="p">:</span><span class="kt">Context</span><span class="o">;&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span>  <span class="o">[</span><span class="n">Init</span><span class="o">]</span>
+</span><span class='line'>  <span class="kd">public</span> <span class="kd">function </span><span class="nf">initialize</span><span class="o">():</span><span class="kt">void</span>
+</span><span class='line'>  <span class="o">{&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">pre</span><span class="o">&gt;&lt;</span><span class="n">code</span><span class="o">&gt;</span><span class="kd">var</span> <span class="n">taskGroup</span><span class="p">:</span><span class="kt">SequentialContextTaskGroup</span> <span class="o">=</span> <span class="k">new</span> <span class="kt">SequentialContextTaskGroup</span><span class="o">(</span><span class="n">context</span><span class="o">);</span>
+</span><span class='line'>
+</span><span class='line'><span class="n">taskGroup</span><span class="o">.</span><span class="na">addTask</span><span class="o">(</span><span class="k">new</span> <span class="kt">ShowHintTask</span><span class="o">(</span><span class="n">HintType</span><span class="o">.</span><span class="na">ATTENTION</span><span class="o">));</span>
+</span><span class='line'><span class="n">taskGroup</span><span class="o">.</span><span class="na">addTask</span><span class="o">(</span><span class="k">new</span> <span class="kt">PointToTask</span><span class="o">(</span><span class="k">new</span> <span class="kt">Point</span><span class="o">(</span><span class="mi">3</span><span class="o">,</span> <span class="mi">5</span><span class="o">)));</span>
+</span><span class='line'><span class="c1">// add more tasks here...</span>
+</span><span class='line'>
+</span><span class='line'><span class="n">taskGroup</span><span class="o">.</span><span class="na">start</span><span class="o">();</span>
+</span><span class='line'><span class="o">&lt;/</span><span class="n">code</span><span class="o">&gt;&lt;/</span><span class="n">pre</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span>  <span class="o">}</span>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<h2>Summary</h2>
+
+<p>This approach of <code>Context</code>-aware <code>Tasks</code> ensures that you don&rsquo;t have a lot of <code>Tasks</code> at the same time in the <code>Context</code>. The adding and removing from the <code>Context</code> happens in an encapsulated class. The <code>Task</code> itself can directly access injected objects during execution time.</p>
+
+<h2>Links</h2>
+
+<ul>
+<li><a href="http://blog.mattes-groeger.de/actionscript/strong-typed-constants/">Strong typed constants</a></li></li>
+<li><a href="http://www.spicefactory.org/parsley/docs/2.3/manual/task.php">Task framework documentation</a></li></li>
+<li><a href="http://www.spicefactory.org/parsley/download.php">Parsley/Spicelib download</a></li></li>
+</ul>
+
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Label Validation with FlexUnit]]></title>
@@ -763,174 +1076,6 @@
 <li><a href="http://github.com/MattesGroeger/as3-parsley-example">Browse the example sources on GitHub</a></li>
 <li><a href="http://github.com/MattesGroeger/as3-parsley-example/blob/master/README.md">Readme of the example</a></li>
 <li><a href="http://github.com/MattesGroeger/as3-parsley-example/blob/master/src/de/mattesgroeger/parsley/core/CommandMap.as">CommandMap source</a></li>
-</ul>
-
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Icon Badge for Windows]]></title>
-    <link href="http://MattesGroeger.github.io/blog/2010/03/14/icon-badge-for-windows/"/>
-    <updated>2010-03-14T22:54:00+01:00</updated>
-    <id>http://MattesGroeger.github.io/blog/2010/03/14/icon-badge-for-windows</id>
-    <content type="html"><![CDATA[<p>Until now the <a href="/blog/2010/02/08/icon-badge-library-for-air/">Air Icon Badge library</a> implementation only supported OS X dock icons. Nevertheless it is easy to extend the implementation for utilizing it as Windows system tray icon. In this article I will demonstrate how this could be realized.</p>
-
-<!-- more -->
-
-
-<p><img class="center" src="/images/posts/WindowsSystemTray.jpg"></p>
-
-<h2>Demo</h2>
-
-<p>I extended the existing example implementation. Just choose &ldquo;Window Tray Icon&rdquo; from the right panel for previewing the new icon.</p>
-
-<object style="width: 850px; height: 350px;" width="850" height="350" classid="clsid:d27cdb6e-ae6d-11cf-96b8-444553540000" codebase="http://download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=6,0,40,0"><param name="src" value="/images/posts/WebBadgeExample.swf" /><embed style="width: 850px; height: 350px;" width="850" height="350" type="application/x-shockwave-flash" src="http://MattesGroeger.github.io/images/posts/WebBadgeExample.swf" /></object>
-
-
-<p></br></p>
-
-<h2>Implementation</h2>
-
-<p>The first class that I create is the <code>SystemTrayIconBuilder</code> (it must implement <code>IconBuilder</code> interface). This class is responsible for composing the system tray icon. It also sets the general icon size to 16 by 16 pixels.</p>
-
-<p><div class='bogus-wrapper'><notextile><figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-<span class='line-number'>19</span>
-<span class='line-number'>20</span>
-<span class='line-number'>21</span>
-<span class='line-number'>22</span>
-<span class='line-number'>23</span>
-<span class='line-number'>24</span>
-<span class='line-number'>25</span>
-<span class='line-number'>26</span>
-<span class='line-number'>27</span>
-<span class='line-number'>28</span>
-<span class='line-number'>29</span>
-<span class='line-number'>30</span>
-<span class='line-number'>31</span>
-</pre></td><td class='code'><pre><code class='as3'><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="n">SystemTrayIconBuilder</span> <span class="kd">extends</span> <span class="n">AbstractIconBuilder</span> <span class="kd">implements</span> <span class="n">IconBuilder</span>
-</span><span class='line'><span class="o">{</span>
-</span><span class='line'>  <span class="kd">public</span> <span class="kd">override</span> <span class="kd">function </span><span class="nf">createNewIcon</span><span class="o">(</span><span class="n">width</span> <span class="o">:</span> <span class="kt">int</span><span class="o">,</span> <span class="n">height</span> <span class="o">:</span> <span class="kt">int</span><span class="o">)</span> <span class="o">:</span> <span class="kt">void</span>
-</span><span class='line'>  <span class="o">{&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="n">pre</span><span class="o">&gt;&lt;</span><span class="n">code</span><span class="o">&gt;</span><span class="kd">super</span><span class="o">.</span><span class="na">createNewIcon</span><span class="o">(</span><span class="mi">16</span><span class="o">,</span> <span class="mi">16</span><span class="o">);</span>
-</span><span class='line'><span class="o">&lt;/</span><span class="n">code</span><span class="o">&gt;&lt;/</span><span class="n">pre</span><span class="o">&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span>  <span class="o">}&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span>  <span class="kd">public</span> <span class="kd">override</span> <span class="kd">function </span><span class="nf">addBackground</span><span class="o">(</span> <span class="n">background</span> <span class="o">:</span> <span class="kt">Bitmap</span><span class="o">)</span> <span class="o">:</span> <span class="kt">void</span>
-</span><span class='line'>  <span class="o">{&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="n">pre</span><span class="o">&gt;&lt;</span><span class="n">code</span><span class="o">&gt;</span><span class="n">background</span><span class="o">.</span><span class="na">width</span> <span class="o">=</span> <span class="n">background</span><span class="o">.</span><span class="na">height</span> <span class="o">=</span> <span class="mi">16</span><span class="o">;</span>
-</span><span class='line'>
-</span><span class='line'><span class="n">container</span><span class="o">.</span><span class="na">addChild</span><span class="o">(</span><span class="n">background</span><span class="o">);</span>
-</span><span class='line'><span class="o">&lt;/</span><span class="n">code</span><span class="o">&gt;&lt;/</span><span class="n">pre</span><span class="o">&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span>  <span class="o">}&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span>  <span class="kd">public</span> <span class="kd">override</span> <span class="kd">function </span><span class="nf">addBadge</span><span class="o">(</span><span class="n">label</span> <span class="o">:</span> <span class="kt">String</span><span class="o">)</span> <span class="o">:</span> <span class="kt">void</span>
-</span><span class='line'>  <span class="o">{&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="n">pre</span><span class="o">&gt;&lt;</span><span class="n">code</span><span class="o">&gt;</span><span class="kd">var</span> <span class="n">badge</span> <span class="p">:</span> <span class="kt">TrayIconBadge</span> <span class="o">=</span> <span class="k">new</span> <span class="kt">TrayIconBadge</span><span class="o">();</span>
-</span><span class='line'><span class="n">badge</span><span class="o">.</span><span class="na">label</span><span class="o">.</span><span class="na">text</span> <span class="o">=</span> <span class="n">label</span><span class="o">;</span>
-</span><span class='line'>
-</span><span class='line'><span class="n">container</span><span class="o">.</span><span class="na">addChild</span><span class="o">(</span><span class="n">badge</span><span class="o">);</span>
-</span><span class='line'><span class="o">&lt;/</span><span class="n">code</span><span class="o">&gt;&lt;/</span><span class="n">pre</span><span class="o">&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span>  <span class="o">}</span>
-</span><span class='line'><span class="o">}</span>
-</span></code></pre></td></tr></table></div></figure></notextile></div></p>
-
-<p>Please note the the <code>TrayIconBadge</code> class used in this example (line 17) is a MovieClip designed and exported (swc) with the Flash IDE. I used a pixel font for better readability. Because of the small icon size the visible letter count is also limited.</p>
-
-<p>The next step is to create a custom <code>SystemTrayIconBadge</code> which has to implement the <code>IconBadge</code> interface. To avoid redundancies I extend the <code>DockIconBadge</code> class and override the factory method &ldquo;<code>createIconBuilder()</code>&rdquo;.</p>
-
-<p><div class='bogus-wrapper'><notextile><figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-</pre></td><td class='code'><pre><code class='as3'><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="n">SystemTrayIconBadge</span> <span class="kd">extends</span> <span class="n">DockIconBadge</span>
-</span><span class='line'><span class="o">{</span>
-</span><span class='line'>  <span class="kd">protected</span> <span class="kd">override</span> <span class="kd">function </span><span class="nf">createIconBuilder</span><span class="o">()</span> <span class="o">:</span> <span class="kt">IconBuilder</span>
-</span><span class='line'>  <span class="o">{&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="n">pre</span><span class="o">&gt;&lt;</span><span class="n">code</span><span class="o">&gt;</span><span class="k">return</span> <span class="k">new</span> <span class="kt">SystemTrayIconBuilder</span><span class="o">();</span>
-</span><span class='line'><span class="o">&lt;/</span><span class="n">code</span><span class="o">&gt;&lt;/</span><span class="n">pre</span><span class="o">&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span>  <span class="o">}</span>
-</span><span class='line'><span class="o">}</span>
-</span></code></pre></td></tr></table></div></figure></notextile></div></p>
-
-<p>The last step is to build the <code>CrossPlatformIconBadgeFactory</code> which implements <code>IconBadgeFactory</code>. It is responsible for detecting the users operating system and returning the corresponding <code>IconBadge</code>. Again I extend the existing factory class to avoid redundancies:</p>
-
-<p><div class='bogus-wrapper'><notextile><figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-</pre></td><td class='code'><pre><code class='as3'><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="n">CrossPlatformIconBadgeFactory</span> <span class="kd">extends</span>
-</span><span class='line'><span class="n">AirIconBadgeFactroy</span>
-</span><span class='line'><span class="o">{</span>
-</span><span class='line'>  <span class="kd">public</span> <span class="kd">override</span> <span class="kd">function </span><span class="nf">create</span><span class="o">()</span> <span class="o">:</span> <span class="kt">IconBadge</span>
-</span><span class='line'>  <span class="o">{&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="n">pre</span><span class="o">&gt;&lt;</span><span class="n">code</span><span class="o">&gt;</span><span class="k">if</span> <span class="o">(</span><span class="n">NativeApplication</span><span class="o">.</span><span class="na">supportsSystemTrayIcon</span><span class="o">)</span>
-</span><span class='line'>  <span class="k">return</span> <span class="k">new</span> <span class="kt">SystemTrayIconBadge</span><span class="o">();</span>
-</span><span class='line'>
-</span><span class='line'>  <span class="k">return</span> <span class="kd">super</span><span class="o">.</span><span class="na">create</span><span class="o">();</span>
-</span><span class='line'><span class="o">&lt;/</span><span class="n">code</span><span class="o">&gt;&lt;/</span><span class="n">pre</span><span class="o">&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span>  <span class="o">}</span>
-</span><span class='line'><span class="o">}</span>
-</span></code></pre></td></tr></table></div></figure></notextile></div></p>
-
-<p>Finally for using the new factory it has to be assigned to the <code>AirIconBadge</code> class.</p>
-
-<p><div class='bogus-wrapper'><notextile><figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-</pre></td><td class='code'><pre><code class='as3'><span class='line'><span class="n">AirIconBadge</span><span class="o">.</span><span class="na">factory</span> <span class="o">=</span> <span class="k">new</span> <span class="kt">CrossPlatformIconBadgeFactory</span><span class="o">();</span>
-</span><span class='line'><span class="n">AirIconBadge</span><span class="o">.</span><span class="na">label</span> <span class="o">=</span> <span class="o">&amp;</span><span class="n">ldquo</span><span class="o">;</span><span class="mi">1</span><span class="o">&amp;</span><span class="n">rdquo</span><span class="o">;;</span>
-</span></code></pre></td></tr></table></div></figure></notextile></div></p>
-
-<h2>Summary</h2>
-
-<p>As you can see, it is very little effort to add the windows system tray icon capability. You are free to (re)use this example. <a href="http://code.google.com/p/air-icon-badge/downloads/list">Binaries</a> and <a href="http://code.google.com/p/air-icon-badge/source/browse/#svn/air-icon-badge-examples/trunk/dev/src/de/mgroeger/air/icon/example/windows">sources</a> can be downloaded from the <a href="http://code.google.com/p/air-icon-badge/">google code project site</a>.</p>
-
-<ul>
-<li><a href="http://code.google.com/p/air-icon-badge/downloads/detail?name=air-icon-badge-examples.zip&amp;amp;can=2&amp;amp;q=#makechanges">Example Download</a> (air/swf)</li>
-<li><a href="http://code.google.com/p/air-icon-badge/source/browse/#svn/air-icon-badge-examples/trunk/dev/src/">Browse Example Sources</a></li>
-<li><a href="http://code.google.com/p/air-icon-badge/downloads/detail?name=air-icon-badge-0.1.zip">Library Download</a></li>
 </ul>
 
 ]]></content>

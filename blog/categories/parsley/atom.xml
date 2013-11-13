@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Parsley | Mattes Groeger]]></title>
   <link href="http://MattesGroeger.github.io/blog/categories/parsley/atom.xml" rel="self"/>
   <link href="http://MattesGroeger.github.io/"/>
-  <updated>2013-11-13T23:05:01+01:00</updated>
+  <updated>2013-11-13T23:54:59+01:00</updated>
   <id>http://MattesGroeger.github.io/</id>
   <author>
     <name><![CDATA[Mattes Groeger]]></name>
@@ -12,6 +12,319 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Context-Aware Tasks]]></title>
+    <link href="http://MattesGroeger.github.io/blog/2011/03/13/context-aware-tasks/"/>
+    <updated>2011-03-13T20:03:00+01:00</updated>
+    <id>http://MattesGroeger.github.io/blog/2011/03/13/context-aware-tasks</id>
+    <content type="html"><![CDATA[<p>This article shows a useful way on how to combine the <a href="http://www.spicefactory.org/parsley/download.php">Spicelib</a> <a href="http://www.spicefactory.org/parsley/docs/2.3/manual/task.php#intro">Task Framework</a> with <a href="http://www.spicefactory.org/parsley/download.php">Parsley</a>. This way you can access everything from the context during the execution of a Task&hellip;</p>
+
+<!-- more -->
+
+
+<p><blockquote><p>The Task Framework is a general abstraction for asynchronous operations. It allows nesting / grouping of Tasks in TaskGroup instances for concurrent or sequential execution</p><footer><strong>Parsley Documentation <a href="http://www.spicefactory.org/parsley/docs/3.3/manual/task.php#intro">http://www.spicefactory.org/parsley/docs/3.3/manual/task.php#intro</a></strong></footer></blockquote></p>
+
+<p>One way to access the <code>Context</code> from within a <code>Task</code> would be to define it during the <a href="http://www.spicefactory.org/parsley/docs/2.3/manual/config.php" target="_blank">Parsley Configuration</a> (<code>Context</code>). But this would mean, that the <code>Task</code> will not be removed until the context gets destroyed. Because a <code>Task</code> is only active during a limited time, this doesn&rsquo;t make much sense.</p>
+
+<p>Another approach would be, not to define the <code>Task</code> in the <code>Context</code> but passing in all the necessary dependencies within the constructor. Depending on the amount of required dependencies, the constructor can become quite big. Also <code>Parsley</code> features like <a href="http://www.spicefactory.org/parsley/docs/2.3/manual/messaging.php#intro" target="_blank">Messaging</a> are not directly supported anymore.</p>
+
+<h2>Solution</h2>
+
+<p>That&rsquo;s why this solution utilizes the <a href="http://www.spicefactory.org/parsley/docs/2.3/manual/lifecycle.php#dynamic" target="_blank">Dynamic Object</a> feature of Parsley. It allows to add any instance to the <code>Context</code> during runtime and also removing it again, if not required anymore. For a <code>Task</code> this means that it needs to be added before the <code>start()</code> is called, and removed after the <code>complete()</code> has been triggered.</p>
+
+<p>This adding/removing happens through the <code>Context</code> interface of Parsley. It should happen automatically in the <code>Task</code> to reduce the amount of code to write. In order to not have to pass the <code>Context</code> to each <code>Task</code> it could just be set once in the parent <code>TaskGroup</code>. The child <code>Task</code> then accesses it via the <code>parent</code> getter:</p>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+</pre></td><td class='code'><pre><code class='actionscript3'><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="n">SequentialContextTaskGroup</span> <span class="kd">extends</span> <span class="n">SequentialTaskGroup</span> <span class="kd">implements</span> <span class="n">IContextProvider</span>
+</span><span class='line'><span class="o">{</span>
+</span><span class='line'>  <span class="kd">private</span> <span class="kd">var</span> <span class="n">_context</span><span class="p">:</span><span class="kt">Context</span><span class="o">;&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span>  <span class="kd">public</span> <span class="kd">function </span><span class="nf">SequentialContextTaskGroup</span><span class="o">(</span><span class="n">context</span><span class="o">:</span><span class="kt">Context</span><span class="o">,</span> <span class="n">name</span><span class="o">:</span><span class="kt">String</span> <span class="o">=</span> <span class="kc">null</span><span class="o">)</span>
+</span><span class='line'>  <span class="o">{&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">pre</span><span class="o">&gt;&lt;</span><span class="n">code</span><span class="o">&gt;</span><span class="n">_context</span> <span class="o">=</span> <span class="n">context</span><span class="o">;</span>
+</span><span class='line'>
+</span><span class='line'><span class="kd">super</span><span class="o">(</span><span class="n">name</span><span class="o">);</span>
+</span><span class='line'><span class="o">&lt;/</span><span class="n">code</span><span class="o">&gt;&lt;/</span><span class="n">pre</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span>  <span class="o">}&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span>  <span class="kd">public</span> <span class="kd">function</span> <span class="kd">get</span> <span class="n">context</span><span class="o">():</span><span class="n">Context</span>
+</span><span class='line'>  <span class="o">{&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">pre</span><span class="o">&gt;&lt;</span><span class="n">code</span><span class="o">&gt;</span><span class="k">return</span> <span class="n">_context</span><span class="o">;</span>
+</span><span class='line'><span class="o">&lt;/</span><span class="n">code</span><span class="o">&gt;&lt;/</span><span class="n">pre</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span>  <span class="o">}</span>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<p>And this is how the <code>IContextProvider</code> interface looks like:</p>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class='actionscript3'><span class='line'><span class="kd">public</span> <span class="kd">interface</span> <span class="n">IContextProvider</span>
+</span><span class='line'><span class="o">{</span>
+</span><span class='line'>  <span class="kd">function</span> <span class="kd">get</span> <span class="n">context</span><span class="o">():</span><span class="n">Context</span><span class="o">;</span>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<p>The following <code>AbstractContextTask</code> is then responsible for adding itself to the <code>Context</code> as soon as it is started. It also removes itself as soon as the <code>complete()</code>, <code>cancel()</code> or <code>skip()</code> has been called. Furthermore it provides a <code>doStartContext()</code> method (read more in the next paragraph).</p>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+<span class='line-number'>33</span>
+<span class='line-number'>34</span>
+<span class='line-number'>35</span>
+<span class='line-number'>36</span>
+<span class='line-number'>37</span>
+<span class='line-number'>38</span>
+<span class='line-number'>39</span>
+<span class='line-number'>40</span>
+<span class='line-number'>41</span>
+<span class='line-number'>42</span>
+<span class='line-number'>43</span>
+<span class='line-number'>44</span>
+<span class='line-number'>45</span>
+<span class='line-number'>46</span>
+<span class='line-number'>47</span>
+<span class='line-number'>48</span>
+<span class='line-number'>49</span>
+<span class='line-number'>50</span>
+<span class='line-number'>51</span>
+<span class='line-number'>52</span>
+<span class='line-number'>53</span>
+<span class='line-number'>54</span>
+<span class='line-number'>55</span>
+<span class='line-number'>56</span>
+<span class='line-number'>57</span>
+<span class='line-number'>58</span>
+</pre></td><td class='code'><pre><code class='actionscript3'><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="n">AbstractContextTask</span> <span class="kd">extends</span> <span class="n">Task</span>
+</span><span class='line'><span class="o">{</span>
+</span><span class='line'>  <span class="kd">private</span> <span class="kd">var</span> <span class="n">_dynamicObject</span><span class="p">:</span><span class="kt">DynamicObject</span><span class="o">;&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span>  <span class="kd">protected</span> <span class="kd">override</span> <span class="kd">function </span><span class="nf">doStart</span><span class="o">():</span><span class="kt">void</span>
+</span><span class='line'>  <span class="o">{&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">pre</span><span class="o">&gt;&lt;</span><span class="n">code</span><span class="o">&gt;</span><span class="n">_dynamicObject</span> <span class="o">=</span> <span class="n">IContextProvider</span><span class="o">(</span><span class="n">parent</span><span class="o">).</span><span class="n">context</span><span class="o">.</span><span class="na">addDynamicObject</span><span class="o">(</span><span class="k">this</span><span class="o">);</span>
+</span><span class='line'>
+</span><span class='line'><span class="n">doStartContext</span><span class="o">();</span>
+</span><span class='line'><span class="kd">super</span><span class="o">.</span><span class="na">doStart</span><span class="o">();</span>
+</span><span class='line'><span class="o">&lt;/</span><span class="n">code</span><span class="o">&gt;&lt;/</span><span class="n">pre</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span>  <span class="o">}&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span>  <span class="kd">protected</span> <span class="kd">function </span><span class="nf">doStartContext</span><span class="o">():</span><span class="kt">void</span>
+</span><span class='line'>  <span class="o">{&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">pre</span><span class="o">&gt;&lt;</span><span class="n">code</span><span class="o">&gt;/*</span> <span class="n">base</span> <span class="n">implementation</span> <span class="n">does</span> <span class="n">nothing</span> <span class="o">*/</span>
+</span><span class='line'><span class="o">&lt;/</span><span class="n">code</span><span class="o">&gt;&lt;/</span><span class="n">pre</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span>  <span class="o">}&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span>  <span class="kd">protected</span> <span class="kd">override</span> <span class="kd">function </span><span class="nf">doCancel</span><span class="o">():</span><span class="kt">void</span>
+</span><span class='line'>  <span class="o">{&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">pre</span><span class="o">&gt;&lt;</span><span class="n">code</span><span class="o">&gt;</span><span class="n">cleanContext</span><span class="o">();</span>
+</span><span class='line'><span class="kd">super</span><span class="o">.</span><span class="na">doCancel</span><span class="o">();</span>
+</span><span class='line'><span class="o">&lt;/</span><span class="n">code</span><span class="o">&gt;&lt;/</span><span class="n">pre</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span>  <span class="o">}&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span>  <span class="kd">protected</span> <span class="kd">override</span> <span class="kd">function </span><span class="nf">doSkip</span><span class="o">():</span><span class="kt">void</span>
+</span><span class='line'>  <span class="o">{&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">pre</span><span class="o">&gt;&lt;</span><span class="n">code</span><span class="o">&gt;</span><span class="n">cleanContext</span><span class="o">();</span>
+</span><span class='line'><span class="kd">super</span><span class="o">.</span><span class="na">doSkip</span><span class="o">();</span>
+</span><span class='line'><span class="o">&lt;/</span><span class="n">code</span><span class="o">&gt;&lt;/</span><span class="n">pre</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span>  <span class="o">}&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span>  <span class="kd">protected</span> <span class="kd">override</span> <span class="kd">function </span><span class="nf">complete</span><span class="o">():</span><span class="kt">Boolean</span>
+</span><span class='line'>  <span class="o">{&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">pre</span><span class="o">&gt;&lt;</span><span class="n">code</span><span class="o">&gt;</span><span class="n">cleanContext</span><span class="o">();</span>
+</span><span class='line'><span class="k">return</span> <span class="kd">super</span><span class="o">.</span><span class="na">complete</span><span class="o">();</span>
+</span><span class='line'><span class="o">&lt;/</span><span class="n">code</span><span class="o">&gt;&lt;/</span><span class="n">pre</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span>  <span class="o">}&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span>  <span class="kd">private</span> <span class="kd">function </span><span class="nf">cleanContext</span><span class="o">():</span><span class="kt">void</span>
+</span><span class='line'>  <span class="o">{&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">pre</span><span class="o">&gt;&lt;</span><span class="n">code</span><span class="o">&gt;</span><span class="n">_dynamicObject</span><span class="o">.</span><span class="na">remove</span><span class="o">();</span>
+</span><span class='line'><span class="o">&lt;/</span><span class="n">code</span><span class="o">&gt;&lt;/</span><span class="n">pre</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span>  <span class="o">}</span>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<p>The following class is a concrete implementation of <code>AbstractContextTask</code>. That&rsquo;s why it gets the <code>HintComponent</code> injected (line 4). Please also note that this <code>Task</code> overrides the method <code>doStartContext()</code> (line 13). This way we ensure that the class already has been added to the <code>Context</code>.</p>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+</pre></td><td class='code'><pre><code class='actionscript3'><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="n">ShowHintTask</span> <span class="kd">extends</span> <span class="n">AbstractContextTask</span>
+</span><span class='line'><span class="o">{</span>
+</span><span class='line'>  <span class="o">[</span><span class="n">Inject</span><span class="o">]</span>
+</span><span class='line'>  <span class="kd">public</span> <span class="kd">var</span> <span class="n">hint</span><span class="p">:</span><span class="kt">HintComponent</span><span class="o">;&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span>  <span class="kd">private</span> <span class="kd">var</span> <span class="n">type</span><span class="p">:</span><span class="kt">HintType</span><span class="o">;&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span>  <span class="kd">public</span> <span class="kd">function </span><span class="nf">ShowHintTask</span><span class="o">(</span><span class="n">type</span><span class="o">:</span><span class="kt">HintType</span><span class="o">)</span>
+</span><span class='line'>  <span class="o">{&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">pre</span><span class="o">&gt;&lt;</span><span class="n">code</span><span class="o">&gt;</span><span class="k">this</span><span class="o">.</span><span class="na">type</span> <span class="o">=</span> <span class="n">type</span><span class="o">;</span>
+</span><span class='line'><span class="o">&lt;/</span><span class="n">code</span><span class="o">&gt;&lt;/</span><span class="n">pre</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span>  <span class="o">}&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span>  <span class="kd">protected</span> <span class="kd">override</span> <span class="kd">function </span><span class="nf">doStartContext</span><span class="o">():</span><span class="kt">void</span>
+</span><span class='line'>  <span class="o">{&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">pre</span><span class="o">&gt;&lt;</span><span class="n">code</span><span class="o">&gt;</span><span class="n">hint</span><span class="o">.</span><span class="na">showHint</span><span class="o">(</span><span class="n">type</span><span class="o">);</span>
+</span><span class='line'>
+</span><span class='line'><span class="n">complete</span><span class="o">();</span>
+</span><span class='line'><span class="o">&lt;/</span><span class="n">code</span><span class="o">&gt;&lt;/</span><span class="n">pre</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span>  <span class="o">}</span>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<p>The following code shows how everything can be glued together. Note, that you don&rsquo;t have to pass the <code>Context</code> to each task.</p>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+</pre></td><td class='code'><pre><code class='actionscript3'><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="n">TaskController</span>
+</span><span class='line'><span class="o">{</span>
+</span><span class='line'>  <span class="o">[</span><span class="n">Inject</span><span class="o">]</span>
+</span><span class='line'>  <span class="kd">public</span> <span class="kd">var</span> <span class="n">context</span><span class="p">:</span><span class="kt">Context</span><span class="o">;&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span>  <span class="o">[</span><span class="n">Init</span><span class="o">]</span>
+</span><span class='line'>  <span class="kd">public</span> <span class="kd">function </span><span class="nf">initialize</span><span class="o">():</span><span class="kt">void</span>
+</span><span class='line'>  <span class="o">{&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">pre</span><span class="o">&gt;&lt;</span><span class="n">code</span><span class="o">&gt;</span><span class="kd">var</span> <span class="n">taskGroup</span><span class="p">:</span><span class="kt">SequentialContextTaskGroup</span> <span class="o">=</span> <span class="k">new</span> <span class="kt">SequentialContextTaskGroup</span><span class="o">(</span><span class="n">context</span><span class="o">);</span>
+</span><span class='line'>
+</span><span class='line'><span class="n">taskGroup</span><span class="o">.</span><span class="na">addTask</span><span class="o">(</span><span class="k">new</span> <span class="kt">ShowHintTask</span><span class="o">(</span><span class="n">HintType</span><span class="o">.</span><span class="na">ATTENTION</span><span class="o">));</span>
+</span><span class='line'><span class="n">taskGroup</span><span class="o">.</span><span class="na">addTask</span><span class="o">(</span><span class="k">new</span> <span class="kt">PointToTask</span><span class="o">(</span><span class="k">new</span> <span class="kt">Point</span><span class="o">(</span><span class="mi">3</span><span class="o">,</span> <span class="mi">5</span><span class="o">)));</span>
+</span><span class='line'><span class="c1">// add more tasks here...</span>
+</span><span class='line'>
+</span><span class='line'><span class="n">taskGroup</span><span class="o">.</span><span class="na">start</span><span class="o">();</span>
+</span><span class='line'><span class="o">&lt;/</span><span class="n">code</span><span class="o">&gt;&lt;/</span><span class="n">pre</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span>  <span class="o">}</span>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<h2>Summary</h2>
+
+<p>This approach of <code>Context</code>-aware <code>Tasks</code> ensures that you don&rsquo;t have a lot of <code>Tasks</code> at the same time in the <code>Context</code>. The adding and removing from the <code>Context</code> happens in an encapsulated class. The <code>Task</code> itself can directly access injected objects during execution time.</p>
+
+<h2>Links</h2>
+
+<ul>
+<li><a href="http://blog.mattes-groeger.de/actionscript/strong-typed-constants/">Strong typed constants</a></li></li>
+<li><a href="http://www.spicefactory.org/parsley/docs/2.3/manual/task.php">Task framework documentation</a></li></li>
+<li><a href="http://www.spicefactory.org/parsley/download.php">Parsley/Spicelib download</a></li></li>
+</ul>
+
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Short-Lived Commands with Parsley]]></title>
