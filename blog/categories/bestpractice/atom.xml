@@ -1,0 +1,313 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: BestPractice | Mattes Groeger]]></title>
+  <link href="http://MattesGroeger.github.io/blog/categories/bestpractice/atom.xml" rel="self"/>
+  <link href="http://MattesGroeger.github.io/"/>
+  <updated>2013-11-13T23:05:01+01:00</updated>
+  <id>http://MattesGroeger.github.io/</id>
+  <author>
+    <name><![CDATA[Mattes Groeger]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[Label Validation with FlexUnit]]></title>
+    <link href="http://MattesGroeger.github.io/blog/2011/01/18/label-validation-with-flexunit/"/>
+    <updated>2011-01-18T22:36:00+01:00</updated>
+    <id>http://MattesGroeger.github.io/blog/2011/01/18/label-validation-with-flexunit</id>
+    <content type="html"><![CDATA[<p>While working in interdisciplinary teams where graphics are produced by artists and the code comes from the developers, a solid designer-developer work-flow is crucial. At my current project team at <a href="http://www.wooga.com">Wooga</a> we already established a very good work-flow. The artists can produce graphics and see them in the running application after committing them.</p>
+
+<!-- more -->
+
+
+<h2>The Problem</h2>
+
+<p>In our project we use <a href="http://www.richardleggett.co.uk/blog/index.php/2010/03/08/flash_builder_and_flash_pro_asset_workflows">SWC asset libraries</a> to have a compile time check and strong typed access to all our graphics. To add logic to <code>MovieClip</code> frames you could either put the code directly on the timeline or the artist defines labels which are then utilized from the code. In order to keep the view separated from the code you should always use the label approach. But this is also risky if the artist accidentally deletes or renames a label. The code would then behave unexpectedly without knowing it. The only way to see the problem is to start the application and test all the <code>MovieClip</code> logic.</p>
+
+<h2>The First Approach</h2>
+
+<p>To protect the labels from unintended changes, our first approach was to check their existence wherever we used them in code. This means we had to provide a separate <code>Vector</code> that contained all the expected labels.</p>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+<span class='line-number'>33</span>
+<span class='line-number'>34</span>
+<span class='line-number'>35</span>
+<span class='line-number'>36</span>
+<span class='line-number'>37</span>
+<span class='line-number'>38</span>
+<span class='line-number'>39</span>
+<span class='line-number'>40</span>
+</pre></td><td class='code'><pre><code class='actionscript3'><span class='line'><span class="kd">private</span> <span class="kd">static</span> <span class="kd">var</span> <span class="n">labels</span><span class="p">:</span><span class="kt">Vector.&lt;String&gt;</span> <span class="o">=</span> <span class="k">new</span> <span class="kt">Vector.&lt;String&gt;</span><span class="o">();</span>
+</span><span class='line'><span class="kd">private</span> <span class="kd">var</span> <span class="n">view</span><span class="p">:</span><span class="kt">IconView</span><span class="o">;&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span><span class="kd">public</span> <span class="kd">function </span><span class="nf">IconMediator</span><span class="o">(</span><span class="n">view</span><span class="o">:</span><span class="kt">IconView</span><span class="o">):</span><span class="kt">void</span>
+</span><span class='line'><span class="o">{</span>
+</span><span class='line'>  <span class="n">initializeLabels</span><span class="o">();</span>
+</span><span class='line'>  <span class="n">assertLabelsExist</span><span class="o">(</span><span class="n">view</span><span class="o">);</span>
+</span><span class='line'><span class="o">}&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span><span class="kd">private</span> <span class="kd">function </span><span class="nf">initializeLabels</span><span class="o">():</span><span class="kt">void</span>
+</span><span class='line'><span class="o">{</span>
+</span><span class='line'>  <span class="k">if</span> <span class="o">(</span><span class="n">labels</span><span class="o">.</span><span class="na">length</span> <span class="o">==</span> <span class="mi">0</span><span class="o">)&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">pre</span><span class="o">&gt;&lt;</span><span class="n">code</span><span class="o">&gt;</span><span class="n">labels</span><span class="o">.</span><span class="na">push</span><span class="o">(</span><span class="n">IconState</span><span class="o">.</span><span class="na">ON</span><span class="o">,</span> <span class="n">IconState</span><span class="o">.</span><span class="na">OFF</span><span class="o">);</span>
+</span><span class='line'><span class="o">&lt;/</span><span class="n">code</span><span class="o">&gt;&lt;/</span><span class="n">pre</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;}&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span><span class="kd">private</span> <span class="kd">function </span><span class="nf">assertLabelsExist</span><span class="o">(</span><span class="n">view</span><span class="o">:</span><span class="kt">ButtonRounded</span><span class="o">):</span><span class="kt">void</span>
+</span><span class='line'><span class="o">{</span>
+</span><span class='line'>  <span class="kd">var</span> <span class="n">requiredMatchesRemaining</span><span class="p">:</span><span class="kt">int</span> <span class="o">=</span> <span class="n">labels</span><span class="o">.</span><span class="na">length</span><span class="o">;&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span>  <span class="k">for</span> <span class="k">each</span> <span class="o">(</span><span class="kd">var</span> <span class="n">requiredLabel</span><span class="p">:</span><span class="kt">String</span> <span class="k">in</span> <span class="n">labels</span><span class="o">)</span>
+</span><span class='line'>  <span class="o">{&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">pre</span><span class="o">&gt;&lt;</span><span class="n">code</span><span class="o">&gt;</span><span class="k">for</span> <span class="k">each</span> <span class="o">(</span><span class="kd">var</span> <span class="n">label</span><span class="p">:</span><span class="kt">FrameLabel</span> <span class="k">in</span> <span class="n">view</span><span class="o">.</span><span class="na">currentLabels</span><span class="o">)</span>
+</span><span class='line'><span class="o">{</span>
+</span><span class='line'>  <span class="k">if</span> <span class="o">(</span><span class="n">requiredLabel</span> <span class="o">==</span> <span class="n">label</span><span class="o">.</span><span class="na">name</span><span class="o">)</span>
+</span><span class='line'>    <span class="n">requiredMatchesRemaining</span><span class="o">--;</span>
+</span><span class='line'><span class="o">}</span>
+</span><span class='line'><span class="o">&lt;/</span><span class="n">code</span><span class="o">&gt;&lt;/</span><span class="n">pre</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span>  <span class="o">}&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span>  <span class="k">if</span> <span class="o">(</span><span class="n">requiredMatchesRemaining</span> <span class="o">!=</span> <span class="mi">0</span><span class="o">)&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">pre</span><span class="o">&gt;&lt;</span><span class="n">code</span><span class="o">&gt;</span><span class="k">throw</span> <span class="k">new</span> <span class="kt">IllegalArgumentError</span><span class="o">(</span><span class="s1">&#39;IconView requires all labels: &#39;</span> <span class="o">+</span> <span class="n">labels</span><span class="o">);</span>
+</span><span class='line'><span class="o">&lt;/</span><span class="n">code</span><span class="o">&gt;&lt;/</span><span class="n">pre</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;}</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<p>Beside this we defined the labels itself in an <a href="http://blog.mattes-groeger.de/actionscript/strong-typed-constants/">enumeration class</a> to provide strong typed access.</p>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+</pre></td><td class='code'><pre><code class='actionscript3'><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="n">IconState</span>
+</span><span class='line'><span class="o">{</span>
+</span><span class='line'>  <span class="kd">public</span> <span class="kd">static</span> <span class="kd">const</span> <span class="n">ON</span><span class="p">:</span><span class="kt">IconState</span> <span class="o">=</span> <span class="k">new</span> <span class="kt">IconState</span><span class="o">(&amp;</span><span class="n">ldquo</span><span class="o">;</span><span class="n">on</span><span class="o">&amp;</span><span class="n">rdquo</span><span class="o">;);</span>
+</span><span class='line'>  <span class="kd">public</span> <span class="kd">static</span> <span class="kd">const</span> <span class="n">OFF</span><span class="p">:</span><span class="kt">IconState</span> <span class="o">=</span> <span class="k">new</span> <span class="kt">IconState</span><span class="o">(&amp;</span><span class="n">ldquo</span><span class="o">;</span><span class="n">off</span><span class="o">&amp;</span><span class="n">rdquo</span><span class="o">;);&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span>  <span class="kd">private</span> <span class="kd">var</span> <span class="n">type</span><span class="p">:</span><span class="kt">String</span><span class="o">;&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span>  <span class="kd">public</span> <span class="kd">function </span><span class="nf">IconState</span><span class="o">(</span><span class="n">type</span><span class="o">:</span><span class="kt">String</span><span class="o">)</span>
+</span><span class='line'>  <span class="o">{&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">pre</span><span class="o">&gt;&lt;</span><span class="n">code</span><span class="o">&gt;</span><span class="k">this</span><span class="o">.</span><span class="na">type</span> <span class="o">=</span> <span class="n">type</span><span class="o">;</span>
+</span><span class='line'><span class="o">&lt;/</span><span class="n">code</span><span class="o">&gt;&lt;/</span><span class="n">pre</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span>  <span class="o">}&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span>  <span class="kd">public</span> <span class="kd">function </span><span class="nf">toString</span><span class="o">():</span><span class="kt">String</span>
+</span><span class='line'>  <span class="o">{&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">pre</span><span class="o">&gt;&lt;</span><span class="n">code</span><span class="o">&gt;</span><span class="k">return</span> <span class="n">type</span><span class="o">;</span>
+</span><span class='line'><span class="o">&lt;/</span><span class="n">code</span><span class="o">&gt;&lt;/</span><span class="n">pre</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span>  <span class="o">}</span>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<p>This approach leads to three main problems:</p>
+
+<ul>
+<li>Depending on when the validation is executed in code, it could still happen that you don&rsquo;t see the problems immediately</li>
+<li>We create a lot of code that is only necessary for validation but not for the application itself</li>
+<li>We create redundancy because we have to maintain the <code>Vector</code> of expected labels and the enumeration class (<code>IconState</code>). When changing labels it is very likely that you forget to update the Vector.</li>
+</ul>
+
+
+<h2>The Solution</h2>
+
+<p>Thats why we came up with a different approach. We moved the validation into the unit tests. Now the code is separated but still executed because of our integration server (Hudson with <a href="http://www.flexunit.org/" target="_blank">FlexUnit support</a>). The normal application code is now much slimmer and better readable. The artists/developers are automatically notified by mail if their changes break the tests.</p>
+
+<p>To solve point 3 I wrote an assertion method that can reflect on enumeration classes and check all the defined labels on a certain MovieClip.</p>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+</pre></td><td class='code'><pre><code class='actionscript3'><span class='line'><span class="kd">public</span> <span class="kd">function </span><span class="nf">assertLabelEnum</span><span class="o">(</span><span class="n">target</span><span class="o">:</span><span class="kt">MovieClip</span><span class="o">,</span> <span class="n">enumClass</span><span class="o">:</span><span class="kt">Class</span><span class="o">):</span><span class="kt">void</span>
+</span><span class='line'><span class="o">{</span>
+</span><span class='line'>  <span class="kd">var</span> <span class="n">classInfo</span><span class="p">:</span><span class="kt">ClassInfo</span> <span class="o">=</span> <span class="n">ClassInfo</span><span class="o">.</span><span class="na">forClass</span><span class="o">(</span><span class="n">enumClass</span><span class="o">);</span>
+</span><span class='line'>  <span class="kd">var</span> <span class="n">properties</span><span class="p">:</span><span class="kt">Array</span> <span class="o">=</span> <span class="n">classInfo</span><span class="o">.</span><span class="na">getStaticProperties</span><span class="o">();</span>
+</span><span class='line'>  <span class="kd">var</span> <span class="n">expectedLabel</span> <span class="p">:</span> <span class="kt">String</span><span class="o">;</span>
+</span><span class='line'>  <span class="n">var</span> <span class="n">type</span><span class="o">:*;</span>
+</span><span class='line'>  <span class="kd">var</span> <span class="n">labelCounter</span><span class="p">:</span><span class="kt">int</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span>  <span class="k">for</span> <span class="k">each</span> <span class="o">(</span><span class="kd">var</span> <span class="n">property</span> <span class="p">:</span> <span class="kt">Property</span> <span class="k">in</span> <span class="n">properties</span><span class="o">)</span>
+</span><span class='line'>  <span class="o">{&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">pre</span><span class="o">&gt;&lt;</span><span class="n">code</span><span class="o">&gt;</span><span class="n">type</span> <span class="o">=</span> <span class="n">property</span><span class="o">.</span><span class="na">getValue</span><span class="o">(</span><span class="n">enumClass</span><span class="o">);</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">if</span> <span class="o">(</span><span class="n">type</span> <span class="k">is</span> <span class="n">String</span><span class="o">)</span>
+</span><span class='line'>  <span class="n">expectedLabel</span> <span class="o">=</span> <span class="n">String</span><span class="o">(</span><span class="n">type</span><span class="o">);</span>
+</span><span class='line'><span class="k">else</span> <span class="k">if</span> <span class="o">(</span><span class="n">type</span> <span class="k">is</span> <span class="n">enumClass</span><span class="o">)</span>
+</span><span class='line'>  <span class="n">type</span><span class="o">[</span><span class="s2">&quot;toString&quot;</span><span class="o">]();</span>
+</span><span class='line'><span class="k">else</span>
+</span><span class='line'>  <span class="k">continue</span><span class="o">;</span>
+</span><span class='line'>
+</span><span class='line'><span class="n">labelCounter</span><span class="o">++;</span>
+</span><span class='line'><span class="n">expectedLabel</span> <span class="o">=</span> <span class="n">type</span><span class="o">[</span><span class="s2">&quot;toString&quot;</span><span class="o">]();</span>
+</span><span class='line'>
+</span><span class='line'><span class="n">assertLabel</span><span class="o">(</span><span class="n">expectedLabel</span><span class="o">,</span> <span class="n">target</span><span class="o">);</span>
+</span><span class='line'><span class="o">&lt;/</span><span class="n">code</span><span class="o">&gt;&lt;/</span><span class="n">pre</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span>  <span class="o">}&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span>  <span class="n">assertEquals</span><span class="o">(&amp;</span><span class="n">ldquo</span><span class="o">;</span><span class="n">Amount</span> <span class="n">of</span> <span class="n">expected</span> <span class="n">labels</span> <span class="n">differs</span> <span class="n">from</span> <span class="n">the</span> <span class="n">amount</span> <span class="n">of</span> <span class="n">existing</span> <span class="n">labels</span><span class="o">&amp;</span><span class="n">rdquo</span><span class="o">;,</span> <span class="n">labelCounter</span><span class="o">,</span> <span class="n">target</span><span class="o">.</span><span class="na">currentLabels</span><span class="o">.</span><span class="na">length</span><span class="o">);</span>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<p>This method internally calls another assertion method <code>assertLabel()</code>. This method can also be used independently for testing specific labels without using enumeration classes.</p>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+</pre></td><td class='code'><pre><code class='actionscript3'><span class='line'><span class="kd">public</span> <span class="kd">function </span><span class="nf">assertLabel</span><span class="o">(</span><span class="n">target</span><span class="o">:</span><span class="kt">MovieClip</span><span class="o">,</span> <span class="n">expectedLabel</span><span class="o">:</span><span class="kt">String</span><span class="o">):</span><span class="kt">void</span>
+</span><span class='line'><span class="o">{</span>
+</span><span class='line'>  <span class="kd">var</span> <span class="n">found</span><span class="p">:</span><span class="kt">Boolean</span> <span class="o">=</span> <span class="kc">false</span><span class="o">;&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span>  <span class="k">for</span> <span class="k">each</span> <span class="o">(</span><span class="kd">var</span> <span class="n">label</span><span class="p">:</span><span class="kt">FrameLabel</span> <span class="k">in</span> <span class="n">target</span><span class="o">.</span><span class="na">currentLabels</span><span class="o">)</span>
+</span><span class='line'>  <span class="o">{&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">pre</span><span class="o">&gt;&lt;</span><span class="n">code</span><span class="o">&gt;</span><span class="k">if</span> <span class="o">(</span><span class="n">expectedLabel</span> <span class="o">==</span> <span class="n">label</span><span class="o">.</span><span class="na">name</span><span class="o">)</span>
+</span><span class='line'><span class="o">{</span>
+</span><span class='line'>  <span class="n">found</span> <span class="o">=</span> <span class="kc">true</span><span class="o">;</span>
+</span><span class='line'>  <span class="k">break</span><span class="o">;</span>
+</span><span class='line'><span class="o">}</span>
+</span><span class='line'><span class="o">&lt;/</span><span class="n">code</span><span class="o">&gt;&lt;/</span><span class="n">pre</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span>  <span class="o">}&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span>  <span class="k">if</span> <span class="o">(!</span><span class="n">found</span><span class="o">)&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">pre</span><span class="o">&gt;&lt;</span><span class="n">code</span><span class="o">&gt;</span><span class="n">fail</span><span class="o">(</span><span class="s2">&quot;Expected label [&quot;</span> <span class="o">+</span> <span class="n">expectedLabel</span> <span class="o">+</span> <span class="s2">&quot;] not found in &quot;</span> <span class="o">+</span> <span class="n">target</span><span class="o">);</span>
+</span><span class='line'><span class="o">&lt;/</span><span class="n">code</span><span class="o">&gt;&lt;/</span><span class="n">pre</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;}</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<p><em>Note:</em> I used the reflection library from spicelib to retrieve all the static members of the enumeration class. You can <a href="http://www.spicefactory.org/parsley/">download the library here</a>.</p>
+
+<p>And this is how the test method would look like:</p>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class='actionscript3'><span class='line'><span class="o">[</span><span class="n">Test</span><span class="o">]</span>
+</span><span class='line'><span class="kd">public</span> <span class="kd">function </span><span class="nf">test_icon_frame_labels</span><span class="o">():</span><span class="kt">void</span>
+</span><span class='line'><span class="o">{</span>
+</span><span class='line'>  <span class="n">assertLabelEnum</span><span class="o">(</span><span class="k">new</span> <span class="kt">IconView</span><span class="o">(),</span> <span class="n">IconState</span><span class="o">);</span>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<h2>Conclusion</h2>
+
+<p>We made very good experiences with this approach because unintended changes on the labels no longer lead to awkward behavior in the application itself. And of course the application code can focus on the main logic and is therefor better readable.</p>
+]]></content>
+  </entry>
+  
+</feed>
