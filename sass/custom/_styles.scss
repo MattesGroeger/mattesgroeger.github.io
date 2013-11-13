@@ -2,8 +2,9 @@
 // Add styles here to make changes without digging in too much
 
 $white: #FFFFFF;
-$highlight1: #94CFEB;
-$highlight2: #81B846;
+$darkgrey: #363636;
+$lightgrey: #707070;
+$lightgreen: #AED16F;
 
 html {
   background: $white;
@@ -24,9 +25,13 @@ body {
 
     h1 {
       a, a:visited, a:hover {
-        color: $highlight1;
+        color: $lightgreen;
         font-family: $heading-font-family;
       }
+    }
+
+    h2 {
+      color: $lightgrey;
     }
   }
 
@@ -76,8 +81,8 @@ body {
     background: $white;
     text-shadow: none;
     color: #AAAAAA;
-      padding-left: 0;
-      padding-right: 0;
+    padding-left: 0;
+    padding-right: 0;
     border-top: 0px;
     padding-left: 0px;
     padding-right: 0px;
@@ -111,40 +116,46 @@ article {
     margin-left: 2em;
   }
 
-  a, a:visited {
-    color: #1863A1;
-  }
-
   header {
     h1.entry-title {
       font-family: $heading-font-family;
       font-weight: 400;
     }
   }
+
+  footer {
+    padding-bottom: 2em;
+  }
 }
 
 #content {
+  code {
+    font-size: .85em;
+  }
+  h1 {
+    color: $darkgrey;
+  }
   div.pagination {
     a:hover {
-      color: $highlight2;
+      color: $lightgreen;
     }
     background: none repeat scroll 0 0 transparent;
     margin: 0 10px;  
     font-size: 0.95em;
     padding-bottom: 1.5em;
-    margin-top: 4em;
+    margin-top: 1em;
     position: relative;
-    text-align: center;    
+    text-align: center;
     border-top: dotted 1px #D1D1D1;
     border-bottom: dotted 1px #D1D1D1;
   }
 
   .blog-index {
     a[rel=full-article]:hover {
-      background: $highlight2;
+      background: $lightgreen;
     }
     article {
-      padding-top: 4em;
+      padding-top: 2em;
 
       header {
         padding-left: 0;
@@ -152,7 +163,7 @@ article {
       }
       h1 {
         a:hover {
-          color: $highlight2;
+          text-decoration: underline;
         }
       }
     }
@@ -176,7 +187,6 @@ article {
       font-size: 2.2em;
     }
   }
-  
 }
 
 figure.code {
