@@ -127,7 +127,7 @@ Well you could now argue that, with this solution, adding new sounds still requi
 
 The idea is to embed all sounds that could be triggered from the timeline in a single `FLA`, so the artists can maintain it. Sounds have to be exported for ActionScript, where the linkage name matches the string that will be later used for the `playSound()` method parameter. In order to make the sounds available to the sound logic we chose to compile them into the sound module itself. This way we get good compression and have no additional loading effort. Note however that this approach wouldn't make sense for large sound files.
 
-{% /images/posts center http://blog.mattes-groeger.de/wp-content/uploads/2012/01/sound-library.png sounds.fla %}
+{% img center /images/posts/SoundLibrary.png sounds.fla %}
 
 The question is now, how do we get new sounds automatically compiled into the sound module? What we did, we created a Sprite that contains all sounds. The `FLA` file then gets compiled into a `SWC` library and is part of the sound module classpath. To enforce the inclusion of the sound definitions the exported `SoundInclusionContainer` class is once referenced in the module:
 
