@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Parsley | Mattes Groeger]]></title>
   <link href="http://MattesGroeger.github.io/blog/categories/parsley/atom.xml" rel="self"/>
   <link href="http://MattesGroeger.github.io/"/>
-  <updated>2013-11-13T23:54:59+01:00</updated>
+  <updated>2013-11-14T23:40:51+01:00</updated>
   <id>http://MattesGroeger.github.io/</id>
   <author>
     <name><![CDATA[Mattes Groeger]]></name>
@@ -23,7 +23,9 @@
 <!-- more -->
 
 
-<p><blockquote><p>The Task Framework is a general abstraction for asynchronous operations. It allows nesting / grouping of Tasks in TaskGroup instances for concurrent or sequential execution</p><footer><strong>Parsley Documentation <a href="http://www.spicefactory.org/parsley/docs/3.3/manual/task.php#intro">http://www.spicefactory.org/parsley/docs/3.3/manual/task.php#intro</a></strong></footer></blockquote></p>
+<p>{% blockquote Parsley Documentation <a href="http://www.spicefactory.org/parsley/docs/3.3/manual/task.php#intro">http://www.spicefactory.org/parsley/docs/3.3/manual/task.php#intro</a> %}
+The Task Framework is a general abstraction for asynchronous operations. It allows nesting / grouping of Tasks in TaskGroup instances for concurrent or sequential execution
+{% endblockquote %}</p>
 
 <p>One way to access the <code>Context</code> from within a <code>Task</code> would be to define it during the <a href="http://www.spicefactory.org/parsley/docs/2.3/manual/config.php" target="_blank">Parsley Configuration</a> (<code>Context</code>). But this would mean, that the <code>Task</code> will not be removed until the context gets destroyed. Because a <code>Task</code> is only active during a limited time, this doesn&rsquo;t make much sense.</p>
 
@@ -35,281 +37,157 @@
 
 <p>This adding/removing happens through the <code>Context</code> interface of Parsley. It should happen automatically in the <code>Task</code> to reduce the amount of code to write. In order to not have to pass the <code>Context</code> to each <code>Task</code> it could just be set once in the parent <code>TaskGroup</code>. The child <code>Task</code> then accesses it via the <code>parent</code> getter:</p>
 
-<p><div class='bogus-wrapper'><notextile><figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-<span class='line-number'>19</span>
-<span class='line-number'>20</span>
-<span class='line-number'>21</span>
-<span class='line-number'>22</span>
-</pre></td><td class='code'><pre><code class='actionscript3'><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="n">SequentialContextTaskGroup</span> <span class="kd">extends</span> <span class="n">SequentialTaskGroup</span> <span class="kd">implements</span> <span class="n">IContextProvider</span>
-</span><span class='line'><span class="o">{</span>
-</span><span class='line'>  <span class="kd">private</span> <span class="kd">var</span> <span class="n">_context</span><span class="p">:</span><span class="kt">Context</span><span class="o">;&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span>  <span class="kd">public</span> <span class="kd">function </span><span class="nf">SequentialContextTaskGroup</span><span class="o">(</span><span class="n">context</span><span class="o">:</span><span class="kt">Context</span><span class="o">,</span> <span class="n">name</span><span class="o">:</span><span class="kt">String</span> <span class="o">=</span> <span class="kc">null</span><span class="o">)</span>
-</span><span class='line'>  <span class="o">{&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="n">pre</span><span class="o">&gt;&lt;</span><span class="n">code</span><span class="o">&gt;</span><span class="n">_context</span> <span class="o">=</span> <span class="n">context</span><span class="o">;</span>
-</span><span class='line'>
-</span><span class='line'><span class="kd">super</span><span class="o">(</span><span class="n">name</span><span class="o">);</span>
-</span><span class='line'><span class="o">&lt;/</span><span class="n">code</span><span class="o">&gt;&lt;/</span><span class="n">pre</span><span class="o">&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span>  <span class="o">}&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span>  <span class="kd">public</span> <span class="kd">function</span> <span class="kd">get</span> <span class="n">context</span><span class="o">():</span><span class="n">Context</span>
-</span><span class='line'>  <span class="o">{&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="n">pre</span><span class="o">&gt;&lt;</span><span class="n">code</span><span class="o">&gt;</span><span class="k">return</span> <span class="n">_context</span><span class="o">;</span>
-</span><span class='line'><span class="o">&lt;/</span><span class="n">code</span><span class="o">&gt;&lt;/</span><span class="n">pre</span><span class="o">&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span>  <span class="o">}</span>
-</span><span class='line'><span class="o">}</span>
-</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+<p>{% codeblock lang:actionscript3 %}
+public class SequentialContextTaskGroup extends SequentialTaskGroup implements IContextProvider
+{
+  private var _context:Context;</p>
+
+<p>  public function SequentialContextTaskGroup(context:Context, name:String = null)
+  {</p>
+
+<pre><code>_context = context;
+
+super(name);
+</code></pre>
+
+<p>  }</p>
+
+<p>  public function get context():Context
+  {</p>
+
+<pre><code>return _context;
+</code></pre>
+
+<p>  }
+}
+{% endcodeblock %}</p>
 
 <p>And this is how the <code>IContextProvider</code> interface looks like:</p>
 
-<p><div class='bogus-wrapper'><notextile><figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-</pre></td><td class='code'><pre><code class='actionscript3'><span class='line'><span class="kd">public</span> <span class="kd">interface</span> <span class="n">IContextProvider</span>
-</span><span class='line'><span class="o">{</span>
-</span><span class='line'>  <span class="kd">function</span> <span class="kd">get</span> <span class="n">context</span><span class="o">():</span><span class="n">Context</span><span class="o">;</span>
-</span><span class='line'><span class="o">}</span>
-</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+<p>{% codeblock lang:actionscript3 %}
+public interface IContextProvider
+{
+  function get context():Context;
+}
+{% endcodeblock %}</p>
 
 <p>The following <code>AbstractContextTask</code> is then responsible for adding itself to the <code>Context</code> as soon as it is started. It also removes itself as soon as the <code>complete()</code>, <code>cancel()</code> or <code>skip()</code> has been called. Furthermore it provides a <code>doStartContext()</code> method (read more in the next paragraph).</p>
 
-<p><div class='bogus-wrapper'><notextile><figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-<span class='line-number'>19</span>
-<span class='line-number'>20</span>
-<span class='line-number'>21</span>
-<span class='line-number'>22</span>
-<span class='line-number'>23</span>
-<span class='line-number'>24</span>
-<span class='line-number'>25</span>
-<span class='line-number'>26</span>
-<span class='line-number'>27</span>
-<span class='line-number'>28</span>
-<span class='line-number'>29</span>
-<span class='line-number'>30</span>
-<span class='line-number'>31</span>
-<span class='line-number'>32</span>
-<span class='line-number'>33</span>
-<span class='line-number'>34</span>
-<span class='line-number'>35</span>
-<span class='line-number'>36</span>
-<span class='line-number'>37</span>
-<span class='line-number'>38</span>
-<span class='line-number'>39</span>
-<span class='line-number'>40</span>
-<span class='line-number'>41</span>
-<span class='line-number'>42</span>
-<span class='line-number'>43</span>
-<span class='line-number'>44</span>
-<span class='line-number'>45</span>
-<span class='line-number'>46</span>
-<span class='line-number'>47</span>
-<span class='line-number'>48</span>
-<span class='line-number'>49</span>
-<span class='line-number'>50</span>
-<span class='line-number'>51</span>
-<span class='line-number'>52</span>
-<span class='line-number'>53</span>
-<span class='line-number'>54</span>
-<span class='line-number'>55</span>
-<span class='line-number'>56</span>
-<span class='line-number'>57</span>
-<span class='line-number'>58</span>
-</pre></td><td class='code'><pre><code class='actionscript3'><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="n">AbstractContextTask</span> <span class="kd">extends</span> <span class="n">Task</span>
-</span><span class='line'><span class="o">{</span>
-</span><span class='line'>  <span class="kd">private</span> <span class="kd">var</span> <span class="n">_dynamicObject</span><span class="p">:</span><span class="kt">DynamicObject</span><span class="o">;&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span>  <span class="kd">protected</span> <span class="kd">override</span> <span class="kd">function </span><span class="nf">doStart</span><span class="o">():</span><span class="kt">void</span>
-</span><span class='line'>  <span class="o">{&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="n">pre</span><span class="o">&gt;&lt;</span><span class="n">code</span><span class="o">&gt;</span><span class="n">_dynamicObject</span> <span class="o">=</span> <span class="n">IContextProvider</span><span class="o">(</span><span class="n">parent</span><span class="o">).</span><span class="n">context</span><span class="o">.</span><span class="na">addDynamicObject</span><span class="o">(</span><span class="k">this</span><span class="o">);</span>
-</span><span class='line'>
-</span><span class='line'><span class="n">doStartContext</span><span class="o">();</span>
-</span><span class='line'><span class="kd">super</span><span class="o">.</span><span class="na">doStart</span><span class="o">();</span>
-</span><span class='line'><span class="o">&lt;/</span><span class="n">code</span><span class="o">&gt;&lt;/</span><span class="n">pre</span><span class="o">&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span>  <span class="o">}&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span>  <span class="kd">protected</span> <span class="kd">function </span><span class="nf">doStartContext</span><span class="o">():</span><span class="kt">void</span>
-</span><span class='line'>  <span class="o">{&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="n">pre</span><span class="o">&gt;&lt;</span><span class="n">code</span><span class="o">&gt;/*</span> <span class="n">base</span> <span class="n">implementation</span> <span class="n">does</span> <span class="n">nothing</span> <span class="o">*/</span>
-</span><span class='line'><span class="o">&lt;/</span><span class="n">code</span><span class="o">&gt;&lt;/</span><span class="n">pre</span><span class="o">&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span>  <span class="o">}&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span>  <span class="kd">protected</span> <span class="kd">override</span> <span class="kd">function </span><span class="nf">doCancel</span><span class="o">():</span><span class="kt">void</span>
-</span><span class='line'>  <span class="o">{&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="n">pre</span><span class="o">&gt;&lt;</span><span class="n">code</span><span class="o">&gt;</span><span class="n">cleanContext</span><span class="o">();</span>
-</span><span class='line'><span class="kd">super</span><span class="o">.</span><span class="na">doCancel</span><span class="o">();</span>
-</span><span class='line'><span class="o">&lt;/</span><span class="n">code</span><span class="o">&gt;&lt;/</span><span class="n">pre</span><span class="o">&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span>  <span class="o">}&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span>  <span class="kd">protected</span> <span class="kd">override</span> <span class="kd">function </span><span class="nf">doSkip</span><span class="o">():</span><span class="kt">void</span>
-</span><span class='line'>  <span class="o">{&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="n">pre</span><span class="o">&gt;&lt;</span><span class="n">code</span><span class="o">&gt;</span><span class="n">cleanContext</span><span class="o">();</span>
-</span><span class='line'><span class="kd">super</span><span class="o">.</span><span class="na">doSkip</span><span class="o">();</span>
-</span><span class='line'><span class="o">&lt;/</span><span class="n">code</span><span class="o">&gt;&lt;/</span><span class="n">pre</span><span class="o">&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span>  <span class="o">}&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span>  <span class="kd">protected</span> <span class="kd">override</span> <span class="kd">function </span><span class="nf">complete</span><span class="o">():</span><span class="kt">Boolean</span>
-</span><span class='line'>  <span class="o">{&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="n">pre</span><span class="o">&gt;&lt;</span><span class="n">code</span><span class="o">&gt;</span><span class="n">cleanContext</span><span class="o">();</span>
-</span><span class='line'><span class="k">return</span> <span class="kd">super</span><span class="o">.</span><span class="na">complete</span><span class="o">();</span>
-</span><span class='line'><span class="o">&lt;/</span><span class="n">code</span><span class="o">&gt;&lt;/</span><span class="n">pre</span><span class="o">&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span>  <span class="o">}&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span>  <span class="kd">private</span> <span class="kd">function </span><span class="nf">cleanContext</span><span class="o">():</span><span class="kt">void</span>
-</span><span class='line'>  <span class="o">{&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="n">pre</span><span class="o">&gt;&lt;</span><span class="n">code</span><span class="o">&gt;</span><span class="n">_dynamicObject</span><span class="o">.</span><span class="na">remove</span><span class="o">();</span>
-</span><span class='line'><span class="o">&lt;/</span><span class="n">code</span><span class="o">&gt;&lt;/</span><span class="n">pre</span><span class="o">&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span>  <span class="o">}</span>
-</span><span class='line'><span class="o">}</span>
-</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+<p>{% codeblock lang:actionscript3 %}
+public class AbstractContextTask extends Task
+{
+  private var _dynamicObject:DynamicObject;</p>
+
+<p>  protected override function doStart():void
+  {</p>
+
+<pre><code>_dynamicObject = IContextProvider(parent).context.addDynamicObject(this);
+
+doStartContext();
+super.doStart();
+</code></pre>
+
+<p>  }</p>
+
+<p>  protected function doStartContext():void
+  {</p>
+
+<pre><code>/* base implementation does nothing */
+</code></pre>
+
+<p>  }</p>
+
+<p>  protected override function doCancel():void
+  {</p>
+
+<pre><code>cleanContext();
+super.doCancel();
+</code></pre>
+
+<p>  }</p>
+
+<p>  protected override function doSkip():void
+  {</p>
+
+<pre><code>cleanContext();
+super.doSkip();
+</code></pre>
+
+<p>  }</p>
+
+<p>  protected override function complete():Boolean
+  {</p>
+
+<pre><code>cleanContext();
+return super.complete();
+</code></pre>
+
+<p>  }</p>
+
+<p>  private function cleanContext():void
+  {</p>
+
+<pre><code>_dynamicObject.remove();
+</code></pre>
+
+<p>  }
+}
+{% endcodeblock %}</p>
 
 <p>The following class is a concrete implementation of <code>AbstractContextTask</code>. That&rsquo;s why it gets the <code>HintComponent</code> injected (line 4). Please also note that this <code>Task</code> overrides the method <code>doStartContext()</code> (line 13). This way we ensure that the class already has been added to the <code>Context</code>.</p>
 
-<p><div class='bogus-wrapper'><notextile><figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-<span class='line-number'>19</span>
-<span class='line-number'>20</span>
-<span class='line-number'>21</span>
-<span class='line-number'>22</span>
-<span class='line-number'>23</span>
-<span class='line-number'>24</span>
-<span class='line-number'>25</span>
-</pre></td><td class='code'><pre><code class='actionscript3'><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="n">ShowHintTask</span> <span class="kd">extends</span> <span class="n">AbstractContextTask</span>
-</span><span class='line'><span class="o">{</span>
-</span><span class='line'>  <span class="o">[</span><span class="n">Inject</span><span class="o">]</span>
-</span><span class='line'>  <span class="kd">public</span> <span class="kd">var</span> <span class="n">hint</span><span class="p">:</span><span class="kt">HintComponent</span><span class="o">;&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span>  <span class="kd">private</span> <span class="kd">var</span> <span class="n">type</span><span class="p">:</span><span class="kt">HintType</span><span class="o">;&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span>  <span class="kd">public</span> <span class="kd">function </span><span class="nf">ShowHintTask</span><span class="o">(</span><span class="n">type</span><span class="o">:</span><span class="kt">HintType</span><span class="o">)</span>
-</span><span class='line'>  <span class="o">{&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="n">pre</span><span class="o">&gt;&lt;</span><span class="n">code</span><span class="o">&gt;</span><span class="k">this</span><span class="o">.</span><span class="na">type</span> <span class="o">=</span> <span class="n">type</span><span class="o">;</span>
-</span><span class='line'><span class="o">&lt;/</span><span class="n">code</span><span class="o">&gt;&lt;/</span><span class="n">pre</span><span class="o">&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span>  <span class="o">}&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span>  <span class="kd">protected</span> <span class="kd">override</span> <span class="kd">function </span><span class="nf">doStartContext</span><span class="o">():</span><span class="kt">void</span>
-</span><span class='line'>  <span class="o">{&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="n">pre</span><span class="o">&gt;&lt;</span><span class="n">code</span><span class="o">&gt;</span><span class="n">hint</span><span class="o">.</span><span class="na">showHint</span><span class="o">(</span><span class="n">type</span><span class="o">);</span>
-</span><span class='line'>
-</span><span class='line'><span class="n">complete</span><span class="o">();</span>
-</span><span class='line'><span class="o">&lt;/</span><span class="n">code</span><span class="o">&gt;&lt;/</span><span class="n">pre</span><span class="o">&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span>  <span class="o">}</span>
-</span><span class='line'><span class="o">}</span>
-</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+<p>{% codeblock lang:actionscript3 %}
+public class ShowHintTask extends AbstractContextTask
+{
+  [Inject]
+  public var hint:HintComponent;</p>
+
+<p>  private var type:HintType;</p>
+
+<p>  public function ShowHintTask(type:HintType)
+  {</p>
+
+<pre><code>this.type = type;
+</code></pre>
+
+<p>  }</p>
+
+<p>  protected override function doStartContext():void
+  {</p>
+
+<pre><code>hint.showHint(type);
+
+complete();
+</code></pre>
+
+<p>  }
+}
+{% endcodeblock %}</p>
 
 <p>The following code shows how everything can be glued together. Note, that you don&rsquo;t have to pass the <code>Context</code> to each task.</p>
 
-<p><div class='bogus-wrapper'><notextile><figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-<span class='line-number'>19</span>
-<span class='line-number'>20</span>
-</pre></td><td class='code'><pre><code class='actionscript3'><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="n">TaskController</span>
-</span><span class='line'><span class="o">{</span>
-</span><span class='line'>  <span class="o">[</span><span class="n">Inject</span><span class="o">]</span>
-</span><span class='line'>  <span class="kd">public</span> <span class="kd">var</span> <span class="n">context</span><span class="p">:</span><span class="kt">Context</span><span class="o">;&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span>  <span class="o">[</span><span class="n">Init</span><span class="o">]</span>
-</span><span class='line'>  <span class="kd">public</span> <span class="kd">function </span><span class="nf">initialize</span><span class="o">():</span><span class="kt">void</span>
-</span><span class='line'>  <span class="o">{&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="n">pre</span><span class="o">&gt;&lt;</span><span class="n">code</span><span class="o">&gt;</span><span class="kd">var</span> <span class="n">taskGroup</span><span class="p">:</span><span class="kt">SequentialContextTaskGroup</span> <span class="o">=</span> <span class="k">new</span> <span class="kt">SequentialContextTaskGroup</span><span class="o">(</span><span class="n">context</span><span class="o">);</span>
-</span><span class='line'>
-</span><span class='line'><span class="n">taskGroup</span><span class="o">.</span><span class="na">addTask</span><span class="o">(</span><span class="k">new</span> <span class="kt">ShowHintTask</span><span class="o">(</span><span class="n">HintType</span><span class="o">.</span><span class="na">ATTENTION</span><span class="o">));</span>
-</span><span class='line'><span class="n">taskGroup</span><span class="o">.</span><span class="na">addTask</span><span class="o">(</span><span class="k">new</span> <span class="kt">PointToTask</span><span class="o">(</span><span class="k">new</span> <span class="kt">Point</span><span class="o">(</span><span class="mi">3</span><span class="o">,</span> <span class="mi">5</span><span class="o">)));</span>
-</span><span class='line'><span class="c1">// add more tasks here...</span>
-</span><span class='line'>
-</span><span class='line'><span class="n">taskGroup</span><span class="o">.</span><span class="na">start</span><span class="o">();</span>
-</span><span class='line'><span class="o">&lt;/</span><span class="n">code</span><span class="o">&gt;&lt;/</span><span class="n">pre</span><span class="o">&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span>  <span class="o">}</span>
-</span><span class='line'><span class="o">}</span>
-</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+<p>{% codeblock lang:actionscript3 %}
+public class TaskController
+{
+  [Inject]
+  public var context:Context;</p>
+
+<p>  [Init]
+  public function initialize():void
+  {</p>
+
+<pre><code>var taskGroup:SequentialContextTaskGroup = new SequentialContextTaskGroup(context);
+
+taskGroup.addTask(new ShowHintTask(HintType.ATTENTION));
+taskGroup.addTask(new PointToTask(new Point(3, 5)));
+// add more tasks here...
+
+taskGroup.start();
+</code></pre>
+
+<p>  }
+}
+{% endcodeblock %}</p>
 
 <h2>Summary</h2>
 
@@ -352,71 +230,44 @@
 
 <p>Because a documentation is not available for this case it was a bit tricky to find the solution (thanks for the hint, Jens). This was the first result:</p>
 
-<p><div class='bogus-wrapper'><notextile><figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-<span class='line-number'>19</span>
-</pre></td><td class='code'><pre><code class='actionscript3'><span class='line'><span class="kd">var</span> <span class="n">contextBuilder</span><span class="p">:</span><span class="kt">ContextBuilder</span> <span class="o">=</span> <span class="n">ContextBuilder</span><span class="o">.</span><span class="na">newSetup</span><span class="o">()</span>
-</span><span class='line'>  <span class="o">.</span><span class="na">viewRoot</span><span class="o">(</span><span class="k">this</span><span class="o">)</span>
-</span><span class='line'>  <span class="o">.</span><span class="na">newBuilder</span><span class="o">();&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span><span class="kd">var</span> <span class="n">targetDef</span><span class="p">:</span><span class="kt">DynamicObjectDefinition</span> <span class="o">=</span> <span class="n">contextBuilder</span>
-</span><span class='line'>  <span class="o">.</span><span class="na">objectDefinition</span><span class="o">()</span>
-</span><span class='line'>  <span class="o">.</span><span class="na">forClass</span><span class="o">(</span><span class="n">CommandType</span><span class="o">)</span>
-</span><span class='line'>  <span class="o">.</span><span class="na">asDynamicObject</span><span class="o">()</span>
-</span><span class='line'>  <span class="o">.</span><span class="na">build</span><span class="o">();&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span><span class="n">DynamicCommandBuilder</span>
-</span><span class='line'>  <span class="o">.</span><span class="na">newBuilder</span><span class="o">(</span><span class="n">targetDef</span><span class="o">)</span>
-</span><span class='line'>  <span class="o">.</span><span class="na">builder</span>
-</span><span class='line'>  <span class="o">.</span><span class="na">messageType</span><span class="o">(</span><span class="n">MessageType</span><span class="o">)</span>
-</span><span class='line'>  <span class="o">.</span><span class="na">stateful</span><span class="o">(</span><span class="kc">false</span><span class="o">)</span>
-</span><span class='line'>  <span class="o">.</span><span class="na">build</span><span class="o">();&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span><span class="n">contextBuilder</span><span class="o">.</span><span class="na">config</span><span class="o">(</span><span class="n">ActionScriptConfig</span><span class="o">.</span><span class="na">forClass</span><span class="o">(</span><span class="n">MainConfig</span><span class="o">));</span>
-</span><span class='line'><span class="n">contextBuilder</span><span class="o">.</span><span class="na">build</span><span class="o">();</span>
-</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+<p>{% codeblock lang:actionscript3 %}
+var contextBuilder:ContextBuilder = ContextBuilder.newSetup()
+  .viewRoot(this)
+  .newBuilder();</p>
+
+<p>var targetDef:DynamicObjectDefinition = contextBuilder
+  .objectDefinition()
+  .forClass(CommandType)
+  .asDynamicObject()
+  .build();</p>
+
+<p>DynamicCommandBuilder
+  .newBuilder(targetDef)
+  .builder
+  .messageType(MessageType)
+  .stateful(false)
+  .build();</p>
+
+<p>contextBuilder.config(ActionScriptConfig.forClass(MainConfig));
+contextBuilder.build();
+{% endcodeblock %}</p>
 
 <p>Note that you can not use the <code>ActionScriptContexBuilder.build()</code> notation anymore. Instead you have to configure the whole context via the DSL. In line 18, the actual configuration (<code>MainConfig</code>) which contains all object definitions is passed in.</p>
 
 <p>Because this configuration is very hard to read and redundant if you want to map several Commands, I encapsulated the mapping to a separate class <code>CommandMap</code>. Now the configuration looks like this:</p>
 
-<p><div class='bogus-wrapper'><notextile><figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-</pre></td><td class='code'><pre><code class='actionscript3'><span class='line'><span class="kd">var</span> <span class="n">contextBuilder</span><span class="p">:</span><span class="kt">ContextBuilder</span> <span class="o">=</span> <span class="n">ContextBuilder</span><span class="o">.</span><span class="na">newSetup</span><span class="o">()</span>
-</span><span class='line'>  <span class="o">.</span><span class="na">viewRoot</span><span class="o">(</span><span class="k">this</span><span class="o">)</span>
-</span><span class='line'>  <span class="o">.</span><span class="na">newBuilder</span><span class="o">();&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span><span class="kd">var</span> <span class="n">commandMap</span><span class="p">:</span><span class="kt">CommandMap</span> <span class="o">=</span> <span class="k">new</span> <span class="kt">CommandMap</span><span class="o">(</span><span class="n">contextBuilder</span><span class="o">);</span>
-</span><span class='line'><span class="n">commandMap</span><span class="o">.</span><span class="na">register</span><span class="o">(</span><span class="n">LoginCommand</span><span class="o">,</span> <span class="n">LoginRequest</span><span class="o">);</span>
-</span><span class='line'><span class="n">commandMap</span><span class="o">.</span><span class="na">register</span><span class="o">(</span><span class="n">LogoutCommand</span><span class="o">,</span> <span class="n">LogoutRequest</span><span class="o">);&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span><span class="n">contextBuilder</span><span class="o">.</span><span class="na">config</span><span class="o">(</span><span class="n">ActionScriptConfig</span><span class="o">.</span><span class="na">forClass</span><span class="o">(</span><span class="n">MainConfig</span><span class="o">));</span>
-</span><span class='line'><span class="n">contextBuilder</span><span class="o">.</span><span class="na">build</span><span class="o">();</span>
-</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+<p>{% codeblock lang:actionscript3 %}
+var contextBuilder:ContextBuilder = ContextBuilder.newSetup()
+  .viewRoot(this)
+  .newBuilder();</p>
+
+<p>var commandMap:CommandMap = new CommandMap(contextBuilder);
+commandMap.register(LoginCommand, LoginRequest);
+commandMap.register(LogoutCommand, LogoutRequest);</p>
+
+<p>contextBuilder.config(ActionScriptConfig.forClass(MainConfig));
+contextBuilder.build();
+{% endcodeblock %}</p>
 
 <p>Until now I found no way to map or un-map Commands after the context has been built. The only way would be to destroy the context they are registered in.</p>
 
@@ -433,55 +284,32 @@
 
 <p>Because Parsley reflects on the types you can pass data directly to the execute method. This way, each concrete execute method can receive strong typed parameters (see line 9). No framework class has to be extended for custom Commands. This is how a command can look like:</p>
 
-<p><div class='bogus-wrapper'><notextile><figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-<span class='line-number'>19</span>
-<span class='line-number'>20</span>
-<span class='line-number'>21</span>
-<span class='line-number'>22</span>
-<span class='line-number'>23</span>
-<span class='line-number'>24</span>
-</pre></td><td class='code'><pre><code class='actionscript3'><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="n">LogoutCommand</span>
-</span><span class='line'><span class="o">{</span>
-</span><span class='line'>  <span class="o">[</span><span class="n">Inject</span><span class="o">]</span>
-</span><span class='line'>  <span class="kd">public</span> <span class="kd">var</span> <span class="n">service</span><span class="p">:</span><span class="kt">ISessionService</span><span class="o">;&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span>  <span class="o">[</span><span class="n">MessageDispatcher</span><span class="o">]</span>
-</span><span class='line'>  <span class="kd">public</span> <span class="kd">var</span> <span class="n">dispatcher</span><span class="p">:</span><span class="kt">Function</span><span class="o">;&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span>  <span class="kd">public</span> <span class="kd">function </span><span class="nf">execute</span><span class="o">(</span><span class="n">message</span><span class="o">:</span><span class="kt">LogoutRequest</span><span class="o">)</span> <span class="o">:</span> <span class="kt">ServiceRequest</span>
-</span><span class='line'>  <span class="o">{&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="n">pre</span><span class="o">&gt;&lt;</span><span class="n">code</span><span class="o">&gt;</span><span class="k">return</span> <span class="n">service</span><span class="o">.</span><span class="na">logout</span><span class="o">(</span><span class="n">message</span><span class="o">.</span><span class="na">sessionId</span><span class="o">);</span>
-</span><span class='line'><span class="o">&lt;/</span><span class="n">code</span><span class="o">&gt;&lt;/</span><span class="n">pre</span><span class="o">&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span>  <span class="o">}&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span>  <span class="kd">public</span> <span class="kd">function </span><span class="nf">result</span><span class="o">(</span><span class="n">success</span><span class="o">:</span><span class="kt">Boolean</span><span class="o">)</span> <span class="o">:</span> <span class="kt">void</span>
-</span><span class='line'>  <span class="o">{&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="n">pre</span><span class="o">&gt;&lt;</span><span class="n">code</span><span class="o">&gt;</span><span class="n">dispatcher</span><span class="o">(</span><span class="k">new</span> <span class="kt">LogoutSuccess</span><span class="o">(</span><span class="n">success</span><span class="o">));</span>
-</span><span class='line'><span class="o">&lt;/</span><span class="n">code</span><span class="o">&gt;&lt;/</span><span class="n">pre</span><span class="o">&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span>  <span class="o">}</span>
-</span><span class='line'><span class="o">}</span>
-</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+<p>{% codeblock lang:actionscript3 %}
+public class LogoutCommand
+{
+  [Inject]
+  public var service:ISessionService;</p>
+
+<p>  [MessageDispatcher]
+  public var dispatcher:Function;</p>
+
+<p>  public function execute(message:LogoutRequest) : ServiceRequest
+  {</p>
+
+<pre><code>return service.logout(message.sessionId);
+</code></pre>
+
+<p>  }</p>
+
+<p>  public function result(success:Boolean) : void
+  {</p>
+
+<pre><code>dispatcher(new LogoutSuccess(success));
+</code></pre>
+
+<p>  }
+}
+{% endcodeblock %}</p>
 
 <p>I also like the native support of synchronous and asynchronous Commands in Parsley. No special configuration is necessary, because Parsley reflects on the return type of the <code>execute()</code> method (line 9, <code>ServiceRequest</code>).</p>
 

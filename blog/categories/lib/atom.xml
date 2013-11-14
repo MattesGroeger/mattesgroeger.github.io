@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Lib | Mattes Groeger]]></title>
   <link href="http://MattesGroeger.github.io/blog/categories/lib/atom.xml" rel="self"/>
   <link href="http://MattesGroeger.github.io/"/>
-  <updated>2013-11-13T23:54:59+01:00</updated>
+  <updated>2013-11-14T23:40:51+01:00</updated>
   <id>http://MattesGroeger.github.io/</id>
   <author>
     <name><![CDATA[Mattes Groeger]]></name>
@@ -23,7 +23,7 @@
 <!-- more -->
 
 
-<p><img class="center" src="/images/posts/WindowsSystemTray.jpg"></p>
+<p>{% img center /images/posts/WindowsSystemTray.jpg %}</p>
 
 <h2>Demo</h2>
 
@@ -38,135 +38,82 @@
 
 <p>The first class that I create is the <code>SystemTrayIconBuilder</code> (it must implement <code>IconBuilder</code> interface). This class is responsible for composing the system tray icon. It also sets the general icon size to 16 by 16 pixels.</p>
 
-<p><div class='bogus-wrapper'><notextile><figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-<span class='line-number'>19</span>
-<span class='line-number'>20</span>
-<span class='line-number'>21</span>
-<span class='line-number'>22</span>
-<span class='line-number'>23</span>
-<span class='line-number'>24</span>
-<span class='line-number'>25</span>
-<span class='line-number'>26</span>
-<span class='line-number'>27</span>
-<span class='line-number'>28</span>
-<span class='line-number'>29</span>
-<span class='line-number'>30</span>
-<span class='line-number'>31</span>
-</pre></td><td class='code'><pre><code class='as3'><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="n">SystemTrayIconBuilder</span> <span class="kd">extends</span> <span class="n">AbstractIconBuilder</span> <span class="kd">implements</span> <span class="n">IconBuilder</span>
-</span><span class='line'><span class="o">{</span>
-</span><span class='line'>  <span class="kd">public</span> <span class="kd">override</span> <span class="kd">function </span><span class="nf">createNewIcon</span><span class="o">(</span><span class="n">width</span> <span class="o">:</span> <span class="kt">int</span><span class="o">,</span> <span class="n">height</span> <span class="o">:</span> <span class="kt">int</span><span class="o">)</span> <span class="o">:</span> <span class="kt">void</span>
-</span><span class='line'>  <span class="o">{&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="n">pre</span><span class="o">&gt;&lt;</span><span class="n">code</span><span class="o">&gt;</span><span class="kd">super</span><span class="o">.</span><span class="na">createNewIcon</span><span class="o">(</span><span class="mi">16</span><span class="o">,</span> <span class="mi">16</span><span class="o">);</span>
-</span><span class='line'><span class="o">&lt;/</span><span class="n">code</span><span class="o">&gt;&lt;/</span><span class="n">pre</span><span class="o">&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span>  <span class="o">}&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span>  <span class="kd">public</span> <span class="kd">override</span> <span class="kd">function </span><span class="nf">addBackground</span><span class="o">(</span> <span class="n">background</span> <span class="o">:</span> <span class="kt">Bitmap</span><span class="o">)</span> <span class="o">:</span> <span class="kt">void</span>
-</span><span class='line'>  <span class="o">{&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="n">pre</span><span class="o">&gt;&lt;</span><span class="n">code</span><span class="o">&gt;</span><span class="n">background</span><span class="o">.</span><span class="na">width</span> <span class="o">=</span> <span class="n">background</span><span class="o">.</span><span class="na">height</span> <span class="o">=</span> <span class="mi">16</span><span class="o">;</span>
-</span><span class='line'>
-</span><span class='line'><span class="n">container</span><span class="o">.</span><span class="na">addChild</span><span class="o">(</span><span class="n">background</span><span class="o">);</span>
-</span><span class='line'><span class="o">&lt;/</span><span class="n">code</span><span class="o">&gt;&lt;/</span><span class="n">pre</span><span class="o">&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span>  <span class="o">}&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span>  <span class="kd">public</span> <span class="kd">override</span> <span class="kd">function </span><span class="nf">addBadge</span><span class="o">(</span><span class="n">label</span> <span class="o">:</span> <span class="kt">String</span><span class="o">)</span> <span class="o">:</span> <span class="kt">void</span>
-</span><span class='line'>  <span class="o">{&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="n">pre</span><span class="o">&gt;&lt;</span><span class="n">code</span><span class="o">&gt;</span><span class="kd">var</span> <span class="n">badge</span> <span class="p">:</span> <span class="kt">TrayIconBadge</span> <span class="o">=</span> <span class="k">new</span> <span class="kt">TrayIconBadge</span><span class="o">();</span>
-</span><span class='line'><span class="n">badge</span><span class="o">.</span><span class="na">label</span><span class="o">.</span><span class="na">text</span> <span class="o">=</span> <span class="n">label</span><span class="o">;</span>
-</span><span class='line'>
-</span><span class='line'><span class="n">container</span><span class="o">.</span><span class="na">addChild</span><span class="o">(</span><span class="n">badge</span><span class="o">);</span>
-</span><span class='line'><span class="o">&lt;/</span><span class="n">code</span><span class="o">&gt;&lt;/</span><span class="n">pre</span><span class="o">&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span>  <span class="o">}</span>
-</span><span class='line'><span class="o">}</span>
-</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+<p>{% codeblock lang:as3 %}
+public class SystemTrayIconBuilder extends AbstractIconBuilder implements IconBuilder
+{
+  public override function createNewIcon(width : int, height : int) : void
+  {</p>
+
+<pre><code>super.createNewIcon(16, 16);
+</code></pre>
+
+<p>  }</p>
+
+<p>  public override function addBackground( background : Bitmap) : void
+  {</p>
+
+<pre><code>background.width = background.height = 16;
+
+container.addChild(background);
+</code></pre>
+
+<p>  }</p>
+
+<p>  public override function addBadge(label : String) : void
+  {</p>
+
+<pre><code>var badge : TrayIconBadge = new TrayIconBadge();
+badge.label.text = label;
+
+container.addChild(badge);
+</code></pre>
+
+<p>  }
+}
+{% endcodeblock %}</p>
 
 <p>Please note the the <code>TrayIconBadge</code> class used in this example (line 17) is a MovieClip designed and exported (swc) with the Flash IDE. I used a pixel font for better readability. Because of the small icon size the visible letter count is also limited.</p>
 
 <p>The next step is to create a custom <code>SystemTrayIconBadge</code> which has to implement the <code>IconBadge</code> interface. To avoid redundancies I extend the <code>DockIconBadge</code> class and override the factory method &ldquo;<code>createIconBuilder()</code>&rdquo;.</p>
 
-<p><div class='bogus-wrapper'><notextile><figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-</pre></td><td class='code'><pre><code class='as3'><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="n">SystemTrayIconBadge</span> <span class="kd">extends</span> <span class="n">DockIconBadge</span>
-</span><span class='line'><span class="o">{</span>
-</span><span class='line'>  <span class="kd">protected</span> <span class="kd">override</span> <span class="kd">function </span><span class="nf">createIconBuilder</span><span class="o">()</span> <span class="o">:</span> <span class="kt">IconBuilder</span>
-</span><span class='line'>  <span class="o">{&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="n">pre</span><span class="o">&gt;&lt;</span><span class="n">code</span><span class="o">&gt;</span><span class="k">return</span> <span class="k">new</span> <span class="kt">SystemTrayIconBuilder</span><span class="o">();</span>
-</span><span class='line'><span class="o">&lt;/</span><span class="n">code</span><span class="o">&gt;&lt;/</span><span class="n">pre</span><span class="o">&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span>  <span class="o">}</span>
-</span><span class='line'><span class="o">}</span>
-</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+<p>{% codeblock lang:as3 %}
+public class SystemTrayIconBadge extends DockIconBadge
+{
+  protected override function createIconBuilder() : IconBuilder
+  {</p>
+
+<pre><code>return new SystemTrayIconBuilder();
+</code></pre>
+
+<p>  }
+}
+{% endcodeblock %}</p>
 
 <p>The last step is to build the <code>CrossPlatformIconBadgeFactory</code> which implements <code>IconBadgeFactory</code>. It is responsible for detecting the users operating system and returning the corresponding <code>IconBadge</code>. Again I extend the existing factory class to avoid redundancies:</p>
 
-<p><div class='bogus-wrapper'><notextile><figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-</pre></td><td class='code'><pre><code class='as3'><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="n">CrossPlatformIconBadgeFactory</span> <span class="kd">extends</span>
-</span><span class='line'><span class="n">AirIconBadgeFactroy</span>
-</span><span class='line'><span class="o">{</span>
-</span><span class='line'>  <span class="kd">public</span> <span class="kd">override</span> <span class="kd">function </span><span class="nf">create</span><span class="o">()</span> <span class="o">:</span> <span class="kt">IconBadge</span>
-</span><span class='line'>  <span class="o">{&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="n">pre</span><span class="o">&gt;&lt;</span><span class="n">code</span><span class="o">&gt;</span><span class="k">if</span> <span class="o">(</span><span class="n">NativeApplication</span><span class="o">.</span><span class="na">supportsSystemTrayIcon</span><span class="o">)</span>
-</span><span class='line'>  <span class="k">return</span> <span class="k">new</span> <span class="kt">SystemTrayIconBadge</span><span class="o">();</span>
-</span><span class='line'>
-</span><span class='line'>  <span class="k">return</span> <span class="kd">super</span><span class="o">.</span><span class="na">create</span><span class="o">();</span>
-</span><span class='line'><span class="o">&lt;/</span><span class="n">code</span><span class="o">&gt;&lt;/</span><span class="n">pre</span><span class="o">&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span>  <span class="o">}</span>
-</span><span class='line'><span class="o">}</span>
-</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+<p>{% codeblock lang:as3 %}
+public class CrossPlatformIconBadgeFactory extends
+AirIconBadgeFactroy
+{
+  public override function create() : IconBadge
+  {</p>
+
+<pre><code>if (NativeApplication.supportsSystemTrayIcon)
+  return new SystemTrayIconBadge();
+
+  return super.create();
+</code></pre>
+
+<p>  }
+}
+{% endcodeblock %}</p>
 
 <p>Finally for using the new factory it has to be assigned to the <code>AirIconBadge</code> class.</p>
 
-<p><div class='bogus-wrapper'><notextile><figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-</pre></td><td class='code'><pre><code class='as3'><span class='line'><span class="n">AirIconBadge</span><span class="o">.</span><span class="na">factory</span> <span class="o">=</span> <span class="k">new</span> <span class="kt">CrossPlatformIconBadgeFactory</span><span class="o">();</span>
-</span><span class='line'><span class="n">AirIconBadge</span><span class="o">.</span><span class="na">label</span> <span class="o">=</span> <span class="o">&amp;</span><span class="n">ldquo</span><span class="o">;</span><span class="mi">1</span><span class="o">&amp;</span><span class="n">rdquo</span><span class="o">;;</span>
-</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+<p>{% codeblock lang:as3 %}
+AirIconBadge.factory = new CrossPlatformIconBadgeFactory();
+AirIconBadge.label = &ldquo;1&rdquo;;
+{% endcodeblock %}</p>
 
 <h2>Summary</h2>
 
@@ -191,11 +138,11 @@
 <!-- more -->
 
 
-<p><img class="right" src="/images/posts/mail.png"></p>
+<p>{% img right /images/posts/mail.png %}</p>
 
 <p>With OS X you can use the dock icon for that purpose. The Cocoa Framework allows to display a user defined text consistently on top of the application dock tile (icon). E.g. the screenshot at the right shows 2 unread mails in the inbox.</p>
 
-<p><img class="left" src="/images/posts/comparision.png" title="Native and emulated badge" ></p>
+<p>{% img left /images/posts/comparision.png Native and emulated badge %}</p>
 
 <p>Unfortunately the Air runtime allows no access to this native functionality. Thats why the idea for this library came up. It tries to emulate the native badge with the possibilities Air provides (see left image). Until now only the OS X badge is supported but a Windows implementation is possible, too. I will demonstrate the extensibility in one of the following blog posts.</p>
 
@@ -205,51 +152,37 @@
 
 <p>With the static property <code>label</code> you can assign any string that should be displayed. Thats it.</p>
 
-<p><div class='bogus-wrapper'><notextile><figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='as3'><span class='line'><span class="n">AirIconBadge</span><span class="o">.</span><span class="na">label</span> <span class="o">=</span> <span class="o">&amp;</span><span class="n">ldquo</span><span class="o">;</span><span class="mi">1</span><span class="o">&amp;</span><span class="n">rdquo</span><span class="o">;;</span>
-</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+<p>{% codeblock lang:as3 %}
+AirIconBadge.label = &ldquo;1&rdquo;;
+{% endcodeblock %}</p>
 
 <p>If you assign an empty string or <code>null</code>, no badge will be displayed. To remove the current badge label you can also call the method <code>clearLabel()</code>.</p>
 
 <p>By default the biggest icon defined within the <a href="http://livedocs.adobe.com/flex/3/html/help.html?content=File_formats_1.html">application descriptor</a> will be loaded and shown. If no icon has been defined or the path is incorrect you must assign a <code>customIcon</code> in order to see the label. You can also assign a <code>customIcon</code> if you want to replace the default icon temporarily. Removing the <code>customIcon</code> will show up the default icon again.</p>
 
-<p><div class='bogus-wrapper'><notextile><figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='as3'><span class='line'><span class="n">AirIconBadge</span><span class="o">.</span><span class="na">customIcon</span> <span class="o">=</span> <span class="k">new</span> <span class="kt">CustomIconBitmap</span><span class="o">();</span>
-</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+<p>{% codeblock lang:as3 %}
+AirIconBadge.customIcon = new CustomIconBitmap();
+{% endcodeblock %}</p>
 
 <p>If neither of the icons could be loaded, no badge will be displayed. In this case an error event will be dispatched (<code>UpdateErrorEvent</code>). To get status information about the internals you can register for the InformationEvent. Both events will be dispatched by the <code>IconBadge</code> witch is statically stored within the AirIconBadge.</p>
 
-<p><div class='bogus-wrapper'><notextile><figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-</pre></td><td class='code'><pre><code class='as3'><span class='line'><span class="n">AirIconBadge</span><span class="o">.</span><span class="na">customIcon</span> <span class="o">=</span> <span class="k">new</span> <span class="kt">CustomIconBitmap</span><span class="o">();&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span><span class="kd">var</span> <span class="n">iconBadge</span> <span class="p">:</span> <span class="kt">IconBadge</span> <span class="o">=</span> <span class="n">AirIconBadge</span><span class="o">.</span><span class="na">iconBadge</span><span class="o">;</span>
-</span><span class='line'><span class="n">iconBadge</span><span class="o">.</span><span class="na">addEventListener</span><span class="o">(</span><span class="n">UpdateErrorEvent</span><span class="o">.</span><span class="na">UPDATE_ERROR</span><span class="o">,</span> <span class="n">handleError</span><span class="o">);</span>
-</span><span class='line'><span class="n">iconBadge</span><span class="o">.</span><span class="na">addEventListener</span><span class="o">(</span><span class="n">InformationEvent</span><span class="o">.</span><span class="na">INFORMATION</span><span class="o">,</span> <span class="n">handleInformation</span><span class="o">);&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span><span class="kd">function </span><span class="nf">handleError</span><span class="o">(</span><span class="n">event</span> <span class="o">:</span> <span class="kt">UpdateErrorEvent</span><span class="o">)</span> <span class="o">:</span> <span class="kt">void</span>
-</span><span class='line'><span class="o">{</span>
-</span><span class='line'>  <span class="c1">// do some error handling</span>
-</span><span class='line'><span class="o">}&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span><span class="kd">function </span><span class="nf">handleInformation</span><span class="o">(</span><span class="n">event</span> <span class="o">:</span> <span class="kt">InformationEvent</span><span class="o">)</span> <span class="o">:</span> <span class="kt">void</span>
-</span><span class='line'><span class="o">{</span>
-</span><span class='line'>  <span class="nf">trace</span><span class="o">(</span><span class="n">event</span><span class="o">.</span><span class="na">information</span><span class="o">.</span><span class="na">toString</span><span class="o">());</span>
-</span><span class='line'><span class="o">}</span>
-</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+<p>{% codeblock lang:as3 %}
+AirIconBadge.customIcon = new CustomIconBitmap();</p>
+
+<p>var iconBadge : IconBadge = AirIconBadge.iconBadge;
+iconBadge.addEventListener(UpdateErrorEvent.UPDATE_ERROR, handleError);
+iconBadge.addEventListener(InformationEvent.INFORMATION, handleInformation);</p>
+
+<p>function handleError(event : UpdateErrorEvent) : void
+{
+  // do some error handling
+}</p>
+
+<p>function handleInformation(event : InformationEvent) : void
+{
+  trace(event.information.toString());
+}
+{% endcodeblock %}</p>
 
 <h2>Download &amp; Demo</h2>
 
