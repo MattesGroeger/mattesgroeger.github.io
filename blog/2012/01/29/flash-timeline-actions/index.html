@@ -50,7 +50,7 @@
   <header role="banner"><hgroup>
   <h1><a href="/">Mattes Groeger</a></h1>
   
-    <h2>iOS/Ruby Developer</h2>
+    <h2>iOS Developer</h2>
   
 </hgroup>
 
@@ -129,7 +129,7 @@
 
 <p>This illustration shows the relevant parts that I&rsquo;ll explain in the following sections.</p>
 
-<p><img class="center" src="http://blog.mattes-groeger.de/wp-content/uploads/2012/01/Graph.png" title="Timeline Actions Overview" ></p>
+<p><img class="center" src="/images/posts/Graph.png" title="Timeline Actions Overview" ></p>
 
 <h3>The basic concept</h3>
 
@@ -146,7 +146,7 @@
 
 <p>This library contains the <code>playSound()</code> function as well as a static <code>SoundDelegate</code> class. The <code>SoundDelegate</code> is the connection between <code>playSound()</code> and sound logic. The next section &ldquo;Technical implementation&rdquo; will give you more insight into the <code>SWC</code> contents.</p>
 
-<p><img class="center" src="http://blog.mattes-groeger.de/wp-content/uploads/2012/01/actionscript-settings.png" title="Advanced ActionScript 3.0 Settings" ></p>
+<p><img class="center" src="/images/posts/ActionscriptSettings.png" title="Advanced ActionScript 3.0 Settings" ></p>
 
 <p>You can reference the <code>timeline-sound.swc</code> in each <code>FLA</code> now. Therefore open your <code>FLA</code> and navigate to <code>File -&amp;gt; ActionScript Settings...</code> Here go to the second tab &ldquo;<code>Library path</code>&rdquo; and select the &ldquo;<code>Browse to SWC file</code>&rdquo; button (1). After choosing the <code>timeline-sound.swc</code> it shows up in the panel underneath (2). Now you can use the <code>playSound()</code> function as frame script without getting a compiler error. At the same time your sound logic keeps separate.</p>
 
@@ -154,7 +154,7 @@
 
 <p>This section will explain how top-level function, delegate and sound logic get wired together. Therefore lets see what the contents of the <code>timeline-sound.swc</code> are. You can <a href="https://github.com/MattesGroeger/as3-timeline-sound">browse and download the source code from GitHub</a> or just read on.</p>
 
-<p><img class="center" src="http://blog.mattes-groeger.de/wp-content/uploads/2012/01/timeline-sound-contents.png" title="Contents of &#39;timeline-sound.swc&#39;" ></p>
+<p><img class="center" src="/images/posts/TimelineSoundContents.png" title="Contents of &#39;timeline-sound.swc&#39;" ></p>
 
 <p>The <code>SoundDelegate</code> contains only static methods. Therefore it can be reached from anywhere in the application (including the top-level function <code>playSound()</code>). It&rsquo;s implementation is rather simple. It basically just holds a reference to another instance that it delegates to (line 17). Again, for encapsulation reasons this is implemented as an interface <code>ISoundAdapter</code> (line 3).</p>
 
@@ -270,7 +270,7 @@
 
 <p>The idea is to embed all sounds that could be triggered from the timeline in a single <code>FLA</code>, so the artists can maintain it. Sounds have to be exported for ActionScript, where the linkage name matches the string that will be later used for the <code>playSound()</code> method parameter. In order to make the sounds available to the sound logic we chose to compile them into the sound module itself. This way we get good compression and have no additional loading effort. Note however that this approach wouldn&rsquo;t make sense for large sound files.</p>
 
-<p><img class="center" src="http://blog.mattes-groeger.de/wp-content/uploads/2012/01/sound-library.png" title="sounds.fla" ></p>
+<p><img class="center" src="/images/posts/SoundLibrary.png" title="sounds.fla" ></p>
 
 <p>The question is now, how do we get new sounds automatically compiled into the sound module? What we did, we created a Sprite that contains all sounds. The <code>FLA</code> file then gets compiled into a <code>SWC</code> library and is part of the sound module classpath. To enforce the inclusion of the sound definitions the exported <code>SoundInclusionContainer</code> class is once referenced in the module:</p>
 
@@ -361,6 +361,8 @@
       
         <a class="basic-alignment left" href="/blog/2011/03/13/context-aware-tasks/" title="Previous Post: Context-Aware Tasks">&laquo; Context-Aware Tasks</a>
       
+      
+        <a class="basic-alignment right" href="/blog/2012/11/11/kiwi-testing-with-style-for-ios/" title="Next Post: Kiwi - iOS Testing with Style">Kiwi - iOS Testing with Style &raquo;</a>
       
     </p>
   </footer>

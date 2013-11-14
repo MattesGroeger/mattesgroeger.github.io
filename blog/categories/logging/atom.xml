@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Logging | Mattes Groeger]]></title>
   <link href="http://MattesGroeger.github.io/blog/categories/logging/atom.xml" rel="self"/>
   <link href="http://MattesGroeger.github.io/"/>
-  <updated>2013-11-14T23:40:51+01:00</updated>
+  <updated>2013-11-15T00:03:25+01:00</updated>
   <id>http://MattesGroeger.github.io/</id>
   <author>
     <name><![CDATA[Mattes Groeger]]></name>
@@ -23,7 +23,7 @@
 <!-- more -->
 
 
-<p>{% img /images/posts/trazzle.jpg Trazzle %}</p>
+<p><img src="/images/posts/trazzle.jpg" title="Trazzle" ></p>
 
 <p>All source files are <a href="http://github.com/nesium/trazzlelib-as3">available on GitHub</a> as well as a <a href="http://github.com/nesium/trazzle-demo-app">simple example</a>.</p>
 
@@ -33,32 +33,39 @@
 
 <p>The first step is to initialize to logging framework:</p>
 
-<p>{% codeblock lang:actionscript3 %}
-zz_init(stage, &ldquo;Logger app title&rdquo;);
-{% endcodeblock %}</p>
+<p><div class='bogus-wrapper'><notextile><figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='actionscript3'><span class='line'><span class="n">zz_init</span><span class="o">(</span><span class="n">stage</span><span class="o">,</span> <span class="o">&amp;</span><span class="n">ldquo</span><span class="o">;</span><span class="n">Logger</span> <span class="n">app</span> <span class="n">title</span><span class="o">&amp;</span><span class="n">rdquo</span><span class="o">;);</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
 
 <p><em>Please note:</em> The logging only works if you import the class <code>TrazzleLogger</code>. The reason why the demo application works: the <code>StatusBar</code> class holds a reference to <code>TrazzleLogger</code>. But normal logging will retrieve the reference only dynamically at runtime, so you have to take care of importing it on your own.</p>
 
 <p>After initialization you can trigger the log messages. By default they will be displayed as plain white text. To make use of the different log levels you have to prepend one of the following characters:</p>
 
-<p>{% codeblock lang:actionscript3 %}
-log(&ldquo;normal&rdquo;);
-log(&ldquo;d debug&rdquo;);
-log(&ldquo;i info&rdquo;);
-log(&ldquo;n notice&rdquo;);
-log(&ldquo;w warning&rdquo;);
-log(&ldquo;e error&rdquo;);
-log(&ldquo;c critical&rdquo;);
-log(&ldquo;f fatal&rdquo;);
-{% endcodeblock %}</p>
+<p><div class='bogus-wrapper'><notextile><figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+</pre></td><td class='code'><pre><code class='actionscript3'><span class='line'><span class="n">log</span><span class="o">(&amp;</span><span class="n">ldquo</span><span class="o">;</span><span class="n">normal</span><span class="o">&amp;</span><span class="n">rdquo</span><span class="o">;);</span>
+</span><span class='line'><span class="n">log</span><span class="o">(&amp;</span><span class="n">ldquo</span><span class="o">;</span><span class="n">d</span> <span class="n">debug</span><span class="o">&amp;</span><span class="n">rdquo</span><span class="o">;);</span>
+</span><span class='line'><span class="n">log</span><span class="o">(&amp;</span><span class="n">ldquo</span><span class="o">;</span><span class="n">i</span> <span class="n">info</span><span class="o">&amp;</span><span class="n">rdquo</span><span class="o">;);</span>
+</span><span class='line'><span class="n">log</span><span class="o">(&amp;</span><span class="n">ldquo</span><span class="o">;</span><span class="n">n</span> <span class="n">notice</span><span class="o">&amp;</span><span class="n">rdquo</span><span class="o">;);</span>
+</span><span class='line'><span class="n">log</span><span class="o">(&amp;</span><span class="n">ldquo</span><span class="o">;</span><span class="n">w</span> <span class="n">warning</span><span class="o">&amp;</span><span class="n">rdquo</span><span class="o">;);</span>
+</span><span class='line'><span class="n">log</span><span class="o">(&amp;</span><span class="n">ldquo</span><span class="o">;</span><span class="n">e</span> <span class="n">error</span><span class="o">&amp;</span><span class="n">rdquo</span><span class="o">;);</span>
+</span><span class='line'><span class="n">log</span><span class="o">(&amp;</span><span class="n">ldquo</span><span class="o">;</span><span class="n">c</span> <span class="n">critical</span><span class="o">&amp;</span><span class="n">rdquo</span><span class="o">;);</span>
+</span><span class='line'><span class="n">log</span><span class="o">(&amp;</span><span class="n">ldquo</span><span class="o">;</span><span class="n">f</span> <span class="n">fatal</span><span class="o">&amp;</span><span class="n">rdquo</span><span class="o">;);</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
 
 <p>This syntax is one of the main differences to other logging frameworks. Because of this convention it es very fast to use. You don&rsquo;t have to retrieve a logger instance and define a strong typed log level. Unfortunately the drawback is, you have to know the convention and you are responsible to use it correctly as there is no compile time check.</p>
 
 <p>You can also use the classical <code>printf</code> behavior which allows to define a string with placeholders that will be replaced at runtime. Again, in order to use this feature you have to make sure that the method printf is compiled into the application.</p>
 
-<p>{% codeblock lang:actionscript3 %}
-logf(&ldquo;There is a difference between %s and %s&rdquo;, &ldquo;good&rdquo;, &ldquo;evil&rdquo;);
-{% endcodeblock %}</p>
+<p><div class='bogus-wrapper'><notextile><figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='actionscript3'><span class='line'><span class="n">logf</span><span class="o">(&amp;</span><span class="n">ldquo</span><span class="o">;</span><span class="n">There</span> <span class="k">is</span> <span class="n">a</span> <span class="n">difference</span> <span class="n">between</span> <span class="o">%</span><span class="n">s</span> <span class="n">and</span> <span class="o">%</span><span class="n">s</span><span class="o">&amp;</span><span class="n">rdquo</span><span class="o">;,</span> <span class="o">&amp;</span><span class="n">ldquo</span><span class="o">;</span><span class="n">good</span><span class="o">&amp;</span><span class="n">rdquo</span><span class="o">;,</span> <span class="o">&amp;</span><span class="n">ldquo</span><span class="o">;</span><span class="n">evil</span><span class="o">&amp;</span><span class="n">rdquo</span><span class="o">;);</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
 
 <p>Furthermore with the function <code>zz_inspect(object)</code> you should be able to see all the fields and values of an instance. For some reason I didn&rsquo;t get it to work. Please comment below if you found a solution.</p>
 
@@ -66,7 +73,7 @@ logf(&ldquo;There is a difference between %s and %s&rdquo;, &ldquo;good&rdquo;, 
 
 <p>In contrast to other logging frameworks it is not possible to configure the logging visibility for certain packages and log levels from within the flash client. Instead the configuration will completely take place in the Trazzle application by using the filters window. Here you can define and combine different rules. Excluding specific packages is not possible. You can save each filter set for later usage.</p>
 
-<p>{% img /images/posts/trazzleFilters.png Trazzle Filters %}</p>
+<p><img src="/images/posts/trazzleFilters.png" title="Trazzle Filters" ></p>
 
 <h2>Performance Monitor</h2>
 
