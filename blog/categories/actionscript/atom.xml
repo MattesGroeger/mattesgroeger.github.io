@@ -4,7 +4,7 @@
   <title><![CDATA[Category: ActionScript | Mattes Groeger]]></title>
   <link href="http://MattesGroeger.github.io/blog/categories/actionscript/atom.xml" rel="self"/>
   <link href="http://MattesGroeger.github.io/"/>
-  <updated>2013-11-15T17:26:12+01:00</updated>
+  <updated>2013-11-15T21:32:54+01:00</updated>
   <id>http://MattesGroeger.github.io/</id>
   <author>
     <name><![CDATA[Mattes Groeger]]></name>
@@ -12,6 +12,250 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Flash Timeline Actions]]></title>
+    <link href="http://MattesGroeger.github.io/blog/2012/01/29/flash-timeline-actions/"/>
+    <updated>2012-01-29T17:12:00+01:00</updated>
+    <id>http://MattesGroeger.github.io/blog/2012/01/29/flash-timeline-actions</id>
+    <content type="html"><![CDATA[<p>A proper designer-developer workflow is essential, especially in bigger teams. By separating logic and view (e.g. via <a href="http://en.wikipedia.org/wiki/Model%E2%80%93view%E2%80%93controller">MVC Design Pattern</a>) we try to avoid dependencies between artists and programmers. Less coupling increases the speed of development and design.</p>
+
+<!-- more -->
+
+
+<p>Sometimes it is hard to avoid this coupling, especially if it comes to optimization. Let&rsquo;s imagine an artist who wants to have sound within his timeline animation. He could just embed the sound and put it in the appropriate timeline frame. But if he then wants to use the same sound in another FLA it gets complicated. We don&rsquo;t want the same sound to be loaded twice.</p>
+
+<p>This post describes a pattern for triggering more sophisticated logic from the Flash timeline so artists can easily make use of it. For easier understanding I will stick to the sound example. But keep in mind that this pattern can be applied to other problems as well. I will give an example at the end of this post.</p>
+
+<p>Please also note that this post focuses on timeline related actions. If you want to trigger sounds based on mouse clicks or just playing background sounds, you are perfectly fine doing this purely by code.</p>
+
+<h3>Alternative Approaches</h3>
+
+<p>Before discussing the actual solution in detail, I would like to briefly mention two alternatives and their particular drawbacks.</p>
+
+<p>I already mentioned one solution: Embedding sounds within their respective <code>FLA</code> files. But using the same sound in other <code>FLAs</code> would cause it to be loaded multiple times. The browser can&rsquo;t cache them either because they are embedded in different <code>SWF</code> files.</p>
+
+<p>Another solution would be to trigger sounds programmatically by using frame labels. This means that your code would have to observe the timeline for execution of certain labels. You have to use some kind of configuration that tells the code which sound to play on which MovieClip and label. Parsing every MovieClip wouldn&rsquo;t be a good idea in terms of performance.</p>
+
+<p>Both alternatives have a drawback either for artists or programmers. Wouldn&rsquo;t it be cool if we could trigger our logic from the timeline instead of heaving the logic observing it? Thats where &lsquo;Timeline Actions&rsquo; enter the stage.</p>
+
+<h2>Timeline Actions</h2>
+
+<p>This illustration shows the relevant parts that I&rsquo;ll explain in the following sections.</p>
+
+<p><img class="center" src="/images/posts/Graph.png" title="Timeline Actions Overview" ></p>
+
+<h3>The basic concept</h3>
+
+<p>In the above image you can see two example asset files (red) which will be maintained by the artists. The sound logic (blue) is a separate <code>SWF</code> or part of the application maintained by the programmers. It&rsquo;s responsible for loading, caching and playing the sounds. The goal is, that artists can trigger any sound by putting the following frame script into the timeline:</p>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='actionscript3'><span class='line'><span class="n">playSound</span><span class="o">(&amp;</span><span class="n">ldquo</span><span class="o">;</span><span class="n">mySound</span><span class="o">&amp;</span><span class="n">rdquo</span><span class="o">;);</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<p><em>Note</em>: Because the <code>playSound()</code> is a top-level function it requires no import statement.</p>
+
+<p>The sound logic should receive the string <code>"mySound"</code> and select the appropriate MP3 for playback. But how do you communicate from the assets (red) to the sound logic (blue)? It&rsquo;s not a good idea to compile the sound logic into each asset. Thats why the first step is, to put just the communication logic into a very small library called &ldquo;<code>timeline-sound.swc</code>&rdquo; (green).</p>
+
+<p>This library contains the <code>playSound()</code> function as well as a static <code>SoundDelegate</code> class. The <code>SoundDelegate</code> is the connection between <code>playSound()</code> and sound logic. The next section &ldquo;Technical implementation&rdquo; will give you more insight into the <code>SWC</code> contents.</p>
+
+<p><img class="center" src="/images/posts/ActionscriptSettings.png" title="Advanced ActionScript 3.0 Settings" ></p>
+
+<p>You can reference the <code>timeline-sound.swc</code> in each <code>FLA</code> now. Therefore open your <code>FLA</code> and navigate to <code>File -&amp;gt; ActionScript Settings...</code> Here go to the second tab &ldquo;<code>Library path</code>&rdquo; and select the &ldquo;<code>Browse to SWC file</code>&rdquo; button (1). After choosing the <code>timeline-sound.swc</code> it shows up in the panel underneath (2). Now you can use the <code>playSound()</code> function as frame script without getting a compiler error. At the same time your sound logic keeps separate.</p>
+
+<h3>Technical implementation</h3>
+
+<p>This section will explain how top-level function, delegate and sound logic get wired together. Therefore lets see what the contents of the <code>timeline-sound.swc</code> are. You can <a href="https://github.com/MattesGroeger/as3-timeline-sound">browse and download the source code from GitHub</a> or just read on.</p>
+
+<p><img class="center" src="/images/posts/TimelineSoundContents.png" title="Contents of &#39;timeline-sound.swc&#39;" ></p>
+
+<p>The <code>SoundDelegate</code> contains only static methods. Therefore it can be reached from anywhere in the application (including the top-level function <code>playSound()</code>). It&rsquo;s implementation is rather simple. It basically just holds a reference to another instance that it delegates to (line 17). Again, for encapsulation reasons this is implemented as an interface <code>ISoundAdapter</code> (line 3).</p>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+</pre></td><td class='code'><pre><code class='actionscript3'><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="n">SoundDelegate</span>
+</span><span class='line'><span class="o">{</span>
+</span><span class='line'>  <span class="kd">private</span> <span class="kd">static</span> <span class="kd">var</span> <span class="n">adapter</span><span class="p">:</span><span class="kt">ISoundAdapter</span><span class="o">;&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span>  <span class="kd">public</span> <span class="kd">static</span> <span class="kd">function </span><span class="nf">init</span><span class="o">(</span><span class="n">adapter</span><span class="o">:</span><span class="kt">ISoundAdapter</span> <span class="o">=</span> <span class="kc">null</span><span class="o">):</span><span class="kt">void</span>
+</span><span class='line'>  <span class="o">{&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">pre</span><span class="o">&gt;&lt;</span><span class="n">code</span><span class="o">&gt;</span><span class="n">SoundDelegate</span><span class="o">.</span><span class="na">adapter</span> <span class="o">=</span> <span class="o">(</span><span class="n">adapter</span> <span class="o">!=</span> <span class="kc">null</span><span class="o">)</span> <span class="o">?</span> <span class="n">adapter</span> <span class="o">:</span> <span class="k">new</span> <span class="kt">NullSoundAdapter</span><span class="o">();</span>
+</span><span class='line'><span class="o">&lt;/</span><span class="n">code</span><span class="o">&gt;&lt;/</span><span class="n">pre</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span>  <span class="o">}&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span>  <span class="kd">public</span> <span class="kd">static</span> <span class="kd">function</span> <span class="kd">get</span> <span class="n">initialized</span><span class="o">():</span><span class="n">Boolean</span>
+</span><span class='line'>  <span class="o">{&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">pre</span><span class="o">&gt;&lt;</span><span class="n">code</span><span class="o">&gt;</span><span class="k">return</span> <span class="n">adapter</span> <span class="o">!=</span> <span class="kc">null</span><span class="o">;</span>
+</span><span class='line'><span class="o">&lt;/</span><span class="n">code</span><span class="o">&gt;&lt;/</span><span class="n">pre</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span>  <span class="o">}&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span>  <span class="kd">public</span> <span class="kd">static</span> <span class="kd">function </span><span class="nf">playSound</span><span class="o">(</span><span class="n">key</span><span class="o">:</span><span class="kt">String</span><span class="o">):</span><span class="kt">void</span>
+</span><span class='line'>  <span class="o">{&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">pre</span><span class="o">&gt;&lt;</span><span class="n">code</span><span class="o">&gt;</span><span class="n">adapter</span><span class="o">.</span><span class="na">playSound</span><span class="o">(</span><span class="n">key</span><span class="o">);</span>
+</span><span class='line'><span class="o">&lt;/</span><span class="n">code</span><span class="o">&gt;&lt;/</span><span class="n">pre</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span>  <span class="o">}</span>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<p>You can also see an <code>init()</code> function (line 5) which is used to set the proper <strong><code>ISoundAdapter</code></strong> implementation. The <code>ISoundAdapter</code> defines just one method:</p>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class='actionscript3'><span class='line'><span class="kd">public</span> <span class="kd">interface</span> <span class="n">ISoundAdapter</span>
+</span><span class='line'><span class="o">{</span>
+</span><span class='line'>  <span class="kd">function </span><span class="nf">playSound</span><span class="o">(</span><span class="n">key</span><span class="o">:</span><span class="kt">String</span><span class="o">):</span><span class="kt">void</span><span class="o">;</span>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<p>In line 7 of the <code>SoundDelegate</code> listing you will also notice that a <code>NullSoundAdapter</code> is assigned in case no instance gets passed to this method. This null-implementation silently ignores every call to <code>playSound()</code>. And this is how the <strong><code>playSound()</code></strong> top-level function looks like:</p>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+</pre></td><td class='code'><pre><code class='actionscript3'><span class='line'><span class="kd">public</span> <span class="kd">function </span><span class="nf">playSound</span><span class="o">(</span><span class="n">title</span><span class="o">:</span><span class="kt">String</span><span class="o">):</span><span class="kt">void</span>
+</span><span class='line'><span class="o">{</span>
+</span><span class='line'>  <span class="k">if</span> <span class="o">(!</span><span class="n">SoundDelegate</span><span class="o">.</span><span class="na">initialized</span><span class="o">)&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">pre</span><span class="o">&gt;&lt;</span><span class="n">code</span><span class="o">&gt;</span><span class="n">SoundDelegate</span><span class="o">.</span><span class="na">init</span><span class="o">();</span>
+</span><span class='line'><span class="o">&lt;/</span><span class="n">code</span><span class="o">&gt;&lt;/</span><span class="n">pre</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span>  <span class="n">SoundDelegate</span><span class="o">.</span><span class="na">playSound</span><span class="o">(</span><span class="n">title</span><span class="o">);</span>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<p>The function makes sure that the <code>SoundDelegate</code> class gets initialized. Because it will create the <code>NullSoundAdapter</code> by default, it is not very useful yet. Thats where the actual sound logic comes in. Whenever the logic is ready it calls the <code>SoundDelegate</code> and registers itself as <code>SoundAdapter</code> (line 6):</p>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+</pre></td><td class='code'><pre><code class='actionscript3'><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="n">SoundLogic</span> <span class="kd">implements</span> <span class="n">ISoundAdapter</span>
+</span><span class='line'><span class="o">{</span>
+</span><span class='line'>  <span class="kd">public</span> <span class="kd">function </span><span class="nf">SoundLogic</span><span class="o">()</span>
+</span><span class='line'>  <span class="o">{&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">pre</span><span class="o">&gt;&lt;</span><span class="n">code</span><span class="o">&gt;//</span> <span class="n">Do</span> <span class="k">this</span> <span class="n">after</span> <span class="n">sounds</span> <span class="n">are</span> <span class="n">loaded</span>
+</span><span class='line'><span class="n">SoundDelegate</span><span class="o">.</span><span class="na">init</span><span class="o">(</span><span class="k">this</span><span class="o">);</span>
+</span><span class='line'><span class="o">&lt;/</span><span class="n">code</span><span class="o">&gt;&lt;/</span><span class="n">pre</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span>  <span class="o">}&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span>  <span class="kd">public</span> <span class="kd">function </span><span class="nf">playSound</span><span class="o">(</span><span class="n">key</span><span class="o">:</span><span class="kt">String</span><span class="o">):</span><span class="kt">void</span>
+</span><span class='line'>  <span class="o">{&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">pre</span><span class="o">&gt;&lt;</span><span class="n">code</span><span class="o">&gt;//</span> <span class="n">play</span> <span class="n">the</span> <span class="n">sound</span> <span class="k">for</span> <span class="s1">&#39;key&#39;</span>
+</span><span class='line'><span class="o">&lt;/</span><span class="n">code</span><span class="o">&gt;&lt;/</span><span class="n">pre</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span>  <span class="o">}</span>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<p>The <code>SoundLogic</code> class implements the <code>ISoundAdapter</code> interface. Now whenever someone calls <code>playSound("foo")</code> the method <code>SoundLogic.playSound()</code> will be called with the string &ldquo;<code>foo</code>&rdquo;. Here you can now put all the logic that is necessary to play the sound for string &ldquo;<code>foo</code>&rdquo;.</p>
+
+<h3>Adding new sounds</h3>
+
+<p>Well you could now argue that, with this solution, adding new sounds still requires programmatic effort. In <a href="http://apps.facebook.com/magicland/">Magic Land</a> (the game I worked on <a href="http://www.wooga.com/">at wooga</a>) we also found a proper solution for this. Before I can explain it you have to know that in our game the sound logic is encapsulated within a module (<code>SWF</code>). This module is loaded lazy because it is less important than other parts of the game. A user can already play our game while the sounds are still loading.</p>
+
+<p>The idea is to embed all sounds that could be triggered from the timeline in a single <code>FLA</code>, so the artists can maintain it. Sounds have to be exported for ActionScript, where the linkage name matches the string that will be later used for the <code>playSound()</code> method parameter. In order to make the sounds available to the sound logic we chose to compile them into the sound module itself. This way we get good compression and have no additional loading effort. Note however that this approach wouldn&rsquo;t make sense for large sound files.</p>
+
+<p><img class="center" src="/images/posts/SoundLibrary.png" title="sounds.fla" ></p>
+
+<p>The question is now, how do we get new sounds automatically compiled into the sound module? What we did, we created a Sprite that contains all sounds. The <code>FLA</code> file then gets compiled into a <code>SWC</code> library and is part of the sound module classpath. To enforce the inclusion of the sound definitions the exported <code>SoundInclusionContainer</code> class is once referenced in the module:</p>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class='actionscript3'><span class='line'><span class="c1">// Sound module constructor</span>
+</span><span class='line'><span class="kd">public</span> <span class="kd">function </span><span class="nf">SoundModule</span><span class="o">()</span>
+</span><span class='line'><span class="o">{</span>
+</span><span class='line'>  <span class="n">SoundInclusionContainer</span><span class="o">;</span> <span class="c1">// sound embedding</span>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<p>This way, whenever the sound module gets compiled, all linked sounds within the container will be made available for the <code>playSound()</code> method call. Now the complete flow of adding and using timeline sounds is independent of the programmers while providing an optimized sound loading experience.</p>
+
+<h2>Conclusion</h2>
+
+<p>This post showed how artists can easily link timeline animations to a more complex logic. As this post is more about the general idea I didn&rsquo;t explain how the sound logic itself looks like.</p>
+
+<p>I found another use cases for this pattern in our game <a href="http://apps.facebook.com/magicland/">Magic Land</a>. We use it for displaying visual effects. Similar to sounds they are part of a separate module that is lazy loaded. On low performance computers we could disable the effects completely.</p>
+
+<p>Finally, lets have a look on the pros and cons of this pattern.</p>
+
+<h3>Disadvantages</h3>
+
+<p>The artists won&rsquo;t be able to hear the sound wile testing their sole assets. They have to start the game including the sound logic in order to hear something. In <a href="http://apps.facebook.com/magicland/">Magic Land</a> the artists are able to build the game locally on their computer (probably a topic for another blog post). So they can hear how it feels in the actual game.</p>
+
+<p>Another drawback is that each asset <code>FLA</code> that makes use of the timeline actions has to link the <code>timeline-sound.swc</code>, which adds 2 Kb. A solution would be to exclude the library for compiling and enforce it to compile in the main application. But then running the asset <code>SWF</code> outside the final application/game throws errors and timeline animations won&rsquo;t be visible anymore.</p>
+
+<h3>Advantages</h3>
+
+<p>On the positive side programmers get less distracted by sound issues because artists can do everything on their own. They are free to add the <code>playSound()</code> call in any asset file, as long as they link the <code>timeline-sound.swc</code> into the <code>FLA</code> file.</p>
+
+<p>At the same time the sounds itself can be loaded after more important stuff has been done loading. This leads to a much better user experience. Also imagine a user turned off sounds. Now you can just not load the sounds at all and the <code>playSound()</code> call will be silently ignored (null-implementation of <code>ISoundAdapter</code>).</p>
+
+<h3>Sources</h3>
+
+<p>You can find all source files for the timeline-sound library in <a href="https://github.com/MattesGroeger/as3-timeline-sound">this GitHub repository</a>. If you have any questions feel free to comment below. Enjoy!</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Context-Aware Tasks]]></title>
@@ -318,7 +562,7 @@
 <h2>Links</h2>
 
 <ul>
-<li><a href="http://blog.mattes-groeger.de/actionscript/strong-typed-constants/">Strong typed constants</a></li></li>
+<li><a href="http://mattesgroeger.github.io/blog/2011/01/02/strong-typed-constants/">Strong typed constants</a></li></li>
 <li><a href="http://www.spicefactory.org/parsley/docs/2.3/manual/task.php">Task framework documentation</a></li></li>
 <li><a href="http://www.spicefactory.org/parsley/download.php">Parsley/Spicelib download</a></li></li>
 </ul>
@@ -426,7 +670,7 @@
 </span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;}</span>
 </span></code></pre></td></tr></table></div></figure></notextile></div></p>
 
-<p>Beside this we defined the labels itself in an <a href="http://blog.mattes-groeger.de/actionscript/strong-typed-constants/">enumeration class</a> to provide strong typed access.</p>
+<p>Beside this we defined the labels itself in an <a href="http://mattesgroeger.github.io/blog/2011/01/02/strong-typed-constants/">enumeration class</a> to provide strong typed access.</p>
 
 <p><div class='bogus-wrapper'><notextile><figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
@@ -908,176 +1152,6 @@
 <p>Apart from this cons you get an easy to use logger which has useful additional features like bitmap data output. With this feature I was able to easily find a bitmap that accidentally prevented clicks. What I especially like is the StackTrace which you can see for each log entry. Because the logger is very easy and fast to use you can eventually use him for some special cases only.</p>
 
 <p>One final note: To see the line numbers you have to compile with the compiler flag <code>-verbose-stacktraces</code>.</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Short-Lived Commands with Parsley]]></title>
-    <link href="http://MattesGroeger.github.io/blog/2010/10/31/short-lived-commands-with-parsley/"/>
-    <updated>2010-10-31T21:24:00+01:00</updated>
-    <id>http://MattesGroeger.github.io/blog/2010/10/31/short-lived-commands-with-parsley</id>
-    <content type="html"><![CDATA[<p>This week we had to decide on a <a href="http://en.wikipedia.org/wiki/Model%E2%80%93View%E2%80%93Controller">MVC Framework</a> for our next game at <a href="http://www.wooga.com">Wooga</a>. In the end the options were <a href="http://www.robotlegs.org/">Robotlegs</a> and <a href="http://www.spicefactory.org/parsley/">Parsley</a>. Both of them had advantages and disadvantages. One aspect we came across was the support of <code>Short-lived Command Objects</code>.</p>
-
-<!-- more -->
-
-
-<p>These commands hold no state and will be garbage collected after execution. In Robotlegs they are supported via the <a href="http://api.robotlegs.org/org/robotlegs/core/ICommandMap.html"><code>ICommandMap</code></a> interface. Parsley also provides an implementation of this pattern called <a href="http://www.spicefactory.org/parsley/docs/2.3/manual/messaging.php#command_objects"><code>DynamicCommand</code></a>. In contrast to Robotlegs, Parsley provides 4 different ways to build and configure a context:</p>
-
-<ul>
-<li><a href="http://www.spicefactory.org/parsley/docs/2.3/manual/config.php#mxml">MXML</a>: DynamicCommand Tag. Only for Flex projects.</li>
-<li><a href="http://www.spicefactory.org/parsley/docs/2.3/manual/config.php#xml">XML</a>: DynamicCommand Node. No compiler check on types possible.</li>
-<li><a href="http://www.spicefactory.org/parsley/docs/2.3/manual/config.php#as3">ActionScript</a>: No way to configure dynamic Commands.</li>
-<li><a href="http://www.spicefactory.org/parsley/docs/2.3/manual/config.php#dsl">Configuration DSL</a>: Programmatic configuration of Dynamic Commands.</li>
-</ul>
-
-
-<p>Because our game should not use the Flex framework, the last option is our only choice if we want to have strongly typed command mappings like in Robotlegs.</p>
-
-<h2>DynamicCommands via Configuration DSL</h2>
-
-<p>Because a documentation is not available for this case it was a bit tricky to find the solution (thanks for the hint, Jens). This was the first result:</p>
-
-<p><div class='bogus-wrapper'><notextile><figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-<span class='line-number'>19</span>
-</pre></td><td class='code'><pre><code class='actionscript3'><span class='line'><span class="kd">var</span> <span class="n">contextBuilder</span><span class="p">:</span><span class="kt">ContextBuilder</span> <span class="o">=</span> <span class="n">ContextBuilder</span><span class="o">.</span><span class="na">newSetup</span><span class="o">()</span>
-</span><span class='line'>  <span class="o">.</span><span class="na">viewRoot</span><span class="o">(</span><span class="k">this</span><span class="o">)</span>
-</span><span class='line'>  <span class="o">.</span><span class="na">newBuilder</span><span class="o">();&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span><span class="kd">var</span> <span class="n">targetDef</span><span class="p">:</span><span class="kt">DynamicObjectDefinition</span> <span class="o">=</span> <span class="n">contextBuilder</span>
-</span><span class='line'>  <span class="o">.</span><span class="na">objectDefinition</span><span class="o">()</span>
-</span><span class='line'>  <span class="o">.</span><span class="na">forClass</span><span class="o">(</span><span class="n">CommandType</span><span class="o">)</span>
-</span><span class='line'>  <span class="o">.</span><span class="na">asDynamicObject</span><span class="o">()</span>
-</span><span class='line'>  <span class="o">.</span><span class="na">build</span><span class="o">();&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span><span class="n">DynamicCommandBuilder</span>
-</span><span class='line'>  <span class="o">.</span><span class="na">newBuilder</span><span class="o">(</span><span class="n">targetDef</span><span class="o">)</span>
-</span><span class='line'>  <span class="o">.</span><span class="na">builder</span>
-</span><span class='line'>  <span class="o">.</span><span class="na">messageType</span><span class="o">(</span><span class="n">MessageType</span><span class="o">)</span>
-</span><span class='line'>  <span class="o">.</span><span class="na">stateful</span><span class="o">(</span><span class="kc">false</span><span class="o">)</span>
-</span><span class='line'>  <span class="o">.</span><span class="na">build</span><span class="o">();&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span><span class="n">contextBuilder</span><span class="o">.</span><span class="na">config</span><span class="o">(</span><span class="n">ActionScriptConfig</span><span class="o">.</span><span class="na">forClass</span><span class="o">(</span><span class="n">MainConfig</span><span class="o">));</span>
-</span><span class='line'><span class="n">contextBuilder</span><span class="o">.</span><span class="na">build</span><span class="o">();</span>
-</span></code></pre></td></tr></table></div></figure></notextile></div></p>
-
-<p>Note that you can not use the <code>ActionScriptContexBuilder.build()</code> notation anymore. Instead you have to configure the whole context via the DSL. In line 18, the actual configuration (<code>MainConfig</code>) which contains all object definitions is passed in.</p>
-
-<p>Because this configuration is very hard to read and redundant if you want to map several Commands, I encapsulated the mapping to a separate class <code>CommandMap</code>. Now the configuration looks like this:</p>
-
-<p><div class='bogus-wrapper'><notextile><figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-</pre></td><td class='code'><pre><code class='actionscript3'><span class='line'><span class="kd">var</span> <span class="n">contextBuilder</span><span class="p">:</span><span class="kt">ContextBuilder</span> <span class="o">=</span> <span class="n">ContextBuilder</span><span class="o">.</span><span class="na">newSetup</span><span class="o">()</span>
-</span><span class='line'>  <span class="o">.</span><span class="na">viewRoot</span><span class="o">(</span><span class="k">this</span><span class="o">)</span>
-</span><span class='line'>  <span class="o">.</span><span class="na">newBuilder</span><span class="o">();&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span><span class="kd">var</span> <span class="n">commandMap</span><span class="p">:</span><span class="kt">CommandMap</span> <span class="o">=</span> <span class="k">new</span> <span class="kt">CommandMap</span><span class="o">(</span><span class="n">contextBuilder</span><span class="o">);</span>
-</span><span class='line'><span class="n">commandMap</span><span class="o">.</span><span class="na">register</span><span class="o">(</span><span class="n">LoginCommand</span><span class="o">,</span> <span class="n">LoginRequest</span><span class="o">);</span>
-</span><span class='line'><span class="n">commandMap</span><span class="o">.</span><span class="na">register</span><span class="o">(</span><span class="n">LogoutCommand</span><span class="o">,</span> <span class="n">LogoutRequest</span><span class="o">);&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span><span class="n">contextBuilder</span><span class="o">.</span><span class="na">config</span><span class="o">(</span><span class="n">ActionScriptConfig</span><span class="o">.</span><span class="na">forClass</span><span class="o">(</span><span class="n">MainConfig</span><span class="o">));</span>
-</span><span class='line'><span class="n">contextBuilder</span><span class="o">.</span><span class="na">build</span><span class="o">();</span>
-</span></code></pre></td></tr></table></div></figure></notextile></div></p>
-
-<p>Until now I found no way to map or un-map Commands after the context has been built. The only way would be to destroy the context they are registered in.</p>
-
-<p>To get a better impression how short-lived commands are used in Parsley, I implemented a small example, which you can <a href="http://github.com/MattesGroeger/as3-parsley-example">access on GitHub</a>. The CommandMap class can be <a href="http://github.com/MattesGroeger/as3-parsley-example/blob/master/src/de/mattesgroeger/parsley/core/CommandMap.as">found here</a>.</p>
-
-<p>And this is how the login example looks like. Invalid credentials lead to an error pop up. Valid login works with <em>admin</em> and password <em>test</em>:</p>
-
-<object style="width: 850px; height: 250px;" width="850" height="250" classid="clsid:d27cdb6e-ae6d-11cf-96b8-444553540000" codebase="http://download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=6,0,40,0"><param name="src" value="/images/posts/ParsleyExample1.swf" /><embed style="width: 850px; height: 250px;" width="850" height="250" type="application/x-shockwave-flash" src="http://MattesGroeger.github.io/images/posts/ParsleyExample1.swf" /> </object>
-
-
-<h2>Summary</h2>
-
-<p>The Robotlegs implementation is very straight forward. Commands can be mapped and un-mapped at any time. This is not possible in Parsley. But you have other features that give maybe similar results (for example <a href="http://www.spicefactory.org/parsley/docs/2.3/manual/messaging.php#interceptors" target="_blank">MessageInterceptors</a>).</p>
-
-<p>Because Parsley reflects on the types you can pass data directly to the execute method. This way, each concrete execute method can receive strong typed parameters (see line 9). No framework class has to be extended for custom Commands. This is how a command can look like:</p>
-
-<p><div class='bogus-wrapper'><notextile><figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-<span class='line-number'>19</span>
-<span class='line-number'>20</span>
-<span class='line-number'>21</span>
-<span class='line-number'>22</span>
-<span class='line-number'>23</span>
-<span class='line-number'>24</span>
-</pre></td><td class='code'><pre><code class='actionscript3'><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="n">LogoutCommand</span>
-</span><span class='line'><span class="o">{</span>
-</span><span class='line'>  <span class="o">[</span><span class="n">Inject</span><span class="o">]</span>
-</span><span class='line'>  <span class="kd">public</span> <span class="kd">var</span> <span class="n">service</span><span class="p">:</span><span class="kt">ISessionService</span><span class="o">;&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span>  <span class="o">[</span><span class="n">MessageDispatcher</span><span class="o">]</span>
-</span><span class='line'>  <span class="kd">public</span> <span class="kd">var</span> <span class="n">dispatcher</span><span class="p">:</span><span class="kt">Function</span><span class="o">;&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span>  <span class="kd">public</span> <span class="kd">function </span><span class="nf">execute</span><span class="o">(</span><span class="n">message</span><span class="o">:</span><span class="kt">LogoutRequest</span><span class="o">)</span> <span class="o">:</span> <span class="kt">ServiceRequest</span>
-</span><span class='line'>  <span class="o">{&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="n">pre</span><span class="o">&gt;&lt;</span><span class="n">code</span><span class="o">&gt;</span><span class="k">return</span> <span class="n">service</span><span class="o">.</span><span class="na">logout</span><span class="o">(</span><span class="n">message</span><span class="o">.</span><span class="na">sessionId</span><span class="o">);</span>
-</span><span class='line'><span class="o">&lt;/</span><span class="n">code</span><span class="o">&gt;&lt;/</span><span class="n">pre</span><span class="o">&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span>  <span class="o">}&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span>  <span class="kd">public</span> <span class="kd">function </span><span class="nf">result</span><span class="o">(</span><span class="n">success</span><span class="o">:</span><span class="kt">Boolean</span><span class="o">)</span> <span class="o">:</span> <span class="kt">void</span>
-</span><span class='line'>  <span class="o">{&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="n">pre</span><span class="o">&gt;&lt;</span><span class="n">code</span><span class="o">&gt;</span><span class="n">dispatcher</span><span class="o">(</span><span class="k">new</span> <span class="kt">LogoutSuccess</span><span class="o">(</span><span class="n">success</span><span class="o">));</span>
-</span><span class='line'><span class="o">&lt;/</span><span class="n">code</span><span class="o">&gt;&lt;/</span><span class="n">pre</span><span class="o">&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span>  <span class="o">}</span>
-</span><span class='line'><span class="o">}</span>
-</span></code></pre></td></tr></table></div></figure></notextile></div></p>
-
-<p>I also like the native support of synchronous and asynchronous Commands in Parsley. No special configuration is necessary, because Parsley reflects on the return type of the <code>execute()</code> method (line 9, <code>ServiceRequest</code>).</p>
-
-<h2>Links:</h2>
-
-<ul>
-<li><a href="http://github.com/MattesGroeger/as3-parsley-example">Browse the example sources on GitHub</a></li>
-<li><a href="http://github.com/MattesGroeger/as3-parsley-example/blob/master/README.md">Readme of the example</a></li>
-<li><a href="http://github.com/MattesGroeger/as3-parsley-example/blob/master/src/de/mattesgroeger/parsley/core/CommandMap.as">CommandMap source</a></li>
-</ul>
-
 ]]></content>
   </entry>
   

@@ -1,0 +1,444 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>Flash Timeline Actions - Mattes Groeger</title>
+  <meta name="author" content="Mattes Groeger">
+
+  
+  <meta name="description" content="A proper designer-developer workflow is essential, especially in bigger teams. By separating logic and view (e.g. via MVC Design Pattern) we try to &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://MattesGroeger.github.io/blog/2012/01/29/flash-timeline-actions">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="Mattes Groeger" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/lib/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href='http://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css'>
+<link href='http://fonts.googleapis.com/css?family=Fjalla+One' rel='stylesheet' type='text/css'>
+  
+  <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-12394086-3']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+  </script>
+
+
+</head>
+
+<body   class="collapse-sidebar sidebar-footer" >
+  <header role="banner"><hgroup>
+  <h1><a href="/">Mattes Groeger</a></h1>
+  
+    <h2>iOS Developer</h2>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="http://google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:MattesGroeger.github.io" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+  <li><a href="https://twitter.com/MattesGroeger">Twitter</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">Flash Timeline Actions</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-01-29T17:12:00+01:00" pubdate data-updated="true">Jan 29<span>th</span>, 2012</time>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><p>A proper designer-developer workflow is essential, especially in bigger teams. By separating logic and view (e.g. via <a href="http://en.wikipedia.org/wiki/Model%E2%80%93view%E2%80%93controller">MVC Design Pattern</a>) we try to avoid dependencies between artists and programmers. Less coupling increases the speed of development and design.</p>
+
+<!-- more -->
+
+
+<p>Sometimes it is hard to avoid this coupling, especially if it comes to optimization. Let&rsquo;s imagine an artist who wants to have sound within his timeline animation. He could just embed the sound and put it in the appropriate timeline frame. But if he then wants to use the same sound in another FLA it gets complicated. We don&rsquo;t want the same sound to be loaded twice.</p>
+
+<p>This post describes a pattern for triggering more sophisticated logic from the Flash timeline so artists can easily make use of it. For easier understanding I will stick to the sound example. But keep in mind that this pattern can be applied to other problems as well. I will give an example at the end of this post.</p>
+
+<p>Please also note that this post focuses on timeline related actions. If you want to trigger sounds based on mouse clicks or just playing background sounds, you are perfectly fine doing this purely by code.</p>
+
+<h3>Alternative Approaches</h3>
+
+<p>Before discussing the actual solution in detail, I would like to briefly mention two alternatives and their particular drawbacks.</p>
+
+<p>I already mentioned one solution: Embedding sounds within their respective <code>FLA</code> files. But using the same sound in other <code>FLAs</code> would cause it to be loaded multiple times. The browser can&rsquo;t cache them either because they are embedded in different <code>SWF</code> files.</p>
+
+<p>Another solution would be to trigger sounds programmatically by using frame labels. This means that your code would have to observe the timeline for execution of certain labels. You have to use some kind of configuration that tells the code which sound to play on which MovieClip and label. Parsing every MovieClip wouldn&rsquo;t be a good idea in terms of performance.</p>
+
+<p>Both alternatives have a drawback either for artists or programmers. Wouldn&rsquo;t it be cool if we could trigger our logic from the timeline instead of heaving the logic observing it? Thats where &lsquo;Timeline Actions&rsquo; enter the stage.</p>
+
+<h2>Timeline Actions</h2>
+
+<p>This illustration shows the relevant parts that I&rsquo;ll explain in the following sections.</p>
+
+<p><img class="center" src="/images/posts/Graph.png" title="Timeline Actions Overview" ></p>
+
+<h3>The basic concept</h3>
+
+<p>In the above image you can see two example asset files (red) which will be maintained by the artists. The sound logic (blue) is a separate <code>SWF</code> or part of the application maintained by the programmers. It&rsquo;s responsible for loading, caching and playing the sounds. The goal is, that artists can trigger any sound by putting the following frame script into the timeline:</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='actionscript3'><span class='line'><span class="n">playSound</span><span class="o">(</span><span class="s2">&quot;mySound&quot;</span><span class="o">);</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p><em>Note</em>: Because the <code>playSound()</code> is a top-level function it requires no import statement.</p>
+
+<p>The sound logic should receive the string <code>"mySound"</code> and select the appropriate MP3 for playback. But how do you communicate from the assets (red) to the sound logic (blue)? It&rsquo;s not a good idea to compile the sound logic into each asset. Thats why the first step is, to put just the communication logic into a very small library called &ldquo;<code>timeline-sound.swc</code>&rdquo; (green).</p>
+
+<p>This library contains the <code>playSound()</code> function as well as a static <code>SoundDelegate</code> class. The <code>SoundDelegate</code> is the connection between <code>playSound()</code> and sound logic. The next section &ldquo;Technical implementation&rdquo; will give you more insight into the <code>SWC</code> contents.</p>
+
+<p><img class="center" src="/images/posts/ActionscriptSettings.png" title="Advanced ActionScript 3.0 Settings" ></p>
+
+<p>You can reference the <code>timeline-sound.swc</code> in each <code>FLA</code> now. Therefore open your <code>FLA</code> and navigate to <code>File -&amp;gt; ActionScript Settings...</code> Here go to the second tab &ldquo;<code>Library path</code>&rdquo; and select the &ldquo;<code>Browse to SWC file</code>&rdquo; button (1). After choosing the <code>timeline-sound.swc</code> it shows up in the panel underneath (2). Now you can use the <code>playSound()</code> function as frame script without getting a compiler error. At the same time your sound logic keeps separate.</p>
+
+<h3>Technical implementation</h3>
+
+<p>This section will explain how top-level function, delegate and sound logic get wired together. Therefore lets see what the contents of the <code>timeline-sound.swc</code> are. You can <a href="https://github.com/MattesGroeger/as3-timeline-sound">browse and download the source code from GitHub</a> or just read on.</p>
+
+<p><img class="center" src="/images/posts/TimelineSoundContents.png" title="Contents of &#39;timeline-sound.swc&#39;" ></p>
+
+<p>The <code>SoundDelegate</code> contains only static methods. Therefore it can be reached from anywhere in the application (including the top-level function <code>playSound()</code>). It&rsquo;s implementation is rather simple. It basically just holds a reference to another instance that it delegates to (line 17). Again, for encapsulation reasons this is implemented as an interface <code>ISoundAdapter</code> (line 3).</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+</pre></td><td class='code'><pre><code class='actionscript3'><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="n">SoundDelegate</span>
+</span><span class='line'><span class="o">{</span>
+</span><span class='line'>  <span class="kd">private</span> <span class="kd">static</span> <span class="kd">var</span> <span class="n">adapter</span><span class="p">:</span><span class="kt">ISoundAdapter</span><span class="o">;</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="kd">public</span> <span class="kd">static</span> <span class="kd">function </span><span class="nf">init</span><span class="o">(</span><span class="n">adapter</span><span class="o">:</span><span class="kt">ISoundAdapter</span> <span class="o">=</span> <span class="kc">null</span><span class="o">):</span><span class="kt">void</span>
+</span><span class='line'>  <span class="o">{</span>
+</span><span class='line'>    <span class="n">SoundDelegate</span><span class="o">.</span><span class="na">adapter</span> <span class="o">=</span> <span class="o">(</span><span class="n">adapter</span> <span class="o">!=</span> <span class="kc">null</span><span class="o">)</span> <span class="o">?</span> <span class="n">adapter</span> <span class="o">:</span> <span class="k">new</span> <span class="kt">NullSoundAdapter</span><span class="o">();</span>
+</span><span class='line'>  <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="kd">public</span> <span class="kd">static</span> <span class="kd">function</span> <span class="kd">get</span> <span class="n">initialized</span><span class="o">():</span><span class="n">Boolean</span>
+</span><span class='line'>  <span class="o">{</span>
+</span><span class='line'>    <span class="k">return</span> <span class="n">adapter</span> <span class="o">!=</span> <span class="kc">null</span><span class="o">;</span>
+</span><span class='line'>  <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="kd">public</span> <span class="kd">static</span> <span class="kd">function </span><span class="nf">playSound</span><span class="o">(</span><span class="n">key</span><span class="o">:</span><span class="kt">String</span><span class="o">):</span><span class="kt">void</span>
+</span><span class='line'>  <span class="o">{</span>
+</span><span class='line'>    <span class="n">adapter</span><span class="o">.</span><span class="na">playSound</span><span class="o">(</span><span class="n">key</span><span class="o">);</span>
+</span><span class='line'>  <span class="o">}</span>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>You can also see an <code>init()</code> function (line 5) which is used to set the proper <strong><code>ISoundAdapter</code></strong> implementation. The <code>ISoundAdapter</code> defines just one method:</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class='actionscript3'><span class='line'><span class="kd">public</span> <span class="kd">interface</span> <span class="n">ISoundAdapter</span>
+</span><span class='line'><span class="o">{</span>
+</span><span class='line'>  <span class="kd">function </span><span class="nf">playSound</span><span class="o">(</span><span class="n">key</span><span class="o">:</span><span class="kt">String</span><span class="o">):</span><span class="kt">void</span><span class="o">;</span>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>In line 7 of the <code>SoundDelegate</code> listing you will also notice that a <code>NullSoundAdapter</code> is assigned in case no instance gets passed to this method. This null-implementation silently ignores every call to <code>playSound()</code>. And this is how the <strong><code>playSound()</code></strong> top-level function looks like:</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+</pre></td><td class='code'><pre><code class='actionscript3'><span class='line'><span class="kd">public</span> <span class="kd">function </span><span class="nf">playSound</span><span class="o">(</span><span class="n">title</span><span class="o">:</span><span class="kt">String</span><span class="o">):</span><span class="kt">void</span>
+</span><span class='line'><span class="o">{</span>
+</span><span class='line'>  <span class="k">if</span> <span class="o">(!</span><span class="n">SoundDelegate</span><span class="o">.</span><span class="na">initialized</span><span class="o">)</span>
+</span><span class='line'>    <span class="n">SoundDelegate</span><span class="o">.</span><span class="na">init</span><span class="o">();</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="n">SoundDelegate</span><span class="o">.</span><span class="na">playSound</span><span class="o">(</span><span class="n">title</span><span class="o">);</span>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>The function makes sure that the <code>SoundDelegate</code> class gets initialized. Because it will create the <code>NullSoundAdapter</code> by default, it is not very useful yet. Thats where the actual sound logic comes in. Whenever the logic is ready it calls the <code>SoundDelegate</code> and registers itself as <code>SoundAdapter</code> (line 6):</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+</pre></td><td class='code'><pre><code class='actionscript3'><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="n">SoundLogic</span> <span class="kd">implements</span> <span class="n">ISoundAdapter</span>
+</span><span class='line'><span class="o">{</span>
+</span><span class='line'>  <span class="kd">public</span> <span class="kd">function </span><span class="nf">SoundLogic</span><span class="o">()</span>
+</span><span class='line'>  <span class="o">{</span>
+</span><span class='line'>    <span class="c1">// Do this after sounds are loaded</span>
+</span><span class='line'>    <span class="n">SoundDelegate</span><span class="o">.</span><span class="na">init</span><span class="o">(</span><span class="k">this</span><span class="o">);</span>
+</span><span class='line'>  <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="kd">public</span> <span class="kd">function </span><span class="nf">playSound</span><span class="o">(</span><span class="n">key</span><span class="o">:</span><span class="kt">String</span><span class="o">):</span><span class="kt">void</span>
+</span><span class='line'>  <span class="o">{</span>
+</span><span class='line'>    <span class="c1">// play the sound for &#39;key&#39;</span>
+</span><span class='line'>  <span class="o">}</span>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>The <code>SoundLogic</code> class implements the <code>ISoundAdapter</code> interface. Now whenever someone calls <code>playSound("foo")</code> the method <code>SoundLogic.playSound()</code> will be called with the string &ldquo;<code>foo</code>&rdquo;. Here you can now put all the logic that is necessary to play the sound for string &ldquo;<code>foo</code>&rdquo;.</p>
+
+<h3>Adding new sounds</h3>
+
+<p>Well you could now argue that, with this solution, adding new sounds still requires programmatic effort. In <a href="http://apps.facebook.com/magicland/">Magic Land</a> (the game I worked on <a href="http://www.wooga.com/">at wooga</a>) we also found a proper solution for this. Before I can explain it you have to know that in our game the sound logic is encapsulated within a module (<code>SWF</code>). This module is loaded lazy because it is less important than other parts of the game. A user can already play our game while the sounds are still loading.</p>
+
+<p>The idea is to embed all sounds that could be triggered from the timeline in a single <code>FLA</code>, so the artists can maintain it. Sounds have to be exported for ActionScript, where the linkage name matches the string that will be later used for the <code>playSound()</code> method parameter. In order to make the sounds available to the sound logic we chose to compile them into the sound module itself. This way we get good compression and have no additional loading effort. Note however that this approach wouldn&rsquo;t make sense for large sound files.</p>
+
+<p><img class="center" src="/images/posts/SoundLibrary.png" title="sounds.fla" ></p>
+
+<p>The question is now, how do we get new sounds automatically compiled into the sound module? What we did, we created a Sprite that contains all sounds. The <code>FLA</code> file then gets compiled into a <code>SWC</code> library and is part of the sound module classpath. To enforce the inclusion of the sound definitions the exported <code>SoundInclusionContainer</code> class is once referenced in the module:</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class='actionscript3'><span class='line'><span class="c1">// Sound module constructor</span>
+</span><span class='line'><span class="kd">public</span> <span class="kd">function </span><span class="nf">SoundModule</span><span class="o">()</span>
+</span><span class='line'><span class="o">{</span>
+</span><span class='line'>  <span class="n">SoundInclusionContainer</span><span class="o">;</span> <span class="c1">// sound embedding</span>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>This way, whenever the sound module gets compiled, all linked sounds within the container will be made available for the <code>playSound()</code> method call. Now the complete flow of adding and using timeline sounds is independent of the programmers while providing an optimized sound loading experience.</p>
+
+<h2>Conclusion</h2>
+
+<p>This post showed how artists can easily link timeline animations to a more complex logic. As this post is more about the general idea I didn&rsquo;t explain how the sound logic itself looks like.</p>
+
+<p>I found another use cases for this pattern in our game <a href="http://apps.facebook.com/magicland/">Magic Land</a>. We use it for displaying visual effects. Similar to sounds they are part of a separate module that is lazy loaded. On low performance computers we could disable the effects completely.</p>
+
+<p>Finally, lets have a look on the pros and cons of this pattern.</p>
+
+<h3>Disadvantages</h3>
+
+<p>The artists won&rsquo;t be able to hear the sound wile testing their sole assets. They have to start the game including the sound logic in order to hear something. In <a href="http://apps.facebook.com/magicland/">Magic Land</a> the artists are able to build the game locally on their computer (probably a topic for another blog post). So they can hear how it feels in the actual game.</p>
+
+<p>Another drawback is that each asset <code>FLA</code> that makes use of the timeline actions has to link the <code>timeline-sound.swc</code>, which adds 2 Kb. A solution would be to exclude the library for compiling and enforce it to compile in the main application. But then running the asset <code>SWF</code> outside the final application/game throws errors and timeline animations won&rsquo;t be visible anymore.</p>
+
+<h3>Advantages</h3>
+
+<p>On the positive side programmers get less distracted by sound issues because artists can do everything on their own. They are free to add the <code>playSound()</code> call in any asset file, as long as they link the <code>timeline-sound.swc</code> into the <code>FLA</code> file.</p>
+
+<p>At the same time the sounds itself can be loaded after more important stuff has been done loading. This leads to a much better user experience. Also imagine a user turned off sounds. Now you can just not load the sounds at all and the <code>playSound()</code> call will be silently ignored (null-implementation of <code>ISoundAdapter</code>).</p>
+
+<h3>Sources</h3>
+
+<p>You can find all source files for the timeline-sound library in <a href="https://github.com/MattesGroeger/as3-timeline-sound">this GitHub repository</a>. If you have any questions feel free to comment below. Enjoy!</p>
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">Mattes Groeger</span></span>
+
+      
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-01-29T17:12:00+01:00" pubdate data-updated="true">Jan 29<span>th</span>, 2012</time>
+      
+
+<span class="categories">
+  
+    <a class='category' href='/blog/categories/actionscript/'>ActionScript</a>, <a class='category' href='/blog/categories/bestpractice/'>BestPractice</a>, <a class='category' href='/blog/categories/timeline/'>Timeline</a>, <a class='category' href='/blog/categories/workflow/'>Workflow</a>
+  
+</span>
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://MattesGroeger.github.io/blog/2012/01/29/flash-timeline-actions/" data-via="MattesGroeger" data-counturl="http://MattesGroeger.github.io/blog/2012/01/29/flash-timeline-actions/" >Tweet</a>
+  
+  
+  <div class="g-plusone" data-size="medium"></div>
+  
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/2011/03/13/context-aware-tasks/" title="Previous Post: Context-Aware Tasks">&laquo; Context-Aware Tasks</a>
+      
+      
+        <a class="basic-alignment right" href="/blog/2012/11/11/kiwi-testing-with-style-for-ios/" title="Next Post: Kiwi - iOS Testing with Style">Kiwi - iOS Testing with Style &raquo;</a>
+      
+    </p>
+  </footer>
+</article>
+
+  <section>
+    <h1>Comments</h1>
+    <div id="disqus_thread" aria-live="polite"><noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+  </section>
+
+
+</div>
+
+<aside class="sidebar">
+  
+    
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2013 - Mattes Groeger
+</p>
+
+</footer>
+  
+
+<script type="text/javascript">
+      var disqus_shortname = 'mattesgroegerblog';
+      
+        
+        // var disqus_developer = 1;
+        var disqus_identifier = 'http://MattesGroeger.github.io/blog/2012/01/29/flash-timeline-actions/';
+        var disqus_url = 'http://MattesGroeger.github.io/blog/2012/01/29/flash-timeline-actions/';
+        var disqus_script = 'embed.js';
+      
+    (function () {
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      dsq.src = 'http://' + disqus_shortname + '.disqus.com/' + disqus_script;
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    }());
+</script>
+
+
+
+
+
+
+
+
+  <script type="text/javascript">
+    (function() {
+      var script = document.createElement('script'); script.type = 'text/javascript'; script.async = true;
+      script.src = 'https://apis.google.com/js/plusone.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(script, s);
+    })();
+  </script>
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = 'http://platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>

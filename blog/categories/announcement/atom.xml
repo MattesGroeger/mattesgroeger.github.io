@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: Announcement | Mattes Groeger]]></title>
+  <link href="http://MattesGroeger.github.io/blog/categories/announcement/atom.xml" rel="self"/>
+  <link href="http://MattesGroeger.github.io/"/>
+  <updated>2013-11-15T21:32:54+01:00</updated>
+  <id>http://MattesGroeger.github.io/</id>
+  <author>
+    <name><![CDATA[Mattes Groeger]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[From Wordpress to Octopress]]></title>
+    <link href="http://MattesGroeger.github.io/blog/2013/11/16/from-wordpress-to-octopress/"/>
+    <updated>2013-11-16T12:07:00+01:00</updated>
+    <id>http://MattesGroeger.github.io/blog/2013/11/16/from-wordpress-to-octopress</id>
+    <content type="html"><![CDATA[<p>For a long time I wasn&rsquo;t happy with my <a href="http://www.wordpress.org">Wordpress</a> blog. Maintenance and hosting seemed unnecessary complex. When researching alternative solutions I found <a href="http://octopress.org/">Octopress</a>. In this article I highlight the reasons that made me switch.</p>
+
+<!-- more -->
+
+
+<h2>Problems with Wordpress</h2>
+
+<p>Wordpress is a dynamic website with a database. As the code is open source it makes it easy for someone to write and use exploits to compromise your blog. That&rsquo;s one reason why Wordpress and the plugins provide frequently updates. But even though I updated often I got a lot of spam comments. Even the captcha system I had in place didn&rsquo;t stop them.</p>
+
+<ul>
+<li>Changes to blog locally, then updating via FTP</li>
+<li>Manual backups necessary (database, images, &hellip;)</li>
+</ul>
+
+
+<h2>Benefits of Octopress</h2>
+
+<ul>
+<li>Posts written in Markdown</li>
+<li><p>Nice codeblock support</p></li>
+<li><p>Static page generator</p></li>
+<li><p>Website renders super fast as everything is static</p></li>
+<li><p>Clear and modern HTML5, scss for Stylesheets</p></li>
+<li><p>I use a modified version of the <a href="https://github.com/lucaslew/whitespace">whitespace theme</a></p></li>
+<li><p>Git provides with version history</p></li>
+<li>1 step deploy (rake deploy)</li>
+<li><p>Hosting on GitHub (github.io)</p></li>
+<li><p>Comment system is provided by external service</p></li>
+<li>Updating blog via command line</li>
+</ul>
+
+
+<h2>Conclusion</h2>
+
+<p>One drawback is that you rely on external services. Imagine for some reason the comment provider stops his service. All your comments will be lost. I for myself rather take this risk in exchange for easier maintainance. I&rsquo;m pretty happy with Octopress. If you are interested, go and <a href="http://octopress.org/">check it out for yourself</a>.</p>
+]]></content>
+  </entry>
+  
+</feed>
