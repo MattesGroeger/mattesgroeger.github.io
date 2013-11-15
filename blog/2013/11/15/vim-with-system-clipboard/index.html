@@ -5,11 +5,11 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>Kiwi - iOS Testing with Style - Mattes Groeger</title>
+  <title>Vim with System Clipboard - Mattes Groeger</title>
   <meta name="author" content="Mattes Groeger">
 
   
-  <meta name="description" content="I&rsquo;m very passionate about writing tests to ensure code quality and achieve better software design. When I started iOS development one of the &hellip;">
+  <meta name="description" content="With vim I got really addicted to keyboard-only usage. But there is one thing I was always missing: integration with the system clipboard. I had to &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -18,7 +18,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   
-  <link rel="canonical" href="http://MattesGroeger.github.io/blog/2012/11/11/kiwi-testing-with-style-for-ios">
+  <link rel="canonical" href="http://MattesGroeger.github.io/blog/2013/11/15/vim-with-system-clipboard">
   <link href="/favicon.png" rel="icon">
   <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
   <link href="/atom.xml" rel="alternate" title="Mattes Groeger" type="application/atom+xml">
@@ -81,7 +81,7 @@
   
   <header>
     
-      <h1 class="entry-title">Kiwi - iOS Testing With Style</h1>
+      <h1 class="entry-title">Vim With System Clipboard</h1>
     
     
       <p class="meta">
@@ -97,40 +97,76 @@
   
 
 
-<time datetime="2012-11-11T20:57:00+01:00" pubdate data-updated="true">Nov 11<span>th</span>, 2012</time>
+<time datetime="2013-11-15T16:14:00+01:00" pubdate data-updated="true">Nov 15<span>th</span>, 2013</time>
         
       </p>
     
   </header>
 
 
-<div class="entry-content"><p>I&rsquo;m very passionate about writing tests to ensure code quality and achieve better software design. When I started iOS development one of the first things I did was evaluating testing frameworks for iOS.</p>
+<div class="entry-content"><p>With vim I got really addicted to keyboard-only usage. But there is one thing I was always missing: integration with the system clipboard. I had to switch back to the mouse for that. As I learned today system clipboard is supported by vim. Unfortunately the version packaged with OSX is not compiled with this feature enabled.</p>
 
 <!-- more -->
 
 
-<h3>How it started out&hellip;</h3>
+<p>You can check this yourself by typing <code>vim --version</code> on the command line. The output should contain something like <code>+clipboard</code> (<code>+</code> means enabled). Probably you have a <code>-</code> instead. Luckily with <a href="http://brew.sh/">homebrew</a> you can easily install vim with clipboard enabled.</p>
 
-<p>It didn&rsquo;t take long to setup <a href="https://github.com/gabriel/gh-unit">GHUnit</a>, <a href="http://ocmock.org/">OCMock</a> and <a href="https://github.com/hamcrest/OCHamcrest">OCHamcrest</a>. This combination allows unit testing, mocking and provides a better assertion syntax. I was very excited and <a href="https://twitter.com/#!/MattesGroeger/status/167993966342569987">tweeted about it</a>. On this tweet I got a very interesting reply from my friend <a href="https://twitter.com/#!/iceX33">Maxim</a>:</p>
+<h3>1. Install vim</h3>
 
-<p><img class="center" src="/images/posts/TweetMax.png" title="Tweet from Max" ></p>
-
-<p>This made me curios. I started using <a href="https://github.com/allending/Kiwi">Kiwi</a> for my recent iOS project and <a href="https://twitter.com/#!/MattesGroeger/status/176436609984643072">fell more and more in love with it</a>.</p>
-
-<h3>Presentation</h3>
-
-<p>In the following video I give a brief introduction to Kiwi and what makes it so special. It was captured during one of our <code>5-Minutes-of-Fame</code> talks at <a href="http://www.wooga.com/">Wooga</a>.</p>
-
-<iframe width="853" height="480" src="//www.youtube.com/embed/gByruPzLjiA" frameborder="0" allowfullscreen></iframe>
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>brew install vim</span></code></pre></td></tr></table></div></figure>
 
 
-<h2>Links</h2>
+<p>This will install vim in the <code>/usr/local/bin</code> directory. So far the original vim is still in place and used. We have to give the brew version precedence.</p>
+
+<h3>2. Update PATH order</h3>
+
+<p>An easy way to make sure the homebrew version is loaded is to make sure its path is defined before the system path. Locate your <code>PATH</code> configuration.</p>
+
+<p>For <a href="http://en.wikipedia.org/wiki/Bash_(Unix_shell)">bash</a> it&rsquo;s one of these files:</p>
 
 <ul>
-<li><a href="https://github.com/allending/kiwi">Kiwi Testing Framework</a> (GitHub)</li>
-<li><a href="https://github.com/MattesGroeger/OCUnit2JUnit">Parsing Kiwi output on Jenkins</a> (GitHub)</li>
+<li>~/.bash_profile</li>
+<li>~/.bash_login</li>
+<li>~/.profile</li>
 </ul>
 
+
+<p>For <a href="http://en.wikipedia.org/wiki/Z_shell">zsh</a> open this file:</p>
+
+<ul>
+<li>~/.zshrc</li>
+</ul>
+
+
+<p>Make sure <code>/usr/local/bin</code> is declared before <code>/usr/bin</code>:</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>export PATH=/usr/local/bin:/usr/bin:/bin:/usr/sbin...</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Reload the config, with zsh for example:
+<a href="http://localhost:4000/blog/2013/11/15/vim-with-system-clipboard/">http://localhost:4000/blog/2013/11/15/vim-with-system-clipboard/</a></p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>source ~/.zshrc
+</span><span class='line'>which vim
+</span><span class='line'>vim --version</span></code></pre></td></tr></table></div></figure>
+
+
+<p>The vim path should be <code>/usr/local/bin/vim</code>. And <code>vim --version</code> should contain the <code>+clipboard</code>. A nice side effect of changing the PATH order is that you can also update git using homebrew.</p>
+
+<h3>3. Enable clipboard in .vimrc</h3>
+
+<p>As a last step you have to enable the system clipboard in vim. Open your <code>.vimrc</code> and add the following line:</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>set clipboard=unnamed</span></code></pre></td></tr></table></div></figure>
+
+
+<p>From now on you should be able to use the system clipboard when using vim verbs (<code>y</code>, <code>d</code>, <code>p</code> etc).</p>
 </div>
 
 
@@ -153,12 +189,12 @@
   
 
 
-<time datetime="2012-11-11T20:57:00+01:00" pubdate data-updated="true">Nov 11<span>th</span>, 2012</time>
+<time datetime="2013-11-15T16:14:00+01:00" pubdate data-updated="true">Nov 15<span>th</span>, 2013</time>
       
 
 <span class="categories">
   
-    <a class='category' href='/blog/categories/bdd/'>BDD</a>, <a class='category' href='/blog/categories/kiwi/'>Kiwi</a>, <a class='category' href='/blog/categories/testing/'>Testing</a>, <a class='category' href='/blog/categories/ios/'>iOS</a>
+    <a class='category' href='/blog/categories/osx/'>OSX</a>, <a class='category' href='/blog/categories/tip/'>Tip</a>, <a class='category' href='/blog/categories/vim/'>Vim</a>
   
 </span>
 
@@ -167,7 +203,7 @@
     
       <div class="sharing">
   
-  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://MattesGroeger.github.io/blog/2012/11/11/kiwi-testing-with-style-for-ios/" data-via="MattesGroeger" data-counturl="http://MattesGroeger.github.io/blog/2012/11/11/kiwi-testing-with-style-for-ios/" >Tweet</a>
+  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://MattesGroeger.github.io/blog/2013/11/15/vim-with-system-clipboard/" data-via="MattesGroeger" data-counturl="http://MattesGroeger.github.io/blog/2013/11/15/vim-with-system-clipboard/" >Tweet</a>
   
   
   <div class="g-plusone" data-size="medium"></div>
@@ -178,7 +214,7 @@
     
     <p class="meta">
       
-        <a class="basic-alignment left" href="/blog/2012/01/29/flash-timeline-actions/" title="Previous Post: Flash Timeline Actions">&laquo; Flash Timeline Actions</a>
+        <a class="basic-alignment left" href="/blog/2011/03/13/context-aware-tasks/" title="Previous Post: Context-Aware Tasks">&laquo; Context-Aware Tasks</a>
       
       
     </p>
@@ -215,8 +251,8 @@
       
         
         // var disqus_developer = 1;
-        var disqus_identifier = 'http://MattesGroeger.github.io/blog/2012/11/11/kiwi-testing-with-style-for-ios/';
-        var disqus_url = 'http://MattesGroeger.github.io/blog/2012/11/11/kiwi-testing-with-style-for-ios/';
+        var disqus_identifier = 'http://MattesGroeger.github.io/blog/2013/11/15/vim-with-system-clipboard/';
+        var disqus_url = 'http://MattesGroeger.github.io/blog/2013/11/15/vim-with-system-clipboard/';
         var disqus_script = 'embed.js';
       
     (function () {
