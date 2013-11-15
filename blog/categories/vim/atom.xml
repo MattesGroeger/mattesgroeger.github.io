@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Vim | Mattes Groeger]]></title>
   <link href="http://MattesGroeger.github.io/blog/categories/vim/atom.xml" rel="self"/>
   <link href="http://MattesGroeger.github.io/"/>
-  <updated>2013-11-15T17:19:41+01:00</updated>
+  <updated>2013-11-15T17:26:12+01:00</updated>
   <id>http://MattesGroeger.github.io/</id>
   <author>
     <name><![CDATA[Mattes Groeger]]></name>
@@ -25,7 +25,7 @@
 
 <p>You can check this yourself by typing <code>vim --version</code> on the command line. The output should contain something like <code>+clipboard</code> (<code>+</code> means enabled). Probably you have a <code>-</code> instead. Luckily with <a href="http://brew.sh/">homebrew</a> you can easily install vim with clipboard enabled.</p>
 
-<h3>1. Install vim</h3>
+<h3>1. Install Vim</h3>
 
 <p><code>
 brew install vim
@@ -33,7 +33,7 @@ brew install vim
 
 <p>This will install vim in the <code>/usr/local/bin</code> directory. So far the original vim is still in place and used. We have to give the brew version precedence.</p>
 
-<h3>2. Update PATH order</h3>
+<h3>2. Update PATH Order</h3>
 
 <p>An easy way to make sure the homebrew version is loaded is to make sure its path is defined before the system path. Locate your <code>PATH</code> configuration.</p>
 
@@ -70,7 +70,7 @@ vim --version
 
 <p>The vim path should be <code>/usr/local/bin/vim</code>. And <code>vim --version</code> should contain the <code>+clipboard</code>. A nice side effect of changing the PATH order is that you can also update git using homebrew.</p>
 
-<h3>3. Enable clipboard in .vimrc</h3>
+<h3>3. Enable Clipboard in .vimrc</h3>
 
 <p>As a last step you have to enable the system clipboard in vim. Open your <code>.vimrc</code> and add the following line:</p>
 
