@@ -12,7 +12,7 @@ With vim I got really addicted to keyboard-only usage. But there is one thing I 
 
 You can check this yourself by typing `vim --version` on the command line. The output should contain something like `+clipboard` (`+` means enabled). Probably you have a `-` instead. Luckily with [homebrew](http://brew.sh/) you can easily install vim with clipboard enabled.
 
-### 1. Install vim
+### 1. Install Vim
 
 ```
 brew install vim
@@ -20,7 +20,7 @@ brew install vim
 
 This will install vim in the `/usr/local/bin` directory. So far the original vim is still in place and used. We have to give the brew version precedence.
 
-### 2. Update PATH order
+### 2. Update PATH Order
 
 An easy way to make sure the homebrew version is loaded is to make sure its path is defined before the system path. Locate your `PATH` configuration.
 
@@ -51,7 +51,7 @@ vim --version
 
 The vim path should be `/usr/local/bin/vim`. And `vim --version` should contain the `+clipboard`. A nice side effect of changing the PATH order is that you can also update git using homebrew.
 
-### 3. Enable clipboard in .vimrc
+### 3. Enable Clipboard in .vimrc
 
 As a last step you have to enable the system clipboard in vim. Open your `.vimrc` and add the following line:
 
