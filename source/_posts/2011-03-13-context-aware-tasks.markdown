@@ -149,6 +149,6 @@ This approach of `Context`-aware `Tasks` ensures that you don't have a lot of `T
 
 ## Links
 
-* [Strong typed constants](http://blog.mattes-groeger.de/actionscript/strong-typed-constants/)</li>
+* [Strong typed constants](http://mattesgroeger.github.io/blog/2011/01/02/strong-typed-constants/)</li>
 * [Task framework documentation](http://www.spicefactory.org/parsley/docs/2.3/manual/task.php)</li>
 * [Parsley/Spicelib download](http://www.spicefactory.org/parsley/download.php)</li>
