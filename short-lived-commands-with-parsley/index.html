@@ -1,0 +1,391 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>Short-Lived Commands with Parsley - Mattes Groeger</title>
+  <meta name="author" content="Mattes Groeger">
+
+  
+  <meta name="description" content="This week we had to decide on a MVC Framework for our next game at Wooga. In the end the options were Robotlegs and Parsley. Both of them had &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://blog.mattes-groeger.de/short-lived-commands-with-parsley">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="Mattes Groeger" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/lib/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href='http://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css'>
+<link href='http://fonts.googleapis.com/css?family=Fjalla+One' rel='stylesheet' type='text/css'>
+  
+  <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-12394086-3']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+  </script>
+
+
+</head>
+
+<body   class="collapse-sidebar sidebar-footer" >
+  <header role="banner"><hgroup>
+  <h1><a href="/">Mattes Groeger</a></h1>
+  
+    <h2>Developer Blog</h2>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="http://google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:blog.mattes-groeger.de" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Home</a></li>
+  <li><a href="/archives">Archives</a></li>
+  <li><a href="https://github.com/MattesGroeger">GitHub</a></li>
+  <li><a href="https://twitter.com/MattesGroeger">Twitter</a></li>
+  <li><a href="https://www.linkedin.com/pub/mattes-groeger/2a/b14/902">LinkedIn</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">Short-Lived Commands With Parsley</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2010-10-31T21:24:00+01:00" pubdate data-updated="true">Oct 31<span>st</span>, 2010</time>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><p>This week we had to decide on a <a href="http://en.wikipedia.org/wiki/Model%E2%80%93View%E2%80%93Controller">MVC Framework</a> for our next game at <a href="http://www.wooga.com">Wooga</a>. In the end the options were <a href="http://www.robotlegs.org/">Robotlegs</a> and <a href="http://www.spicefactory.org/parsley/">Parsley</a>. Both of them had advantages and disadvantages. One aspect we came across was the support of <code>Short-lived Command Objects</code>.</p>
+
+<!-- more -->
+
+
+<p>These commands hold no state and will be garbage collected after execution. In Robotlegs they are supported via the <a href="http://api.robotlegs.org/org/robotlegs/core/ICommandMap.html"><code>ICommandMap</code></a> interface. Parsley also provides an implementation of this pattern called <a href="http://www.spicefactory.org/parsley/docs/2.3/manual/messaging.php#command_objects"><code>DynamicCommand</code></a>. In contrast to Robotlegs, Parsley provides 4 different ways to build and configure a context:</p>
+
+<ul>
+<li><a href="http://www.spicefactory.org/parsley/docs/2.3/manual/config.php#mxml">MXML</a>: DynamicCommand Tag. Only for Flex projects.</li>
+<li><a href="http://www.spicefactory.org/parsley/docs/2.3/manual/config.php#xml">XML</a>: DynamicCommand Node. No compiler check on types possible.</li>
+<li><a href="http://www.spicefactory.org/parsley/docs/2.3/manual/config.php#as3">ActionScript</a>: No way to configure dynamic Commands.</li>
+<li><a href="http://www.spicefactory.org/parsley/docs/2.3/manual/config.php#dsl">Configuration DSL</a>: Programmatic configuration of Dynamic Commands.</li>
+</ul>
+
+
+<p>Because our game should not use the Flex framework, the last option is our only choice if we want to have strongly typed command mappings like in Robotlegs.</p>
+
+<h2>DynamicCommands via Configuration DSL</h2>
+
+<p>Because a documentation is not available for this case it was a bit tricky to find the solution (thanks for the hint, Jens). This was the first result:</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+</pre></td><td class='code'><pre><code class='actionscript3'><span class='line'><span class="kd">var</span> <span class="n">contextBuilder</span><span class="p">:</span><span class="kt">ContextBuilder</span> <span class="o">=</span> <span class="n">ContextBuilder</span><span class="o">.</span><span class="na">newSetup</span><span class="o">()</span>
+</span><span class='line'>  <span class="o">.</span><span class="na">viewRoot</span><span class="o">(</span><span class="k">this</span><span class="o">)</span>
+</span><span class='line'>  <span class="o">.</span><span class="na">newBuilder</span><span class="o">();</span>
+</span><span class='line'>
+</span><span class='line'><span class="kd">var</span> <span class="n">targetDef</span><span class="p">:</span><span class="kt">DynamicObjectDefinition</span> <span class="o">=</span> <span class="n">contextBuilder</span>
+</span><span class='line'>  <span class="o">.</span><span class="na">objectDefinition</span><span class="o">()</span>
+</span><span class='line'>  <span class="o">.</span><span class="na">forClass</span><span class="o">(</span><span class="n">CommandType</span><span class="o">)</span>
+</span><span class='line'>  <span class="o">.</span><span class="na">asDynamicObject</span><span class="o">()</span>
+</span><span class='line'>  <span class="o">.</span><span class="na">build</span><span class="o">();</span>
+</span><span class='line'>
+</span><span class='line'><span class="n">DynamicCommandBuilder</span>
+</span><span class='line'>  <span class="o">.</span><span class="na">newBuilder</span><span class="o">(</span><span class="n">targetDef</span><span class="o">)</span>
+</span><span class='line'>  <span class="o">.</span><span class="na">builder</span>
+</span><span class='line'>  <span class="o">.</span><span class="na">messageType</span><span class="o">(</span><span class="n">MessageType</span><span class="o">)</span>
+</span><span class='line'>  <span class="o">.</span><span class="na">stateful</span><span class="o">(</span><span class="kc">false</span><span class="o">)</span>
+</span><span class='line'>  <span class="o">.</span><span class="na">build</span><span class="o">();</span>
+</span><span class='line'>
+</span><span class='line'><span class="n">contextBuilder</span><span class="o">.</span><span class="na">config</span><span class="o">(</span><span class="n">ActionScriptConfig</span><span class="o">.</span><span class="na">forClass</span><span class="o">(</span><span class="n">MainConfig</span><span class="o">));</span>
+</span><span class='line'><span class="n">contextBuilder</span><span class="o">.</span><span class="na">build</span><span class="o">();</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Note that you can not use the <code>ActionScriptContexBuilder.build()</code> notation anymore. Instead you have to configure the whole context via the DSL. In line 18, the actual configuration (<code>MainConfig</code>) which contains all object definitions is passed in.</p>
+
+<p>Because this configuration is very hard to read and redundant if you want to map several Commands, I encapsulated the mapping to a separate class <code>CommandMap</code>. Now the configuration looks like this:</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+</pre></td><td class='code'><pre><code class='actionscript3'><span class='line'><span class="kd">var</span> <span class="n">contextBuilder</span><span class="p">:</span><span class="kt">ContextBuilder</span> <span class="o">=</span> <span class="n">ContextBuilder</span><span class="o">.</span><span class="na">newSetup</span><span class="o">()</span>
+</span><span class='line'>  <span class="o">.</span><span class="na">viewRoot</span><span class="o">(</span><span class="k">this</span><span class="o">)</span>
+</span><span class='line'>  <span class="o">.</span><span class="na">newBuilder</span><span class="o">();</span>
+</span><span class='line'>
+</span><span class='line'><span class="kd">var</span> <span class="n">commandMap</span><span class="p">:</span><span class="kt">CommandMap</span> <span class="o">=</span> <span class="k">new</span> <span class="kt">CommandMap</span><span class="o">(</span><span class="n">contextBuilder</span><span class="o">);</span>
+</span><span class='line'><span class="n">commandMap</span><span class="o">.</span><span class="na">register</span><span class="o">(</span><span class="n">LoginCommand</span><span class="o">,</span> <span class="n">LoginRequest</span><span class="o">);</span>
+</span><span class='line'><span class="n">commandMap</span><span class="o">.</span><span class="na">register</span><span class="o">(</span><span class="n">LogoutCommand</span><span class="o">,</span> <span class="n">LogoutRequest</span><span class="o">);</span>
+</span><span class='line'>
+</span><span class='line'><span class="n">contextBuilder</span><span class="o">.</span><span class="na">config</span><span class="o">(</span><span class="n">ActionScriptConfig</span><span class="o">.</span><span class="na">forClass</span><span class="o">(</span><span class="n">MainConfig</span><span class="o">));</span>
+</span><span class='line'><span class="n">contextBuilder</span><span class="o">.</span><span class="na">build</span><span class="o">();</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Until now I found no way to map or un-map Commands after the context has been built. The only way would be to destroy the context they are registered in.</p>
+
+<p>To get a better impression how short-lived commands are used in Parsley, I implemented a small example, which you can <a href="http://github.com/MattesGroeger/as3-parsley-example">access on GitHub</a>. The CommandMap class can be <a href="http://github.com/MattesGroeger/as3-parsley-example/blob/master/src/de/mattesgroeger/parsley/core/CommandMap.as">found here</a>.</p>
+
+<p>And this is how the login example looks like. Invalid credentials lead to an error pop up. Valid login works with <em>admin</em> and password <em>test</em>:</p>
+
+<object style="width: 850px; height: 250px;" width="850" height="250" classid="clsid:d27cdb6e-ae6d-11cf-96b8-444553540000" codebase="http://download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=6,0,40,0"><param name="src" value="/images/posts/ParsleyExample1.swf" /><embed style="width: 850px; height: 250px;" width="850" height="250" type="application/x-shockwave-flash" src="/images/posts/ParsleyExample1.swf" /> </object>
+
+
+<h2>Summary</h2>
+
+<p>The Robotlegs implementation is very straight forward. Commands can be mapped and un-mapped at any time. This is not possible in Parsley. But you have other features that give maybe similar results (for example <a href="http://www.spicefactory.org/parsley/docs/2.3/manual/messaging.php#interceptors" target="_blank">MessageInterceptors</a>).</p>
+
+<p>Because Parsley reflects on the types you can pass data directly to the execute method. This way, each concrete execute method can receive strong typed parameters (see line 9). No framework class has to be extended for custom Commands. This is how a command can look like:</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+</pre></td><td class='code'><pre><code class='actionscript3'><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="n">LogoutCommand</span>
+</span><span class='line'><span class="o">{</span>
+</span><span class='line'>  <span class="o">[</span><span class="n">Inject</span><span class="o">]</span>
+</span><span class='line'>  <span class="kd">public</span> <span class="kd">var</span> <span class="n">service</span><span class="p">:</span><span class="kt">ISessionService</span><span class="o">;</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="o">[</span><span class="n">MessageDispatcher</span><span class="o">]</span>
+</span><span class='line'>  <span class="kd">public</span> <span class="kd">var</span> <span class="n">dispatcher</span><span class="p">:</span><span class="kt">Function</span><span class="o">;</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="kd">public</span> <span class="kd">function </span><span class="nf">execute</span><span class="o">(</span><span class="n">message</span><span class="o">:</span><span class="kt">LogoutRequest</span><span class="o">)</span> <span class="o">:</span> <span class="kt">ServiceRequest</span>
+</span><span class='line'>  <span class="o">{</span>
+</span><span class='line'>    <span class="k">return</span> <span class="n">service</span><span class="o">.</span><span class="na">logout</span><span class="o">(</span><span class="n">message</span><span class="o">.</span><span class="na">sessionId</span><span class="o">);</span>
+</span><span class='line'>  <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="kd">public</span> <span class="kd">function </span><span class="nf">result</span><span class="o">(</span><span class="n">success</span><span class="o">:</span><span class="kt">Boolean</span><span class="o">)</span> <span class="o">:</span> <span class="kt">void</span>
+</span><span class='line'>  <span class="o">{</span>
+</span><span class='line'>    <span class="n">dispatcher</span><span class="o">(</span><span class="k">new</span> <span class="kt">LogoutSuccess</span><span class="o">(</span><span class="n">success</span><span class="o">));</span>
+</span><span class='line'>  <span class="o">}</span>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>I also like the native support of synchronous and asynchronous Commands in Parsley. No special configuration is necessary, because Parsley reflects on the return type of the <code>execute()</code> method (line 9, <code>ServiceRequest</code>).</p>
+
+<h2>Links:</h2>
+
+<ul>
+<li><a href="http://github.com/MattesGroeger/as3-parsley-example">Browse the example sources on GitHub</a></li>
+<li><a href="http://github.com/MattesGroeger/as3-parsley-example/blob/master/README.md">Readme of the example</a></li>
+<li><a href="http://github.com/MattesGroeger/as3-parsley-example/blob/master/src/de/mattesgroeger/parsley/core/CommandMap.as">CommandMap source</a></li>
+</ul>
+
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">Mattes Groeger</span></span>
+
+      
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2010-10-31T21:24:00+01:00" pubdate data-updated="true">Oct 31<span>st</span>, 2010</time>
+      
+
+<span class="categories">
+  
+    <a class='category' href='/categories/actionscript/'>ActionScript</a>, <a class='category' href='/categories/commands/'>Commands</a>, <a class='category' href='/categories/parsley/'>Parsley</a>
+  
+</span>
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://blog.mattes-groeger.de/short-lived-commands-with-parsley/" data-via="MattesGroeger" data-counturl="http://blog.mattes-groeger.de/short-lived-commands-with-parsley/" >Tweet</a>
+  
+  
+  <div class="g-plusone" data-size="medium"></div>
+  
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/icon-badge-for-windows/" title="Previous Post: Icon Badge for Windows">&laquo; Icon Badge for Windows</a>
+      
+      
+        <a class="basic-alignment right" href="/review-logging-with-trazzle/" title="Next Post: Review: Logging with Trazzle">Review: Logging with Trazzle &raquo;</a>
+      
+    </p>
+  </footer>
+</article>
+
+  <section>
+    <h1>Comments</h1>
+    <div id="disqus_thread" aria-live="polite"><noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+  </section>
+
+
+</div>
+
+<aside class="sidebar">
+  
+    
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2013 - Mattes Groeger
+</p>
+
+</footer>
+  
+
+<script type="text/javascript">
+      var disqus_shortname = 'mattesgroegerblog';
+      
+        
+        // var disqus_developer = 1;
+        var disqus_identifier = 'http://blog.mattes-groeger.de/short-lived-commands-with-parsley/';
+        var disqus_url = 'http://blog.mattes-groeger.de/short-lived-commands-with-parsley/';
+        var disqus_script = 'embed.js';
+      
+    (function () {
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      dsq.src = 'http://' + disqus_shortname + '.disqus.com/' + disqus_script;
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    }());
+</script>
+
+
+
+
+
+
+
+
+  <script type="text/javascript">
+    (function() {
+      var script = document.createElement('script'); script.type = 'text/javascript'; script.async = true;
+      script.src = 'https://apis.google.com/js/plusone.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(script, s);
+    })();
+  </script>
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = 'http://platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>

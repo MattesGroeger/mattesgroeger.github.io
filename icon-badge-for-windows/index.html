@@ -1,0 +1,372 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>Icon Badge for Windows - Mattes Groeger</title>
+  <meta name="author" content="Mattes Groeger">
+
+  
+  <meta name="description" content="Until now the Air Icon Badge library implementation only supported OS X dock icons. Nevertheless it is easy to extend the implementation for &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://blog.mattes-groeger.de/icon-badge-for-windows">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="Mattes Groeger" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/lib/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href='http://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css'>
+<link href='http://fonts.googleapis.com/css?family=Fjalla+One' rel='stylesheet' type='text/css'>
+  
+  <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-12394086-3']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+  </script>
+
+
+</head>
+
+<body   class="collapse-sidebar sidebar-footer" >
+  <header role="banner"><hgroup>
+  <h1><a href="/">Mattes Groeger</a></h1>
+  
+    <h2>Developer Blog</h2>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="http://google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:blog.mattes-groeger.de" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Home</a></li>
+  <li><a href="/archives">Archives</a></li>
+  <li><a href="https://github.com/MattesGroeger">GitHub</a></li>
+  <li><a href="https://twitter.com/MattesGroeger">Twitter</a></li>
+  <li><a href="https://www.linkedin.com/pub/mattes-groeger/2a/b14/902">LinkedIn</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">Icon Badge for Windows</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2010-03-14T22:54:00+01:00" pubdate data-updated="true">Mar 14<span>th</span>, 2010</time>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><p>Until now the <a href="/blog/2010/02/08/icon-badge-library-for-air/">Air Icon Badge library</a> implementation only supported OS X dock icons. Nevertheless it is easy to extend the implementation for utilizing it as Windows system tray icon. In this article I will demonstrate how this could be realized.</p>
+
+<!-- more -->
+
+
+<p><img class="center" src="/images/posts/WindowsSystemTray.jpg"></p>
+
+<h2>Demo</h2>
+
+<p>I extended the existing example implementation. Just choose &ldquo;Window Tray Icon&rdquo; from the right panel for previewing the new icon.</p>
+
+<object style="width: 850px; height: 350px;" width="850" height="350" classid="clsid:d27cdb6e-ae6d-11cf-96b8-444553540000" codebase="http://download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=6,0,40,0"><param name="src" value="/images/posts/WebBadgeExample.swf" /><embed style="width: 850px; height: 350px;" width="850" height="350" type="application/x-shockwave-flash" src="/images/posts/WebBadgeExample.swf" /></object>
+
+
+<p></br></p>
+
+<h2>Implementation</h2>
+
+<p>The first class that I create is the <code>SystemTrayIconBuilder</code> (it must implement <code>IconBuilder</code> interface). This class is responsible for composing the system tray icon. It also sets the general icon size to 16 by 16 pixels.</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+</pre></td><td class='code'><pre><code class='as3'><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="n">SystemTrayIconBuilder</span> <span class="kd">extends</span> <span class="n">AbstractIconBuilder</span> <span class="kd">implements</span> <span class="n">IconBuilder</span>
+</span><span class='line'><span class="o">{</span>
+</span><span class='line'>  <span class="kd">public</span> <span class="kd">override</span> <span class="kd">function </span><span class="nf">createNewIcon</span><span class="o">(</span><span class="n">width</span> <span class="o">:</span> <span class="kt">int</span><span class="o">,</span> <span class="n">height</span> <span class="o">:</span> <span class="kt">int</span><span class="o">)</span> <span class="o">:</span> <span class="kt">void</span>
+</span><span class='line'>  <span class="o">{</span>
+</span><span class='line'>    <span class="kd">super</span><span class="o">.</span><span class="na">createNewIcon</span><span class="o">(</span><span class="mi">16</span><span class="o">,</span> <span class="mi">16</span><span class="o">);</span>
+</span><span class='line'>  <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="kd">public</span> <span class="kd">override</span> <span class="kd">function </span><span class="nf">addBackground</span><span class="o">(</span> <span class="n">background</span> <span class="o">:</span> <span class="kt">Bitmap</span><span class="o">)</span> <span class="o">:</span> <span class="kt">void</span>
+</span><span class='line'>  <span class="o">{</span>
+</span><span class='line'>    <span class="n">background</span><span class="o">.</span><span class="na">width</span> <span class="o">=</span> <span class="n">background</span><span class="o">.</span><span class="na">height</span> <span class="o">=</span> <span class="mi">16</span><span class="o">;</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="n">container</span><span class="o">.</span><span class="na">addChild</span><span class="o">(</span><span class="n">background</span><span class="o">);</span>
+</span><span class='line'>  <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="kd">public</span> <span class="kd">override</span> <span class="kd">function </span><span class="nf">addBadge</span><span class="o">(</span><span class="n">label</span> <span class="o">:</span> <span class="kt">String</span><span class="o">)</span> <span class="o">:</span> <span class="kt">void</span>
+</span><span class='line'>  <span class="o">{</span>
+</span><span class='line'>    <span class="kd">var</span> <span class="n">badge</span> <span class="p">:</span> <span class="kt">TrayIconBadge</span> <span class="o">=</span> <span class="k">new</span> <span class="kt">TrayIconBadge</span><span class="o">();</span>
+</span><span class='line'>    <span class="n">badge</span><span class="o">.</span><span class="na">label</span><span class="o">.</span><span class="na">text</span> <span class="o">=</span> <span class="n">label</span><span class="o">;</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="n">container</span><span class="o">.</span><span class="na">addChild</span><span class="o">(</span><span class="n">badge</span><span class="o">);</span>
+</span><span class='line'>  <span class="o">}</span>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Please note the the <code>TrayIconBadge</code> class used in this example (line 17) is a MovieClip designed and exported (swc) with the Flash IDE. I used a pixel font for better readability. Because of the small icon size the visible letter count is also limited.</p>
+
+<p>The next step is to create a custom <code>SystemTrayIconBadge</code> which has to implement the <code>IconBadge</code> interface. To avoid redundancies I extend the <code>DockIconBadge</code> class and override the factory method &ldquo;<code>createIconBuilder()</code>&rdquo;.</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+</pre></td><td class='code'><pre><code class='as3'><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="n">SystemTrayIconBadge</span> <span class="kd">extends</span> <span class="n">DockIconBadge</span>
+</span><span class='line'><span class="o">{</span>
+</span><span class='line'>  <span class="kd">protected</span> <span class="kd">override</span> <span class="kd">function </span><span class="nf">createIconBuilder</span><span class="o">()</span> <span class="o">:</span> <span class="kt">IconBuilder</span>
+</span><span class='line'>  <span class="o">{</span>
+</span><span class='line'>    <span class="k">return</span> <span class="k">new</span> <span class="kt">SystemTrayIconBuilder</span><span class="o">();</span>
+</span><span class='line'>  <span class="o">}</span>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>The last step is to build the <code>CrossPlatformIconBadgeFactory</code> which implements <code>IconBadgeFactory</code>. It is responsible for detecting the users operating system and returning the corresponding <code>IconBadge</code>. Again I extend the existing factory class to avoid redundancies:</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+</pre></td><td class='code'><pre><code class='as3'><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="n">CrossPlatformIconBadgeFactory</span> <span class="kd">extends</span>
+</span><span class='line'><span class="n">AirIconBadgeFactroy</span>
+</span><span class='line'><span class="o">{</span>
+</span><span class='line'>  <span class="kd">public</span> <span class="kd">override</span> <span class="kd">function </span><span class="nf">create</span><span class="o">()</span> <span class="o">:</span> <span class="kt">IconBadge</span>
+</span><span class='line'>  <span class="o">{</span>
+</span><span class='line'>    <span class="k">if</span> <span class="o">(</span><span class="n">NativeApplication</span><span class="o">.</span><span class="na">supportsSystemTrayIcon</span><span class="o">)</span>
+</span><span class='line'>      <span class="k">return</span> <span class="k">new</span> <span class="kt">SystemTrayIconBadge</span><span class="o">();</span>
+</span><span class='line'>
+</span><span class='line'>      <span class="k">return</span> <span class="kd">super</span><span class="o">.</span><span class="na">create</span><span class="o">();</span>
+</span><span class='line'>  <span class="o">}</span>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Finally for using the new factory it has to be assigned to the <code>AirIconBadge</code> class.</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='as3'><span class='line'><span class="n">AirIconBadge</span><span class="o">.</span><span class="na">factory</span> <span class="o">=</span> <span class="k">new</span> <span class="kt">CrossPlatformIconBadgeFactory</span><span class="o">();</span>
+</span><span class='line'><span class="n">AirIconBadge</span><span class="o">.</span><span class="na">label</span> <span class="o">=</span> <span class="s2">&quot;1&quot;</span><span class="o">;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h2>Summary</h2>
+
+<p>As you can see, it is very little effort to add the windows system tray icon capability. You are free to (re)use this example. <a href="http://code.google.com/p/air-icon-badge/downloads/list">Binaries</a> and <a href="http://code.google.com/p/air-icon-badge/source/browse/#svn/air-icon-badge-examples/trunk/dev/src/de/mgroeger/air/icon/example/windows">sources</a> can be downloaded from the <a href="http://code.google.com/p/air-icon-badge/">google code project site</a>.</p>
+
+<ul>
+<li><a href="http://code.google.com/p/air-icon-badge/downloads/detail?name=air-icon-badge-examples.zip&amp;amp;can=2&amp;amp;q=#makechanges">Example Download</a> (air/swf)</li>
+<li><a href="http://code.google.com/p/air-icon-badge/source/browse/#svn/air-icon-badge-examples/trunk/dev/src/">Browse Example Sources</a></li>
+<li><a href="http://code.google.com/p/air-icon-badge/downloads/detail?name=air-icon-badge-0.1.zip">Library Download</a></li>
+</ul>
+
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">Mattes Groeger</span></span>
+
+      
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2010-03-14T22:54:00+01:00" pubdate data-updated="true">Mar 14<span>th</span>, 2010</time>
+      
+
+<span class="categories">
+  
+    <a class='category' href='/categories/actionscript/'>ActionScript</a>, <a class='category' href='/categories/air/'>Air</a>, <a class='category' href='/categories/api/'>Api</a>, <a class='category' href='/categories/lib/'>Lib</a>
+  
+</span>
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://blog.mattes-groeger.de/icon-badge-for-windows/" data-via="MattesGroeger" data-counturl="http://blog.mattes-groeger.de/icon-badge-for-windows/" >Tweet</a>
+  
+  
+  <div class="g-plusone" data-size="medium"></div>
+  
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/icon-badge-library-for-air/" title="Previous Post: Icon Badge Library for Air">&laquo; Icon Badge Library for Air</a>
+      
+      
+        <a class="basic-alignment right" href="/short-lived-commands-with-parsley/" title="Next Post: Short-Lived Commands with Parsley">Short-Lived Commands with Parsley &raquo;</a>
+      
+    </p>
+  </footer>
+</article>
+
+  <section>
+    <h1>Comments</h1>
+    <div id="disqus_thread" aria-live="polite"><noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+  </section>
+
+
+</div>
+
+<aside class="sidebar">
+  
+    
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2013 - Mattes Groeger
+</p>
+
+</footer>
+  
+
+<script type="text/javascript">
+      var disqus_shortname = 'mattesgroegerblog';
+      
+        
+        // var disqus_developer = 1;
+        var disqus_identifier = 'http://blog.mattes-groeger.de/icon-badge-for-windows/';
+        var disqus_url = 'http://blog.mattes-groeger.de/icon-badge-for-windows/';
+        var disqus_script = 'embed.js';
+      
+    (function () {
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      dsq.src = 'http://' + disqus_shortname + '.disqus.com/' + disqus_script;
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    }());
+</script>
+
+
+
+
+
+
+
+
+  <script type="text/javascript">
+    (function() {
+      var script = document.createElement('script'); script.type = 'text/javascript'; script.async = true;
+      script.src = 'https://apis.google.com/js/plusone.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(script, s);
+    })();
+  </script>
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = 'http://platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>
