@@ -2,10 +2,10 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
 
   <title><![CDATA[Category: Logging | Mattes Groeger]]></title>
-  <link href="http://blog.mattes-groeger.de/categories/logging/atom.xml" rel="self"/>
-  <link href="http://blog.mattes-groeger.de/"/>
-  <updated>2013-11-17T17:18:37+01:00</updated>
-  <id>http://blog.mattes-groeger.de/</id>
+  <link href="http://mattesgroeger.github.io/categories/logging/atom.xml" rel="self"/>
+  <link href="http://mattesgroeger.github.io/"/>
+  <updated>2013-11-17T21:18:52+01:00</updated>
+  <id>http://mattesgroeger.github.io/</id>
   <author>
     <name><![CDATA[Mattes Groeger]]></name>
     
@@ -15,9 +15,9 @@
   
   <entry>
     <title type="html"><![CDATA[Review: Logging with Trazzle]]></title>
-    <link href="http://blog.mattes-groeger.de/review-logging-with-trazzle/"/>
+    <link href="http://mattesgroeger.github.io/review-logging-with-trazzle/"/>
     <updated>2010-11-14T17:39:00+01:00</updated>
-    <id>http://blog.mattes-groeger.de/review-logging-with-trazzle</id>
+    <id>http://mattesgroeger.github.io/review-logging-with-trazzle</id>
     <content type="html"><![CDATA[<p>A few weeks ago <a href="https://twitter.com/MattesGroeger/status/24742440693">I discovered</a> an ActionScript 3.0 Logger called Trazzle. It&rsquo;s available for Mac only and provides a well-arranged, beautiful logging output, a performance monitor, bitmap logging <a href="http://www.nesium.com/products/trazzle">and much more</a>. In order to use this logger, you need to install the <a href="http">Logger Client</a> and include the <a href="http://github.com/nesium/trazzlelib-as3/downloads">SWC files</a> within your project.</p>
 
 <!-- more -->

@@ -2,10 +2,10 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
 
   <title><![CDATA[Category: Timeline | Mattes Groeger]]></title>
-  <link href="http://blog.mattes-groeger.de/categories/timeline/atom.xml" rel="self"/>
-  <link href="http://blog.mattes-groeger.de/"/>
-  <updated>2013-11-17T17:18:37+01:00</updated>
-  <id>http://blog.mattes-groeger.de/</id>
+  <link href="http://mattesgroeger.github.io/categories/timeline/atom.xml" rel="self"/>
+  <link href="http://mattesgroeger.github.io/"/>
+  <updated>2013-11-17T21:18:52+01:00</updated>
+  <id>http://mattesgroeger.github.io/</id>
   <author>
     <name><![CDATA[Mattes Groeger]]></name>
     
@@ -15,9 +15,9 @@
   
   <entry>
     <title type="html"><![CDATA[Flash Timeline Actions]]></title>
-    <link href="http://blog.mattes-groeger.de/flash-timeline-actions/"/>
+    <link href="http://mattesgroeger.github.io/flash-timeline-actions/"/>
     <updated>2012-01-29T17:12:00+01:00</updated>
-    <id>http://blog.mattes-groeger.de/flash-timeline-actions</id>
+    <id>http://mattesgroeger.github.io/flash-timeline-actions</id>
     <content type="html"><![CDATA[<p>A proper designer-developer workflow is essential, especially in bigger teams. By separating logic and view (e.g. via <a href="http://en.wikipedia.org/wiki/Model%E2%80%93view%E2%80%93controller">MVC Design Pattern</a>) we try to avoid dependencies between artists and programmers. Less coupling increases the speed of development and design.</p>
 
 <!-- more -->

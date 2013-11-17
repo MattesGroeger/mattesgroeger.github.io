@@ -2,10 +2,10 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
 
   <title><![CDATA[Category: Air | Mattes Groeger]]></title>
-  <link href="http://blog.mattes-groeger.de/categories/air/atom.xml" rel="self"/>
-  <link href="http://blog.mattes-groeger.de/"/>
-  <updated>2013-11-17T17:18:37+01:00</updated>
-  <id>http://blog.mattes-groeger.de/</id>
+  <link href="http://mattesgroeger.github.io/categories/air/atom.xml" rel="self"/>
+  <link href="http://mattesgroeger.github.io/"/>
+  <updated>2013-11-17T21:18:52+01:00</updated>
+  <id>http://mattesgroeger.github.io/</id>
   <author>
     <name><![CDATA[Mattes Groeger]]></name>
     
@@ -15,9 +15,9 @@
   
   <entry>
     <title type="html"><![CDATA[Icon Badge for Windows]]></title>
-    <link href="http://blog.mattes-groeger.de/icon-badge-for-windows/"/>
+    <link href="http://mattesgroeger.github.io/icon-badge-for-windows/"/>
     <updated>2010-03-14T22:54:00+01:00</updated>
-    <id>http://blog.mattes-groeger.de/icon-badge-for-windows</id>
+    <id>http://mattesgroeger.github.io/icon-badge-for-windows</id>
     <content type="html"><![CDATA[<p>Until now the <a href="/blog/2010/02/08/icon-badge-library-for-air/">Air Icon Badge library</a> implementation only supported OS X dock icons. Nevertheless it is easy to extend the implementation for utilizing it as Windows system tray icon. In this article I will demonstrate how this could be realized.</p>
 
 <!-- more -->
@@ -29,7 +29,7 @@
 
 <p>I extended the existing example implementation. Just choose &ldquo;Window Tray Icon&rdquo; from the right panel for previewing the new icon.</p>
 
-<object style="width: 850px; height: 350px;" width="850" height="350" classid="clsid:d27cdb6e-ae6d-11cf-96b8-444553540000" codebase="http://download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=6,0,40,0"><param name="src" value="/images/posts/WebBadgeExample.swf" /><embed style="width: 850px; height: 350px;" width="850" height="350" type="application/x-shockwave-flash" src="http://blog.mattes-groeger.de/images/posts/WebBadgeExample.swf" /></object>
+<object style="width: 850px; height: 350px;" width="850" height="350" classid="clsid:d27cdb6e-ae6d-11cf-96b8-444553540000" codebase="http://download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=6,0,40,0"><param name="src" value="/images/posts/WebBadgeExample.swf" /><embed style="width: 850px; height: 350px;" width="850" height="350" type="application/x-shockwave-flash" src="http://mattesgroeger.github.io/images/posts/WebBadgeExample.swf" /></object>
 
 
 <p></br></p>
@@ -183,9 +183,9 @@
   
   <entry>
     <title type="html"><![CDATA[Icon Badge Library for Air]]></title>
-    <link href="http://blog.mattes-groeger.de/icon-badge-library-for-air/"/>
+    <link href="http://mattesgroeger.github.io/icon-badge-library-for-air/"/>
     <updated>2010-02-08T14:06:00+01:00</updated>
-    <id>http://blog.mattes-groeger.de/icon-badge-library-for-air</id>
+    <id>http://mattesgroeger.github.io/icon-badge-library-for-air</id>
     <content type="html"><![CDATA[<p><a href="http://www.adobe.com/products/air/">Adobe Air</a> is often used to build feed readers or social media clients. This kind of applications can retrieve new data while they are running in the background. In that case it would be great to inform the user about the amount of new items.</p>
 
 <!-- more -->
@@ -257,7 +257,7 @@
 
 <p>None Mac users can use the following demo that shows a preview of the dock icon:</p>
 
-<object style="width: 850px; height: 400px;" classid="clsid:d27cdb6e-ae6d-11cf-96b8-444553540000" width="850" height="400" codebase="http://download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=6,0,40,0"><param name="src" value="/images/posts/WebBadgeExample.swf" /><embed style="width: 850px; height: 400px;" type="application/x-shockwave-flash" width="850" height="400" src="http://blog.mattes-groeger.de/images/posts/WebBadgeExample.swf"> </embed></object>
+<object style="width: 850px; height: 400px;" classid="clsid:d27cdb6e-ae6d-11cf-96b8-444553540000" width="850" height="400" codebase="http://download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=6,0,40,0"><param name="src" value="/images/posts/WebBadgeExample.swf" /><embed style="width: 850px; height: 400px;" type="application/x-shockwave-flash" width="850" height="400" src="http://mattesgroeger.github.io/images/posts/WebBadgeExample.swf"> </embed></object>
 
 
 <p></br></p>

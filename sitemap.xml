@@ -1,55 +1,55 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <urlset xmlns='http://www.sitemaps.org/schemas/sitemap/0.9'>
     <url>
-        <loc>http://blog.mattes-groeger.de/icon-badge-library-for-air/</loc>
+        <loc>http://mattesgroeger.github.io/icon-badge-library-for-air/</loc>
         <lastmod>2013-11-12T23:52:30+01:00</lastmod>
     </url>
     <url>
-        <loc>http://blog.mattes-groeger.de/icon-badge-for-windows/</loc>
+        <loc>http://mattesgroeger.github.io/icon-badge-for-windows/</loc>
         <lastmod>2013-11-12T23:54:16+01:00</lastmod>
     </url>
     <url>
-        <loc>http://blog.mattes-groeger.de/short-lived-commands-with-parsley/</loc>
+        <loc>http://mattesgroeger.github.io/short-lived-commands-with-parsley/</loc>
         <lastmod>2013-11-12T23:18:22+01:00</lastmod>
     </url>
     <url>
-        <loc>http://blog.mattes-groeger.de/review-logging-with-trazzle/</loc>
+        <loc>http://mattesgroeger.github.io/review-logging-with-trazzle/</loc>
         <lastmod>2013-11-12T23:31:37+01:00</lastmod>
     </url>
     <url>
-        <loc>http://blog.mattes-groeger.de/strong-typed-constants/</loc>
+        <loc>http://mattesgroeger.github.io/strong-typed-constants/</loc>
         <lastmod>2013-11-12T23:49:07+01:00</lastmod>
     </url>
     <url>
-        <loc>http://blog.mattes-groeger.de/label-validation-with-flexunit/</loc>
+        <loc>http://mattesgroeger.github.io/label-validation-with-flexunit/</loc>
         <lastmod>2013-11-15T21:30:00+01:00</lastmod>
     </url>
     <url>
-        <loc>http://blog.mattes-groeger.de/context-aware-tasks/</loc>
+        <loc>http://mattesgroeger.github.io/context-aware-tasks/</loc>
         <lastmod>2013-11-15T21:30:57+01:00</lastmod>
     </url>
     <url>
-        <loc>http://blog.mattes-groeger.de/flash-timeline-actions/</loc>
+        <loc>http://mattesgroeger.github.io/flash-timeline-actions/</loc>
         <lastmod>2013-11-15T21:24:00+01:00</lastmod>
     </url>
     <url>
-        <loc>http://blog.mattes-groeger.de/kiwi-testing-with-style-for-ios/</loc>
+        <loc>http://mattesgroeger.github.io/kiwi-testing-with-style-for-ios/</loc>
         <lastmod>2013-11-15T21:24:00+01:00</lastmod>
     </url>
     <url>
-        <loc>http://blog.mattes-groeger.de/vim-with-system-clipboard/</loc>
+        <loc>http://mattesgroeger.github.io/vim-with-system-clipboard/</loc>
         <lastmod>2013-11-15T21:23:59+01:00</lastmod>
     </url>
     <url>
-        <loc>http://blog.mattes-groeger.de/archives/</loc>
+        <loc>http://mattesgroeger.github.io/archives/</loc>
         <lastmod>2013-11-15T21:30:57+01:00</lastmod>
     </url>
     <url>
-        <loc>http://blog.mattes-groeger.de/</loc>
+        <loc>http://mattesgroeger.github.io/</loc>
         <lastmod>2013-11-17T17:01:07+01:00</lastmod>
     </url>
     <url>
-        <loc>http://blog.mattes-groeger.de/robots.txt</loc>
+        <loc>http://mattesgroeger.github.io/robots.txt</loc>
         <lastmod>2013-11-12T22:21:04+01:00</lastmod>
     </url>
 </urlset>
