@@ -4,7 +4,7 @@
   <title><![CDATA[Category: BestPractice | Mattes Groeger]]></title>
   <link href="http://mattesgroeger.github.io/categories/bestpractice/atom.xml" rel="self"/>
   <link href="http://mattesgroeger.github.io/"/>
-  <updated>2013-11-17T21:18:52+01:00</updated>
+  <updated>2013-11-18T22:21:41+01:00</updated>
   <id>http://mattesgroeger.github.io/</id>
   <author>
     <name><![CDATA[Mattes Groeger]]></name>
@@ -562,7 +562,7 @@
 <h2>Links</h2>
 
 <ul>
-<li><a href="http://mattesgroeger.github.io/blog/2011/01/02/strong-typed-constants/">Strong typed constants</a></li></li>
+<li><a href="/strong-typed-constants/">Strong typed constants</a></li></li>
 <li><a href="http://www.spicefactory.org/parsley/docs/2.3/manual/task.php">Task framework documentation</a></li></li>
 <li><a href="http://www.spicefactory.org/parsley/download.php">Parsley/Spicelib download</a></li></li>
 </ul>
@@ -670,7 +670,7 @@
 </span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;}</span>
 </span></code></pre></td></tr></table></div></figure></notextile></div></p>
 
-<p>Beside this we defined the labels itself in an <a href="http://mattesgroeger.github.io/blog/2011/01/02/strong-typed-constants/">enumeration class</a> to provide strong typed access.</p>
+<p>Beside this we defined the labels itself in an <a href="/strong-typed-constants/">enumeration class</a> to provide strong typed access.</p>
 
 <p><div class='bogus-wrapper'><notextile><figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>

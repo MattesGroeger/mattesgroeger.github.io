@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Parsley | Mattes Groeger]]></title>
   <link href="http://mattesgroeger.github.io/categories/parsley/atom.xml" rel="self"/>
   <link href="http://mattesgroeger.github.io/"/>
-  <updated>2013-11-17T21:18:52+01:00</updated>
+  <updated>2013-11-18T22:21:41+01:00</updated>
   <id>http://mattesgroeger.github.io/</id>
   <author>
     <name><![CDATA[Mattes Groeger]]></name>
@@ -318,7 +318,7 @@
 <h2>Links</h2>
 
 <ul>
-<li><a href="http://mattesgroeger.github.io/blog/2011/01/02/strong-typed-constants/">Strong typed constants</a></li></li>
+<li><a href="/strong-typed-constants/">Strong typed constants</a></li></li>
 <li><a href="http://www.spicefactory.org/parsley/docs/2.3/manual/task.php">Task framework documentation</a></li></li>
 <li><a href="http://www.spicefactory.org/parsley/download.php">Parsley/Spicelib download</a></li></li>
 </ul>
