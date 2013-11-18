@@ -52,7 +52,7 @@ private function assertLabelsExist(view:ButtonRounded):void
 }
 {% endcodeblock %}
 
-Beside this we defined the labels itself in an [enumeration class](http://mattesgroeger.github.io/blog/2011/01/02/strong-typed-constants/) to provide strong typed access.
+Beside this we defined the labels itself in an [enumeration class](/strong-typed-constants/) to provide strong typed access.
 
 {% codeblock lang:actionscript3 %}
 public class IconState
