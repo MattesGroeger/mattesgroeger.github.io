@@ -2,10 +2,10 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
 
   <title><![CDATA[Category: OSX | Mattes Groeger]]></title>
-  <link href="http://mattesgroeger.github.io/categories/osx/atom.xml" rel="self"/>
-  <link href="http://mattesgroeger.github.io/"/>
-  <updated>2013-11-18T22:21:41+01:00</updated>
-  <id>http://mattesgroeger.github.io/</id>
+  <link href="http://blog.mattes-groeger.de/categories/osx/atom.xml" rel="self"/>
+  <link href="http://blog.mattes-groeger.de/"/>
+  <updated>2014-01-13T23:18:02+01:00</updated>
+  <id>http://blog.mattes-groeger.de/</id>
   <author>
     <name><![CDATA[Mattes Groeger]]></name>
     
@@ -15,9 +15,9 @@
   
   <entry>
     <title type="html"><![CDATA[Vim with System Clipboard]]></title>
-    <link href="http://mattesgroeger.github.io/vim-with-system-clipboard/"/>
+    <link href="http://blog.mattes-groeger.de/vim-with-system-clipboard/"/>
     <updated>2013-11-15T16:14:00+01:00</updated>
-    <id>http://mattesgroeger.github.io/vim-with-system-clipboard</id>
+    <id>http://blog.mattes-groeger.de/vim-with-system-clipboard</id>
     <content type="html"><![CDATA[<p>With vim I got really addicted to keyboard-only usage. But there is one thing I was always missing: integration with the system clipboard. I had to switch back to the mouse for that. As I learned today system clipboard is supported by vim. Unfortunately the version packaged with OSX is not compiled with this feature enabled.</p>
 
 <!-- more -->

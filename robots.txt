@@ -1,4 +1,4 @@
 User-agent: *
 Disallow: 
 
-Sitemap: http://mattesgroeger.github.io/sitemap.xml 
+Sitemap: http://blog.mattes-groeger.de/sitemap.xml 

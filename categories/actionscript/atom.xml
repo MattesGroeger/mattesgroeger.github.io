@@ -2,10 +2,10 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
 
   <title><![CDATA[Category: ActionScript | Mattes Groeger]]></title>
-  <link href="http://mattesgroeger.github.io/categories/actionscript/atom.xml" rel="self"/>
-  <link href="http://mattesgroeger.github.io/"/>
-  <updated>2013-11-18T22:21:41+01:00</updated>
-  <id>http://mattesgroeger.github.io/</id>
+  <link href="http://blog.mattes-groeger.de/categories/actionscript/atom.xml" rel="self"/>
+  <link href="http://blog.mattes-groeger.de/"/>
+  <updated>2014-01-13T23:18:02+01:00</updated>
+  <id>http://blog.mattes-groeger.de/</id>
   <author>
     <name><![CDATA[Mattes Groeger]]></name>
     
@@ -15,9 +15,9 @@
   
   <entry>
     <title type="html"><![CDATA[Flash Timeline Actions]]></title>
-    <link href="http://mattesgroeger.github.io/flash-timeline-actions/"/>
+    <link href="http://blog.mattes-groeger.de/flash-timeline-actions/"/>
     <updated>2012-01-29T17:12:00+01:00</updated>
-    <id>http://mattesgroeger.github.io/flash-timeline-actions</id>
+    <id>http://blog.mattes-groeger.de/flash-timeline-actions</id>
     <content type="html"><![CDATA[<p>A proper designer-developer workflow is essential, especially in bigger teams. By separating logic and view (e.g. via <a href="http://en.wikipedia.org/wiki/Model%E2%80%93view%E2%80%93controller">MVC Design Pattern</a>) we try to avoid dependencies between artists and programmers. Less coupling increases the speed of development and design.</p>
 
 <!-- more -->
@@ -259,9 +259,9 @@
   
   <entry>
     <title type="html"><![CDATA[Context-Aware Tasks]]></title>
-    <link href="http://mattesgroeger.github.io/context-aware-tasks/"/>
+    <link href="http://blog.mattes-groeger.de/context-aware-tasks/"/>
     <updated>2011-03-13T20:03:00+01:00</updated>
-    <id>http://mattesgroeger.github.io/context-aware-tasks</id>
+    <id>http://blog.mattes-groeger.de/context-aware-tasks</id>
     <content type="html"><![CDATA[<p>This article shows a useful way on how to combine the <a href="http://www.spicefactory.org/parsley/download.php">Spicelib</a> <a href="http://www.spicefactory.org/parsley/docs/2.3/manual/task.php#intro">Task Framework</a> with <a href="http://www.spicefactory.org/parsley/download.php">Parsley</a>. This way you can access everything from the context during the execution of a Task&hellip;</p>
 
 <!-- more -->
@@ -562,7 +562,7 @@
 <h2>Links</h2>
 
 <ul>
-<li><a href="/strong-typed-constants/">Strong typed constants</a></li></li>
+<li><a href="http://mattesgroeger.github.io/blog/2011/01/02/strong-typed-constants/">Strong typed constants</a></li></li>
 <li><a href="http://www.spicefactory.org/parsley/docs/2.3/manual/task.php">Task framework documentation</a></li></li>
 <li><a href="http://www.spicefactory.org/parsley/download.php">Parsley/Spicelib download</a></li></li>
 </ul>
@@ -572,9 +572,9 @@
   
   <entry>
     <title type="html"><![CDATA[Label Validation with FlexUnit]]></title>
-    <link href="http://mattesgroeger.github.io/label-validation-with-flexunit/"/>
+    <link href="http://blog.mattes-groeger.de/label-validation-with-flexunit/"/>
     <updated>2011-01-18T22:36:00+01:00</updated>
-    <id>http://mattesgroeger.github.io/label-validation-with-flexunit</id>
+    <id>http://blog.mattes-groeger.de/label-validation-with-flexunit</id>
     <content type="html"><![CDATA[<p>While working in interdisciplinary teams where graphics are produced by artists and the code comes from the developers, a solid designer-developer work-flow is crucial. At my current project team at <a href="http://www.wooga.com">Wooga</a> we already established a very good work-flow. The artists can produce graphics and see them in the running application after committing them.</p>
 
 <!-- more -->
@@ -670,7 +670,7 @@
 </span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;}</span>
 </span></code></pre></td></tr></table></div></figure></notextile></div></p>
 
-<p>Beside this we defined the labels itself in an <a href="/strong-typed-constants/">enumeration class</a> to provide strong typed access.</p>
+<p>Beside this we defined the labels itself in an <a href="http://mattesgroeger.github.io/blog/2011/01/02/strong-typed-constants/">enumeration class</a> to provide strong typed access.</p>
 
 <p><div class='bogus-wrapper'><notextile><figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
@@ -869,9 +869,9 @@
   
   <entry>
     <title type="html"><![CDATA[Strong Typed Constants]]></title>
-    <link href="http://mattesgroeger.github.io/strong-typed-constants/"/>
+    <link href="http://blog.mattes-groeger.de/strong-typed-constants/"/>
     <updated>2011-01-02T19:19:00+01:00</updated>
-    <id>http://mattesgroeger.github.io/strong-typed-constants</id>
+    <id>http://blog.mattes-groeger.de/strong-typed-constants</id>
     <content type="html"><![CDATA[<p>Constants are commonly occurring in the ActionScript core classes. Typical examples are events (<code>Event.COMPLETE</code>) or general configurations (<code>StageAlign.TOP_LEFT</code>). These constants are typically of type <code>String</code> and grouped in one class.</p>
 
 <!-- more -->
@@ -1079,9 +1079,9 @@
   
   <entry>
     <title type="html"><![CDATA[Review: Logging with Trazzle]]></title>
-    <link href="http://mattesgroeger.github.io/review-logging-with-trazzle/"/>
+    <link href="http://blog.mattes-groeger.de/review-logging-with-trazzle/"/>
     <updated>2010-11-14T17:39:00+01:00</updated>
-    <id>http://mattesgroeger.github.io/review-logging-with-trazzle</id>
+    <id>http://blog.mattes-groeger.de/review-logging-with-trazzle</id>
     <content type="html"><![CDATA[<p>A few weeks ago <a href="https://twitter.com/MattesGroeger/status/24742440693">I discovered</a> an ActionScript 3.0 Logger called Trazzle. It&rsquo;s available for Mac only and provides a well-arranged, beautiful logging output, a performance monitor, bitmap logging <a href="http://www.nesium.com/products/trazzle">and much more</a>. In order to use this logger, you need to install the <a href="http">Logger Client</a> and include the <a href="http://github.com/nesium/trazzlelib-as3/downloads">SWC files</a> within your project.</p>
 
 <!-- more -->

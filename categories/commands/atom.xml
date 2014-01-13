@@ -2,10 +2,10 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
 
   <title><![CDATA[Category: Commands | Mattes Groeger]]></title>
-  <link href="http://mattesgroeger.github.io/categories/commands/atom.xml" rel="self"/>
-  <link href="http://mattesgroeger.github.io/"/>
-  <updated>2013-11-18T22:21:41+01:00</updated>
-  <id>http://mattesgroeger.github.io/</id>
+  <link href="http://blog.mattes-groeger.de/categories/commands/atom.xml" rel="self"/>
+  <link href="http://blog.mattes-groeger.de/"/>
+  <updated>2014-01-13T23:18:02+01:00</updated>
+  <id>http://blog.mattes-groeger.de/</id>
   <author>
     <name><![CDATA[Mattes Groeger]]></name>
     
@@ -15,9 +15,9 @@
   
   <entry>
     <title type="html"><![CDATA[Short-Lived Commands with Parsley]]></title>
-    <link href="http://mattesgroeger.github.io/short-lived-commands-with-parsley/"/>
+    <link href="http://blog.mattes-groeger.de/short-lived-commands-with-parsley/"/>
     <updated>2010-10-31T21:24:00+01:00</updated>
-    <id>http://mattesgroeger.github.io/short-lived-commands-with-parsley</id>
+    <id>http://blog.mattes-groeger.de/short-lived-commands-with-parsley</id>
     <content type="html"><![CDATA[<p>This week we had to decide on a <a href="http://en.wikipedia.org/wiki/Model%E2%80%93View%E2%80%93Controller">MVC Framework</a> for our next game at <a href="http://www.wooga.com">Wooga</a>. In the end the options were <a href="http://www.robotlegs.org/">Robotlegs</a> and <a href="http://www.spicefactory.org/parsley/">Parsley</a>. Both of them had advantages and disadvantages. One aspect we came across was the support of <code>Short-lived Command Objects</code>.</p>
 
 <!-- more -->
@@ -111,7 +111,7 @@
 
 <p>And this is how the login example looks like. Invalid credentials lead to an error pop up. Valid login works with <em>admin</em> and password <em>test</em>:</p>
 
-<object style="width: 850px; height: 250px;" width="850" height="250" classid="clsid:d27cdb6e-ae6d-11cf-96b8-444553540000" codebase="http://download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=6,0,40,0"><param name="src" value="/images/posts/ParsleyExample1.swf" /><embed style="width: 850px; height: 250px;" width="850" height="250" type="application/x-shockwave-flash" src="http://mattesgroeger.github.io/images/posts/ParsleyExample1.swf" /> </object>
+<object style="width: 850px; height: 250px;" width="850" height="250" classid="clsid:d27cdb6e-ae6d-11cf-96b8-444553540000" codebase="http://download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=6,0,40,0"><param name="src" value="/images/posts/ParsleyExample1.swf" /><embed style="width: 850px; height: 250px;" width="850" height="250" type="application/x-shockwave-flash" src="http://blog.mattes-groeger.de/images/posts/ParsleyExample1.swf" /> </object>
 
 
 <h2>Summary</h2>

@@ -2,10 +2,10 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
 
   <title><![CDATA[Category: Kiwi | Mattes Groeger]]></title>
-  <link href="http://mattesgroeger.github.io/categories/kiwi/atom.xml" rel="self"/>
-  <link href="http://mattesgroeger.github.io/"/>
-  <updated>2013-11-18T22:21:41+01:00</updated>
-  <id>http://mattesgroeger.github.io/</id>
+  <link href="http://blog.mattes-groeger.de/categories/kiwi/atom.xml" rel="self"/>
+  <link href="http://blog.mattes-groeger.de/"/>
+  <updated>2014-01-13T23:18:02+01:00</updated>
+  <id>http://blog.mattes-groeger.de/</id>
   <author>
     <name><![CDATA[Mattes Groeger]]></name>
     
@@ -15,9 +15,9 @@
   
   <entry>
     <title type="html"><![CDATA[Kiwi - iOS Testing with Style]]></title>
-    <link href="http://mattesgroeger.github.io/kiwi-testing-with-style-for-ios/"/>
+    <link href="http://blog.mattes-groeger.de/kiwi-testing-with-style-for-ios/"/>
     <updated>2012-11-11T20:57:00+01:00</updated>
-    <id>http://mattesgroeger.github.io/kiwi-testing-with-style-for-ios</id>
+    <id>http://blog.mattes-groeger.de/kiwi-testing-with-style-for-ios</id>
     <content type="html"><![CDATA[<p>I&rsquo;m very passionate about writing tests to ensure code quality and achieve better software design. When I started iOS development one of the first things I did was evaluating testing frameworks for iOS.</p>
 
 <!-- more -->
@@ -35,7 +35,7 @@
 
 <p>In the following video I give a brief introduction to Kiwi and what makes it so special. It was captured during one of our <code>5-Minutes-of-Fame</code> talks at <a href="http://www.wooga.com/">Wooga</a>.</p>
 
-<iframe width="853" height="480" src="http://mattesgroeger.github.io//www.youtube.com/embed/gByruPzLjiA" frameborder="0" allowfullscreen></iframe>
+<iframe width="853" height="480" src="http://blog.mattes-groeger.de//www.youtube.com/embed/gByruPzLjiA" frameborder="0" allowfullscreen></iframe>
 
 
 <h2>Links</h2>

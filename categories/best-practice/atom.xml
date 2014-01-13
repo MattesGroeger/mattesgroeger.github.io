@@ -2,10 +2,10 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
 
   <title><![CDATA[Category: Best-Practice | Mattes Groeger]]></title>
-  <link href="http://mattesgroeger.github.io/categories/best-practice/atom.xml" rel="self"/>
-  <link href="http://mattesgroeger.github.io/"/>
-  <updated>2013-11-18T22:21:41+01:00</updated>
-  <id>http://mattesgroeger.github.io/</id>
+  <link href="http://blog.mattes-groeger.de/categories/best-practice/atom.xml" rel="self"/>
+  <link href="http://blog.mattes-groeger.de/"/>
+  <updated>2014-01-13T23:18:02+01:00</updated>
+  <id>http://blog.mattes-groeger.de/</id>
   <author>
     <name><![CDATA[Mattes Groeger]]></name>
     
@@ -15,9 +15,9 @@
   
   <entry>
     <title type="html"><![CDATA[Strong Typed Constants]]></title>
-    <link href="http://mattesgroeger.github.io/strong-typed-constants/"/>
+    <link href="http://blog.mattes-groeger.de/strong-typed-constants/"/>
     <updated>2011-01-02T19:19:00+01:00</updated>
-    <id>http://mattesgroeger.github.io/strong-typed-constants</id>
+    <id>http://blog.mattes-groeger.de/strong-typed-constants</id>
     <content type="html"><![CDATA[<p>Constants are commonly occurring in the ActionScript core classes. Typical examples are events (<code>Event.COMPLETE</code>) or general configurations (<code>StageAlign.TOP_LEFT</code>). These constants are typically of type <code>String</code> and grouped in one class.</p>
 
 <!-- more -->
