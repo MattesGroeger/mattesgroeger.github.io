@@ -6,7 +6,7 @@ comments: true
 categories: [ActionScript, Air, Api, Lib]
 ---
 
-Until now the [Air Icon Badge library](/blog/2010/02/08/icon-badge-library-for-air/) implementation only supported OS X dock icons. Nevertheless it is easy to extend the implementation for utilizing it as Windows system tray icon. In this article I will demonstrate how this could be realized.
+Until now the [Air Icon Badge library](/icon-badge-library-for-air/) implementation only supported OS X dock icons. Nevertheless it is easy to extend the implementation for utilizing it as Windows system tray icon. In this article I will demonstrate how this could be realized.
 
 <!-- more -->
 
