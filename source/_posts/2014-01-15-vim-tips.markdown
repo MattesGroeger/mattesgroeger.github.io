@@ -1,0 +1,31 @@
+---
+layout: post
+title: "Vim Tips"
+date: 2014-01-15 00:12
+comments: true
+categories: vim, tip
+---
+
+Lately I'm working a lot with Vim as I work together with backend engineers. I use it already for a long time but always had a hard time to be fast with it. In this post I want to share what helped me to become productive.
+
+<!-- more -->
+
+### Understanding the Vim principle
+
+Vim as verbs link
+
+### Useful Plugins
+
+* Nerdtree
+* Ack
+* Ctrl-P
+
+### Useful Shortcuts
+
+* ~ (change case)
+
+### Vim Config
+
+## Conclusion
+
+Check out my config on GitHub.
