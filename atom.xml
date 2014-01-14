@@ -4,7 +4,7 @@
   <title><![CDATA[Mattes Groeger]]></title>
   <link href="http://blog.mattes-groeger.de/atom.xml" rel="self"/>
   <link href="http://blog.mattes-groeger.de/"/>
-  <updated>2014-01-14T18:46:56+01:00</updated>
+  <updated>2014-01-14T20:41:39+01:00</updated>
   <id>http://blog.mattes-groeger.de/</id>
   <author>
     <name><![CDATA[Mattes Groeger]]></name>
@@ -12,6 +12,55 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[From Wordpress to Octopress]]></title>
+    <link href="http://blog.mattes-groeger.de/from-wordpress-to-octopress/"/>
+    <updated>2014-01-14T20:00:00+01:00</updated>
+    <id>http://blog.mattes-groeger.de/from-wordpress-to-octopress</id>
+    <content type="html"><![CDATA[<p>For a long time I wasn&rsquo;t happy with my <a href="http://www.wordpress.org">Wordpress</a> blog. Maintenance and hosting seemed unnecessary complex. When researching alternative solutions I found <a href="http://octopress.org/">Octopress</a>. In this article I highlight the reasons that made me switch.</p>
+
+<!-- more -->
+
+
+<h2>Problems with Wordpress</h2>
+
+<p>Wordpress is a self-hosted <a href="http://php.net/">PHP</a> + <a href="http://www.mysql.com/">MySQL</a> blog system. As the code is <a href="http://wordpress.org/download/source/">open source</a>, getting compromised with zero-day exploits is easy. That&rsquo;s one reason why Wordpress and its plugins provide frequently updates. But even though I updated often I got a lot of spam comments. Even the captcha system I had in place didn&rsquo;t stop them.</p>
+
+<p>It is very convient to write blog posts with Wordpress as it comes with a <a href="http://en.wikipedia.org/wiki/WYSIWYG">WYSIWYG editor</a>. But that means also that the content is residing on the server only. In the worst case I could loose all my data if the server breaks. Therefore I have to make backups of all files (images, videos, &hellip;) and the database regularily.</p>
+
+<p>Also I want to experiment with layout changes locally. Therefore I have to setup everything on my computer as well. When done, it needs to be uploaded via FTP. That&rsquo;s rather annoying. I want something that is versioned with <a href="http://git-scm.com/">git</a> and deployed automatically on each commit.</p>
+
+<h2>Octopress</h2>
+
+<p>Exactly this is possible with Octopress. At it&rsquo;s core it uses <a href="http://jekyllrb.com/docs/usage/">Jekyll</a>&rsquo;s static site generator which is also used for <a href="http://pages.github.com/">GitHub Pages</a>. Load times are super fast because its just static HTML.</p>
+
+<p>Blog posts are written in the <a href="http://daringfireball.net/projects/markdown/">Markdown</a> format which then gets translated into HTML. I really enjoy writing in Markdown. <a href="http://daringfireball.net/projects/markdown/">The syntax</a> is concise and let&rsquo;s me focus on the content. <a href="https://raw.github.com/MattesGroeger/mattesgroeger.github.io/source/source/_posts/2013-11-15-vim-with-system-clipboard.markdown">This is how</a> a raw blog post looks like.</p>
+
+<p>Octopress comes with a number of plugins that enhance the possibilities of Markdown. Examples are <a href="http://octopress.org/docs/plugins/codeblock/">code blocks</a>, <a href="http://octopress.org/docs/plugins/blockquote/">block quotes</a> or <a href="http://octopress.org/docs/plugins/video-tag/">html5 video tag</a>.</p>
+
+<p>The provided default template (classic) allows for an easy start. Making changes to the layout <a href="http://octopress.org/docs/theme/">is simple</a>. Stylesheets are written in the <a href="http://sass-lang.com/documentation/file.SCSS_FOR_SASS_USERS.html">scss format</a>. My blog layout is an adjusted version of the <a href="https://github.com/lucaslew/whitespace">whitespace theme</a>.</p>
+
+<p>The best part is the deployment via <a href="http://octopress.org/docs/deploying/github/">GitHub Pages</a>. Blog posts are created on a git branch (<code>source</code>). To deploy changes I run <code>rake deploy</code> which:</p>
+
+<ul>
+<li>Generates the HTML</li>
+<li>Merges everything to <code>master</code></li>
+<li>Pushes <code>master</code> to GitHub</li>
+</ul>
+
+
+<p>GitHub will autmatically update the website afterwards. You can also deploy to <a href="http://octopress.org/docs/deploying/">other hosting providers</a>. Make sure to also push your <code>source</code> branch in order to have a backup on the server. With git under the hood you can always roll back changes.</p>
+
+<p>With GitHub Pages you can use your own domain for the Octopress blog. This way the user won&rsquo;t even notice that you use GitHub under the hood. Find a detailed explaination on how to do it <a href="https://help.github.com/articles/setting-up-a-custom-domain-with-pages#setting-the-domain-in-your-repo">in the GitHub FAQ</a>.</p>
+
+<h2>Conclusion</h2>
+
+<p>Static pages load much quicker than dynamic ones. But you have to rely on external services for dynamic content. Imagine the comment provider (Disqus) stops his service and all comments would be lost. I for myself take this risk in exchange for easier maintainance.</p>
+
+<p>So far I&rsquo;m pretty happy with Octopress. If you are interested, go and <a href="http://octopress.org/">check it out for yourself</a>.</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Vim with System Clipboard]]></title>

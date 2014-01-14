@@ -1,0 +1,277 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>From Wordpress to Octopress - Mattes Groeger</title>
+  <meta name="author" content="Mattes Groeger">
+
+  
+  <meta name="description" content="For a long time I wasn&rsquo;t happy with my Wordpress blog. Maintenance and hosting seemed unnecessary complex. When researching alternative &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://blog.mattes-groeger.de/from-wordpress-to-octopress">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="Mattes Groeger" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/lib/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href='http://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css'>
+<link href='http://fonts.googleapis.com/css?family=Fjalla+One' rel='stylesheet' type='text/css'>
+  
+  <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-12394086-3']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+  </script>
+
+
+</head>
+
+<body   class="collapse-sidebar sidebar-footer" >
+  <header role="banner"><hgroup>
+  <h1><a href="/">Mattes Groeger</a></h1>
+  
+    <h2>Developer Blog</h2>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="http://google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:blog.mattes-groeger.de" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Home</a></li>
+  <li><a href="/archives">Archives</a></li>
+  <li><a href="https://github.com/MattesGroeger">GitHub</a></li>
+  <li><a href="https://twitter.com/MattesGroeger">Twitter</a></li>
+  <li><a href="https://www.linkedin.com/pub/mattes-groeger/2a/b14/902">LinkedIn</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">From Wordpress to Octopress</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2014-01-14T20:00:00+01:00" pubdate data-updated="true">Jan 14<span>th</span>, 2014</time>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><p>For a long time I wasn&rsquo;t happy with my <a href="http://www.wordpress.org">Wordpress</a> blog. Maintenance and hosting seemed unnecessary complex. When researching alternative solutions I found <a href="http://octopress.org/">Octopress</a>. In this article I highlight the reasons that made me switch.</p>
+
+<!-- more -->
+
+
+<h2>Problems with Wordpress</h2>
+
+<p>Wordpress is a self-hosted <a href="http://php.net/">PHP</a> + <a href="http://www.mysql.com/">MySQL</a> blog system. As the code is <a href="http://wordpress.org/download/source/">open source</a>, getting compromised with zero-day exploits is easy. That&rsquo;s one reason why Wordpress and its plugins provide frequently updates. But even though I updated often I got a lot of spam comments. Even the captcha system I had in place didn&rsquo;t stop them.</p>
+
+<p>It is very convient to write blog posts with Wordpress as it comes with a <a href="http://en.wikipedia.org/wiki/WYSIWYG">WYSIWYG editor</a>. But that means also that the content is residing on the server only. In the worst case I could loose all my data if the server breaks. Therefore I have to make backups of all files (images, videos, &hellip;) and the database regularily.</p>
+
+<p>Also I want to experiment with layout changes locally. Therefore I have to setup everything on my computer as well. When done, it needs to be uploaded via FTP. That&rsquo;s rather annoying. I want something that is versioned with <a href="http://git-scm.com/">git</a> and deployed automatically on each commit.</p>
+
+<h2>Octopress</h2>
+
+<p>Exactly this is possible with Octopress. At it&rsquo;s core it uses <a href="http://jekyllrb.com/docs/usage/">Jekyll</a>&rsquo;s static site generator which is also used for <a href="http://pages.github.com/">GitHub Pages</a>. Load times are super fast because its just static HTML.</p>
+
+<p>Blog posts are written in the <a href="http://daringfireball.net/projects/markdown/">Markdown</a> format which then gets translated into HTML. I really enjoy writing in Markdown. <a href="http://daringfireball.net/projects/markdown/">The syntax</a> is concise and let&rsquo;s me focus on the content. <a href="https://raw.github.com/MattesGroeger/mattesgroeger.github.io/source/source/_posts/2013-11-15-vim-with-system-clipboard.markdown">This is how</a> a raw blog post looks like.</p>
+
+<p>Octopress comes with a number of plugins that enhance the possibilities of Markdown. Examples are <a href="http://octopress.org/docs/plugins/codeblock/">code blocks</a>, <a href="http://octopress.org/docs/plugins/blockquote/">block quotes</a> or <a href="http://octopress.org/docs/plugins/video-tag/">html5 video tag</a>.</p>
+
+<p>The provided default template (classic) allows for an easy start. Making changes to the layout <a href="http://octopress.org/docs/theme/">is simple</a>. Stylesheets are written in the <a href="http://sass-lang.com/documentation/file.SCSS_FOR_SASS_USERS.html">scss format</a>. My blog layout is an adjusted version of the <a href="https://github.com/lucaslew/whitespace">whitespace theme</a>.</p>
+
+<p>The best part is the deployment via <a href="http://octopress.org/docs/deploying/github/">GitHub Pages</a>. Blog posts are created on a git branch (<code>source</code>). To deploy changes I run <code>rake deploy</code> which:</p>
+
+<ul>
+<li>Generates the HTML</li>
+<li>Merges everything to <code>master</code></li>
+<li>Pushes <code>master</code> to GitHub</li>
+</ul>
+
+
+<p>GitHub will autmatically update the website afterwards. You can also deploy to <a href="http://octopress.org/docs/deploying/">other hosting providers</a>. Make sure to also push your <code>source</code> branch in order to have a backup on the server. With git under the hood you can always roll back changes.</p>
+
+<p>With GitHub Pages you can use your own domain for the Octopress blog. This way the user won&rsquo;t even notice that you use GitHub under the hood. Find a detailed explaination on how to do it <a href="https://help.github.com/articles/setting-up-a-custom-domain-with-pages#setting-the-domain-in-your-repo">in the GitHub FAQ</a>.</p>
+
+<h2>Conclusion</h2>
+
+<p>Static pages load much quicker than dynamic ones. But you have to rely on external services for dynamic content. Imagine the comment provider (Disqus) stops his service and all comments would be lost. I for myself take this risk in exchange for easier maintainance.</p>
+
+<p>So far I&rsquo;m pretty happy with Octopress. If you are interested, go and <a href="http://octopress.org/">check it out for yourself</a>.</p>
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">Mattes Groeger</span></span>
+
+      
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2014-01-14T20:00:00+01:00" pubdate data-updated="true">Jan 14<span>th</span>, 2014</time>
+      
+
+<span class="categories">
+  
+    <a class='category' href='/categories/blog/'>Blog</a>
+  
+</span>
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://blog.mattes-groeger.de/from-wordpress-to-octopress/" data-via="MattesGroeger" data-counturl="http://blog.mattes-groeger.de/from-wordpress-to-octopress/" >Tweet</a>
+  
+  
+  <div class="g-plusone" data-size="medium"></div>
+  
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/vim-with-system-clipboard/" title="Previous Post: Vim with System Clipboard">&laquo; Vim with System Clipboard</a>
+      
+      
+    </p>
+  </footer>
+</article>
+
+  <section>
+    <h1>Comments</h1>
+    <div id="disqus_thread" aria-live="polite"><noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+  </section>
+
+
+</div>
+
+<aside class="sidebar">
+  
+    
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2014 - Mattes Groeger
+</p>
+
+</footer>
+  
+
+<script type="text/javascript">
+      var disqus_shortname = 'mattesgroegerblog';
+      
+        
+        // var disqus_developer = 1;
+        var disqus_identifier = 'http://blog.mattes-groeger.de/from-wordpress-to-octopress/';
+        var disqus_url = 'http://blog.mattes-groeger.de/from-wordpress-to-octopress/';
+        var disqus_script = 'embed.js';
+      
+    (function () {
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      dsq.src = 'http://' + disqus_shortname + '.disqus.com/' + disqus_script;
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    }());
+</script>
+
+
+
+
+
+
+
+
+  <script type="text/javascript">
+    (function() {
+      var script = document.createElement('script'); script.type = 'text/javascript'; script.async = true;
+      script.src = 'https://apis.google.com/js/plusone.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(script, s);
+    })();
+  </script>
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = 'http://platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>
