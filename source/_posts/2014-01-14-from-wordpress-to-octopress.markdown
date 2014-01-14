@@ -1,7 +1,7 @@
 ---
 layout: post
 title: "From Wordpress to Octopress"
-date: 2013-11-17 12:07
+date: 2014-01-14 20:00
 comments: true
 categories: Blog
 ---
@@ -12,11 +12,11 @@ For a long time I wasn't happy with my [Wordpress](http://www.wordpress.org) blo
 
 ## Problems with Wordpress
 
-Wordpress is a PHP + MySQL website. As the code is open source it makes it easy for someone to compromise it using exploits. That's one reason why Wordpress and its plugins provide updates frequently. But even though I updated often I got a lot of spam comments. Even the captcha system I had in place didn't stop them.
+Wordpress is a self-hosted [PHP](http://php.net/) + [MySQL](http://www.mysql.com/) blog system. As the code is [open source](http://wordpress.org/download/source/), getting compromised with zero-day exploits is easy. That's one reason why Wordpress and its plugins provide frequently updates. But even though I updated often I got a lot of spam comments. Even the captcha system I had in place didn't stop them.
 
-It is very convient to write blog posts with Wordpress as it comes with a [WYSIWYG editor]. But that means also that the content is residing on the server only. In the worst case I could loose all my data if the server breaks. Therefore I have to make backups of all files (images, videos, ...) and the database regularily.
+It is very convient to write blog posts with Wordpress as it comes with a [WYSIWYG editor](http://en.wikipedia.org/wiki/WYSIWYG). But that means also that the content is residing on the server only. In the worst case I could loose all my data if the server breaks. Therefore I have to make backups of all files (images, videos, ...) and the database regularily.
 
-I want to do layout changes locally first. Therefore I have to setup everything on my computer. When done, it needs to be uploaded via FTP. That's rather annoying. I want something that is versioned with [git](http://git-scm.com/) and deployed automatically on each commit.
+Also I want to experiment with layout changes locally. Therefore I have to setup everything on my computer as well. When done, it needs to be uploaded via FTP. That's rather annoying. I want something that is versioned with [git](http://git-scm.com/) and deployed automatically on each commit.
 
 ## Octopress
 
@@ -28,13 +28,15 @@ Octopress comes with a number of plugins that enhance the possibilities of Markd
 
 The provided default template (classic) allows for an easy start. Making changes to the layout [is simple](http://octopress.org/docs/theme/). Stylesheets are written in the [scss format](http://sass-lang.com/documentation/file.SCSS_FOR_SASS_USERS.html). My blog layout is an adjusted version of the [whitespace theme](https://github.com/lucaslew/whitespace).
 
-The best part is the deployment. Blog posts are created on a git branch (`source`). To deploy changes I run `rake deploy` which:
+The best part is the deployment via [GitHub Pages](http://octopress.org/docs/deploying/github/). Blog posts are created on a git branch (`source`). To deploy changes I run `rake deploy` which:
 
 * Generates the HTML
 * Merges everything to `master`
 * Pushes `master` to GitHub
 
 GitHub will autmatically update the website afterwards. You can also deploy to [other hosting providers](http://octopress.org/docs/deploying/). Make sure to also push your `source` branch in order to have a backup on the server. With git under the hood you can always roll back changes.
+
+With GitHub Pages you can use your own domain for the Octopress blog. This way the user won't even notice that you use GitHub under the hood. Find a detailed explaination on how to do it [in the GitHub FAQ](https://help.github.com/articles/setting-up-a-custom-domain-with-pages#setting-the-domain-in-your-repo).
 
 ## Conclusion
 
