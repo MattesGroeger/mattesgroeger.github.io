@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Lib | Mattes Groeger]]></title>
   <link href="http://blog.mattes-groeger.de/categories/lib/atom.xml" rel="self"/>
   <link href="http://blog.mattes-groeger.de/"/>
-  <updated>2014-01-13T23:18:02+01:00</updated>
+  <updated>2014-01-14T18:46:56+01:00</updated>
   <id>http://blog.mattes-groeger.de/</id>
   <author>
     <name><![CDATA[Mattes Groeger]]></name>
@@ -18,7 +18,7 @@
     <link href="http://blog.mattes-groeger.de/icon-badge-for-windows/"/>
     <updated>2010-03-14T22:54:00+01:00</updated>
     <id>http://blog.mattes-groeger.de/icon-badge-for-windows</id>
-    <content type="html"><![CDATA[<p>Until now the <a href="/blog/2010/02/08/icon-badge-library-for-air/">Air Icon Badge library</a> implementation only supported OS X dock icons. Nevertheless it is easy to extend the implementation for utilizing it as Windows system tray icon. In this article I will demonstrate how this could be realized.</p>
+    <content type="html"><![CDATA[<p>Until now the <a href="/icon-badge-library-for-air/">Air Icon Badge library</a> implementation only supported OS X dock icons. Nevertheless it is easy to extend the implementation for utilizing it as Windows system tray icon. In this article I will demonstrate how this could be realized.</p>
 
 <!-- more -->
 
