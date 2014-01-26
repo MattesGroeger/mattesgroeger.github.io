@@ -4,7 +4,7 @@
   <title><![CDATA[Mattes Groeger]]></title>
   <link href="http://blog.mattes-groeger.de/atom.xml" rel="self"/>
   <link href="http://blog.mattes-groeger.de/"/>
-  <updated>2014-01-14T20:41:39+01:00</updated>
+  <updated>2014-01-26T17:47:29+01:00</updated>
   <id>http://blog.mattes-groeger.de/</id>
   <author>
     <name><![CDATA[Mattes Groeger]]></name>
@@ -12,6 +12,526 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Travis CI for iOS]]></title>
+    <link href="http://blog.mattes-groeger.de/travis-ci/"/>
+    <updated>2014-01-25T12:00:00+01:00</updated>
+    <id>http://blog.mattes-groeger.de/travis-ci</id>
+    <content type="html"><![CDATA[<p>Have you ever tried to setup a <a href="http://en.wikipedia.org/wiki/Continuous_integration">continuous integration</a> server for iOS? From my personal experience it is not easy. You have to organize a Mac and install software and plugins. You have to manage user accounts and provide security. You have to grant access to the repositories and configure all build steps and certificates. During the project lifetime you have to keep the server healthy and up-to-date.</p>
+
+<!-- More -->
+
+
+<p>In the end you will spend a lot of time maintaining the server – time you wanted to save in the first place. But if your project is hosted on <a href="https://github.com/">GitHub</a> there is hope: <a href="https://travis-ci.org/">Travis CI</a> – continuous integration as a service. That means they are taking care of all the hosting aspects. In the <a href="https://www.ruby-lang.org/">Ruby</a> world they are well-known already. Since April 2013 they support iOS and Mac as well.</p>
+
+<p>In this article I want to show you how to setup your project for Travis. This does not only include building and running unit tests, but also shipping the app to all your test devices. For demonstration purposes I put an <a href="https://github.com/MattesGroeger/TravisExample-iOS">example project</a> on GitHub. At the end of this article I will give some tips on how to tackle problems with Travis.</p>
+
+<p>Please note that this is a more up-to-date version of my <a href="http://www.objc.io/issue-6/travis-ci.html">original article on objc.io</a> from November 2013. Feel free to comment on this article if you have questions.</p>
+
+<h3>GitHub Integration</h3>
+
+<p>What I really like about Travis is how well it is embedded in the GitHub web UI. One example is pull requests. Travis will run the build for each request. The pull request on GitHub will look like this if everything is ok:</p>
+
+<p><img class="center" src="http://blog.mattes-groeger.de/images/posts/github_ready_to_merge.jpg"></p>
+
+<p>In case the build doesn&rsquo;t succeed the page will be colored accordingly on GitHub:</p>
+
+<p><img class="center" src="http://blog.mattes-groeger.de/images/posts/github_merge_with_caution.jpg"></p>
+
+<h2>Link Travis and GitHub</h2>
+
+<p>Let&rsquo;s have a look on how to link your GitHub project with Travis. Sign in on <a href="https://travis-ci.org/">the Travis website</a> using your GitHub account. For private repositories you need to signup for a <a href="https://magnum.travis-ci.com">Travis Pro account</a>.</p>
+
+<p>Once signed in you have to enable your project for Travis. Navigate to the <a href="https://travis-ci.org/profile">profile page</a> which lists all your GitHub projects. Please note, when you create a new repository later use the <code>Sync now</code> button. Travis only updates the list occasionally.</p>
+
+<p><img class="center" src="http://blog.mattes-groeger.de/images/posts/objc_travis_flick.jpg"></p>
+
+<p>Enable your project now by using the switch.</p>
+
+<h2>Minimal Project Configuration</h2>
+
+<p>Travis CI needs some basic information about your project. Create a file called <code>.travis.yml</code> in the project root with the following content:</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>language: objective-c</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Travis builds run in a virtual machine environment. They are <a href="http://about.travis-ci.org/docs/user/osx-ci-environment/">pre-configured</a> with ruby, homebrew, cocoapods and some <a href="https://github.com/jspahrsummers/objc-build-scripts">default build scripts</a>. The above configuration should be enough to build your project.</p>
+
+<p>The pre-installed build script analyzes your Xcode project and builds each target. The build succeeds if everything compiled without error and the tests didn&rsquo;t break. Push your changes to GitHub and see if the build succeeds.</p>
+
+<p>While this is really easy to setup it might not work for your project. There is not much documentation on how to configure the default build behaviour. I had for example <a href="https://github.com/travis-ci/travis-ci/issues/1322">code signing issues</a> because it didn&rsquo;t use the <code>iphonesimulator</code> SDK. If that minimal solution doesn&rsquo;t suite you let&rsquo;s have a look on how to use Travis with a custom build command.</p>
+
+<h2>Custom Build Commands</h2>
+
+<p>Travis builds your project from the command line. Therefore the first step is to make your project compile locally. As part of the Xcode Command Line Tools Apple ships <a href="https://developer.apple.com/library/mac/documentation/Darwin/Reference/ManPages/man1/xcodebuild.1.html"><code>xcodebuild</code></a>.</p>
+
+<p>Open your terminal and type:</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>xcodebuild --help</span></code></pre></td></tr></table></div></figure>
+
+
+<p>This should list all possible arguments for <code>xcodebuild</code>. If it fails make sure <a href="http://stackoverflow.com/a/9329325">the Command Line Tools</a> are properly installed. This is how a typical build command would look like:</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>xcodebuild -project {project}.xcodeproj -target {target} -sdk iphonesimulator ONLY_ACTIVE_ARCH=NO</span></code></pre></td></tr></table></div></figure>
+
+
+<p>The <code>iphonesimulator</code> SDK is set in order to avoid signing issues. This is necessary until we include the certificates later. By setting <code>ONLY_ACTIVE_ARCH=NO</code> we make sure that we can build for the simulator architecture. You can set additional attributes (e.g. <code>configuration</code>). Type <code>man xcodebuild</code> to read the documentation.</p>
+
+<p>For <code>CocoaPods</code> projects you have to specify the <code>workspace</code> and <code>scheme</code> instead:</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>xcodebuild -workspace {workspace}.xcworkspace -scheme {scheme} -sdk iphonesimulator ONLY_ACTIVE_ARCH=NO</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Schemes get created automatically with XCode but this won&rsquo;t happen on the server. Make sure to declare the schemes as <code>shared</code> and add them to the repository. Otherwise it will work locally but not on Travis CI.</p>
+
+<p><img class="center" src="http://blog.mattes-groeger.de/images/posts/objc_shared_schemes.jpg"></p>
+
+<p>The <code>.travis.yml</code> for our example project would look like this now:</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>language: objective-c
+</span><span class='line'>rvm: 1.9.3
+</span><span class='line'>script: xcodebuild -workspace TravisExample.xcworkspace -scheme TravisExample -sdk iphonesimulator ONLY_ACTIVE_ARCH=NO</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Please note that the rvm environment is explicitly set to <code>1.9.3</code> because the new default environment <code>2.0.0</code> <a href="https://github.com/travis-ci/travis-ci/issues/1637">does not have</a> <code>CocoaPods</code> pre-installed. You could also add <code>before_install: gem install cocoapods</code> instead.</p>
+
+<h2>Running Tests</h2>
+
+<p>Usually for testing you would use a command like this (note the <code>test</code> attribute):</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>xcodebuild test -workspace {workspace}.xcworkspace -scheme {test_scheme} -sdk iphonesimulator ONLY_ACTIVE_ARCH=NO</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Unfortunately <code>xcodebuild</code> doesn&rsquo;t properly support test targets and application tests for iOS. There are <a href="http://www.raingrove.com/2012/03/28/running-ocunit-and-specta-tests-from-command-line.html">attempts to fix this problems</a> but I suggest using Xctool instead.</p>
+
+<h3>Xctool</h3>
+
+<p><a href="https://github.com/facebook/xctool">Xctool</a> is a command line tool from Facebook to make building and testing easier. The output is less verbose than with <code>xcodebuild</code>. It can create a nicely structured and colored output instead. It also fixes the problems with running logic and application tests.</p>
+
+<p>Travis comes with xctool pre-installed. To test it locally, install it with <a href="http://brew.sh/">homebrew</a>:</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>brew update
+</span><span class='line'>brew install xctool</span></code></pre></td></tr></table></div></figure>
+
+
+<p>The usage is really simple as it takes exactly the same arguments as <code>xcodebuild</code>:</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>xctool test -workspace TravisExample.xcworkspace -scheme TravisExampleTests -sdk iphonesimulator ONLY_ACTIVE_ARCH=NO</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Once we get these commands working locally it&rsquo;s time to put them in our <code>.travis.yml</code>:</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>language: objective-c
+</span><span class='line'>rvm: 1.9.3
+</span><span class='line'>script:
+</span><span class='line'>  - xctool -workspace TravisExample.xcworkspace -scheme TravisExample -sdk iphonesimulator ONLY_ACTIVE_ARCH=NO
+</span><span class='line'>  - xctool test -workspace TravisExample.xcworkspace -scheme TravisExampleTests -sdk iphonesimulator ONLY_ACTIVE_ARCH=NO</span></code></pre></td></tr></table></div></figure>
+
+
+<p>What we looked at so far is enough to use Travis for library projects. We can ensure that it compiles properly and tests pass. But for iOS apps we want to test on a physical device. That means we have to distribute it to all our test devices. Of course we want to do this automatically using Travis. As a first step we have to sign our app with an apple distribution certificate.</p>
+
+<h2>App Signing</h2>
+
+<p>In order to sign our app on Travis we have to create all necessary certificates and profiles. As every iOS-Developer knows, this might be the most difficult step ;&ndash;). Afterwards we will write some scripts that do the signing on the server.</p>
+
+<h3>Certificates and Profiles</h3>
+
+<p><strong>1. Apple Worldwide Developer Relations Certification Authority</strong></p>
+
+<p>Download it <a href="http://developer.apple.com/certificationauthority/AppleWWDRCA.cer">from the Apple</a> page or export it from your Keychain. Save it in your project under <code>scripts/certs/apple.cer</code>.</p>
+
+<p><strong>2. iPhone Distribution Certificate + Private Key</strong></p>
+
+<p>Create a new distribution certificate if you don&rsquo;t have one already. Therefore go to your <a href="https://developer.apple.com/account/overview.action">Apple Developer Account</a> and follow the steps to create a new certificate for Production (<code>Certificates</code> > <code>Production</code> > <code>Add</code> > <code>App Store and Ad Hoc</code>). Make sure to download and install the certificate. Afterwards you should find it in your Keychain with a private key attached to it. Open the application <code>Keychain Access</code> on you Mac:</p>
+
+<p><img class="center" src="http://blog.mattes-groeger.de/images/posts/dist_cert_keychain.jpg"></p>
+
+<p>Export the certificate into <code>scripts/certs/dist.cer</code> by right-clicking the item and choose <code>Export...</code>. Then export the private key and save it into <code>scripts/certs/dist.p12</code>. Enter a password of your choice.</p>
+
+<p>As Travis needs to know this password we have to store it somewhere. Of course we don&rsquo;t want to save it as plain text. Therefore we can make use of the <a href="http://about.travis-ci.org/docs/user/build-configuration/#Secure-environment-variables">Travis secure environment variables</a>. Open terminal and navigate to your project folder that contains the <code>.travis.yml</code>. First let&rsquo;s install the Travis gem by running <code>gem install travis</code>. Afterwards you can add the password by executing:</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>travis encrypt "KEY_PASSWORD={password}" --add</span></code></pre></td></tr></table></div></figure>
+
+
+<p>This will add an encrypted environment variable called <code>KEY_PASSWORD</code> to your <code>.travis.yml</code>. It can then be used in any script executed by Travis CI.</p>
+
+<p><strong>3. iOS Provisioning Profile (Distribution)</strong></p>
+
+<p>If you don&rsquo;t have already create a new distribution profile. Based on your account you can either create an <a href="https://developer.apple.com/library/ios/documentation/IDEs/Conceptual/AppDistributionGuide/TestingYouriOSApp/TestingYouriOSApp.html">Ad Hoc</a> or <a href="https://developer.apple.com/programs/ios/enterprise/gettingstarted/">In House</a> profile (<code>Provisioning Profiles</code> > <code>Distribution</code> > <code>Add</code> > <code>Ad Hoc</code> or <code>In House</code>). Download and save it under <code>scripts/profile/</code>.</p>
+
+<p>As we have to access this profile from Travis we have to store the name as global environment variable. Therefore add it to the <code>.travis.yml</code> global environment variables section. If the file name would be <code>TravisExample_Ad_Hoc.mobileprovision</code> add this:</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>env:
+</span><span class='line'>  global:
+</span><span class='line'>  - APP_NAME="TravisExample"
+</span><span class='line'>  - 'DEVELOPER_NAME="iPhone Distribution: {your_name} ({code})"'
+</span><span class='line'>  - PROFILE_NAME="TravisExample_Ad_Hoc"</span></code></pre></td></tr></table></div></figure>
+
+
+<p>There are 2 more environment variables declared. The <code>APP_NAME</code> (line 3) is usually the same name as your main target. The <code>DEVELOPER_NAME</code> (line 4) is what you see when checking the XCode <code>Build Settings</code> of your main target under <code>Code Signing Identity</code> > <code>Release</code>. Search for the <code>Ad Hoc</code> or <code>In House</code> profile of your app. Take the text part that is in black letters. Depending on your setup it may or may not include a code in brackets.</p>
+
+<h2>Encrypt certificates and profiles</h2>
+
+<p>If your GitHub project is public you might want to encrypt your certificates and profiles if they contain sensitive data. If you have a private repository you can move on to the next section.</p>
+
+<p>First we have to come up with a password that encrypts all our files (the secret). In our example let&rsquo;s choose &ldquo;foo&rdquo;. But you should come up with a more secure password for your project ;&ndash;). On the command line encrypt all 3 sensitive files using <code>openssl</code>:</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>openssl aes-256-cbc -k "foo" -in scripts/profile/TravisExample_Ad_Hoc.mobileprovision -out scripts/profile/TravisExample_Ad_Hoc.mobileprovision.enc -a
+</span><span class='line'>openssl aes-256-cbc -k "foo" -in scripts/certs/dist.cer -out scripts/certs/dist.cer.enc -a
+</span><span class='line'>openssl aes-256-cbc -k "foo" -in scripts/certs/dist.p12 -out scripts/certs/dist.cer.p12 -a</span></code></pre></td></tr></table></div></figure>
+
+
+<p>This will create encrypted versions of our files with the ending <code>.enc</code>. You can now remove or ignore the original files. At least make sure not to commit them, otherwise they would show up on GitHub. If you accedentially commited or pushed them already <a href="https://help.github.com/articles/remove-sensitive-data">get some help</a>.</p>
+
+<p>Now that our files are encrypted we need to tell Travis to decrypt them again. For that Travis needs the secret. We use the same approach that we used already for the <code>KEY_PASSWORD</code>:</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>travis encrypt "ENCRYPTION_SECRET=foo" --add</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Lastly, we have to tell Travis which files to decrypt. Therefore add the following commands to the <code>before-script</code> phase in the <code>.travis.yml</code>:</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>before_script:
+</span><span class='line'>- openssl aes-256-cbc -k "$ENCRYPTION_SECRET" -in scripts/profile/TravisExample_Ad_Hoc.mobileprovision.enc -d -a -out scripts/profile/TravisExample_Ad_Hoc.mobileprovision
+</span><span class='line'>- openssl aes-256-cbc -k "$ENCRYPTION_SECRET" -in scripts/certs/dist.p12.enc -d -a -out scripts/certs/dist.p12
+</span><span class='line'>- openssl aes-256-cbc -k "$ENCRYPTION_SECRET" -in scripts/certs/dist.p12.enc -d -a -out scripts/certs/dist.p12</span></code></pre></td></tr></table></div></figure>
+
+
+<p>With that your files on GitHub will be secured, while Travis can still read and use them. There is only one security issue that you have to be aware of: You could (accidentally) expose a decrypted environment variable in the Travis build log. Note however that decryption is disabled for pull requests.</p>
+
+<h3>Add Scripts</h3>
+
+<p>Now we have to make sure that the certificates get imported in the keychain on the Travis server. Therefore we should add a new file <code>add-key.sh</code> in the <code>scripts</code> folder:</p>
+
+<figure class='code'><figcaption><span>add-key.sh </span></figcaption>
+<div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="c">#!/bin/sh</span>
+</span><span class='line'>security create-keychain -p travis ios-build.keychain
+</span><span class='line'>security import ./scripts/certs/apple.cer -k ~/Library/Keychains/ios-build.keychain -T /usr/bin/codesign
+</span><span class='line'>security import ./scripts/certs/dist.cer -k ~/Library/Keychains/ios-build.keychain -T /usr/bin/codesign
+</span><span class='line'>security import ./scripts/certs/dist.p12 -k ~/Library/Keychains/ios-build.keychain -P <span class="nv">$KEY_PASSWORD</span> -T /usr/bin/codesign
+</span><span class='line'>mkdir -p ~/Library/MobileDevice/Provisioning<span class="se">\ </span>Profiles
+</span><span class='line'>cp ./scripts/profile/<span class="nv">$PROFILE_NAME</span>.mobileprovision ~/Library/MobileDevice/Provisioning<span class="se">\ </span>Profiles/
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Here we create a new temporary keychain called <code>ios-build</code> that will contain all the certificates. Note that we use the <code>$KEY_PASSWORD</code> here to import the private key. As a last step the mobile provisioning profile is copied into the <code>Library</code> folder.</p>
+
+<p>After creating this file make sure to give it executable rights. On the command line type <code>chmod a+x scripts/add-key.sh</code>. You have to do this for the following scripts as well.</p>
+
+<p>Now that all certificates and profiles are imported we can sign our application. Please note that we have to build the app before we can sign it. As we need to know where the build is stored on disk I recommend specifying the output folder by declaring <code>OBJROOT</code> and <code>SYMROOT</code> in the build command. Also we should create a release version by setting the sdk to <code>iphoneos</code> and the configuration to <code>Release</code>:</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>xctool -workspace TravisExample.xcworkspace -scheme TravisExample -sdk iphoneos -configuration Release OBJROOT=$PWD/build SYMROOT=$PWD/build ONLY_ACTIVE_ARCH=NO</span></code></pre></td></tr></table></div></figure>
+
+
+<p>If you run this command you should find the app binary in the <code>build/Release-iphoneos</code> folder afterwards. Now we can sign it and create the <code>IPA</code> file. Therefore create a new script:</p>
+
+<figure class='code'><figcaption><span>sign-and-upload.sh </span></figcaption>
+<div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="c">#!/bin/sh</span>
+</span><span class='line'><span class="k">if</span> <span class="o">[[</span> <span class="s2">&quot;$TRAVIS_PULL_REQUEST&quot;</span> !<span class="o">=</span> <span class="s2">&quot;false&quot;</span> <span class="o">]]</span>; <span class="k">then</span>
+</span><span class='line'><span class="k">  </span><span class="nb">echo</span> <span class="s2">&quot;This is a pull request. No deployment will be done.&quot;</span>
+</span><span class='line'>  <span class="nb">exit </span>0
+</span><span class='line'><span class="k">fi</span>
+</span><span class='line'><span class="k">if</span> <span class="o">[[</span> <span class="s2">&quot;$TRAVIS_BRANCH&quot;</span> !<span class="o">=</span> <span class="s2">&quot;master&quot;</span> <span class="o">]]</span>; <span class="k">then</span>
+</span><span class='line'><span class="k">  </span><span class="nb">echo</span> <span class="s2">&quot;Testing on a branch other than master. No deployment will be done.&quot;</span>
+</span><span class='line'>  <span class="nb">exit </span>0
+</span><span class='line'><span class="k">fi</span>
+</span><span class='line'>
+</span><span class='line'><span class="nv">PROVISIONING_PROFILE</span><span class="o">=</span><span class="s2">&quot;$HOME/Library/MobileDevice/Provisioning Profiles/$PROFILE_NAME.mobileprovision&quot;</span>
+</span><span class='line'><span class="nv">OUTPUTDIR</span><span class="o">=</span><span class="s2">&quot;$PWD/build/Release-iphoneos&quot;</span>
+</span><span class='line'>
+</span><span class='line'>xcrun -log -sdk iphoneos PackageApplication <span class="s2">&quot;$OUTPUTDIR/$APPNAME.app&quot;</span> -o <span class="s2">&quot;$OUTPUTDIR/$APPNAME.ipa&quot;</span> -sign <span class="s2">&quot;$DEVELOPER_NAME&quot;</span> -embed <span class="s2">&quot;$PROVISIONING_PROFILE&quot;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Line 2-9 are quite important. You don&rsquo;t want to create a new release while working on a feature branch. The same is true for pull requests. Builds for pull requests wouldn&rsquo;t work anyway as secured environment variables <a href="http://about.travis-ci.org/docs/user/build-configuration/#Secure-environment-variables">are disabled</a>.</p>
+
+<p>In line 14 we do the actual signing. This results in two new files in the <code>build/Release-iphoneos</code> folder: <code>TravisExample.ipa</code> and <code>TravisExample.app.dsym</code>. The first one contains the app which is ready to be delivered to your phone. The <code>dsym</code> file allows contains debug information of your binary. This is important for logging crashes on the devices. We will use both files later when we distribute the app.</p>
+
+<p>The last script will remove the temporary keychain again and delete the mobile provisioning profile. It is not really necessary but helps when testing locally.</p>
+
+<figure class='code'><figcaption><span>remov-key.sh </span></figcaption>
+<div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='sh'><span class='line'><span class="c">#!/bin/sh</span>
+</span><span class='line'>security delete-keychain ios-build.keychain
+</span><span class='line'>rm -f ~/Library/MobileDevice/Provisioning<span class="se">\ </span>Profiles/<span class="nv">$PROFILE_NAME</span>.mobileprovision
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>As a last step we have to tell Travis when to execute these 3 scripts. The keys should be added before the app is built and the signing and cleanup should happen afterwards. Add/replace the following steps in your <code>.travis.yml</code>:</p>
+
+<figure class='code'><figcaption><span>.travis.yml </span></figcaption>
+<div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+</pre></td><td class='code'><pre><code class='yaml'><span class='line'><span class="l-Scalar-Plain">before_script</span><span class="p-Indicator">:</span>
+</span><span class='line'><span class="p-Indicator">-</span> <span class="l-Scalar-Plain">./scripts/add-key.sh</span>
+</span><span class='line'><span class="p-Indicator">-</span> <span class="l-Scalar-Plain">./scripts/update-bundle.sh</span>
+</span><span class='line'><span class="l-Scalar-Plain">script</span><span class="p-Indicator">:</span>
+</span><span class='line'><span class="p-Indicator">-</span> <span class="l-Scalar-Plain">xctool -workspace TravisExample.xcworkspace -scheme TravisExample -sdk iphoneos -configuration Release OBJROOT=$PWD/build SYMROOT=$PWD/build ONLY_ACTIVE_ARCH=NO</span>
+</span><span class='line'><span class="l-Scalar-Plain">after_success</span><span class="p-Indicator">:</span>
+</span><span class='line'><span class="p-Indicator">-</span> <span class="l-Scalar-Plain">./scripts/sign-and-upload.sh</span>
+</span><span class='line'><span class="l-Scalar-Plain">after_script</span><span class="p-Indicator">:</span>
+</span><span class='line'><span class="p-Indicator">-</span> <span class="l-Scalar-Plain">./scripts/remove-key.sh</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>With that being done we can push everything to GitHub and wait for Travis to sign our app. We can validate if it worked by investigating the Travis console on the project page. If everything works fine we can have a look on how to distribute the signed app to our testers.</p>
+
+<h2>Distributing the App</h2>
+
+<p>There are two well-known services that help you with distributing your app: <a href="http://testflightapp.com">Testflight</a> and <a href="http://hockeyapp.net">Hockeyapp</a>. Choose whatever is more sufficient for your needs. Personally I prefer Hockeyapp but I&rsquo;ll show how to integrate both services.</p>
+
+<p>We will extend our existing shell script <code>sign-and-build.sh</code> for that. Let&rsquo;s create some release notes first:</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>RELEASE_DATE=`date '+%Y-%m-%d %H:%M:%S'`
+</span><span class='line'>RELEASE_NOTES="Build: $TRAVIS_BUILD_NUMBER\nUploaded: $RELEASE_DATE"</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Note that we use a global environment variable set by Travis here (<code>TRAVIS_BUILD_NUMBER</code>).</p>
+
+<h3>Testflight</h3>
+
+<p>Create a <a href="https://testflightapp.com/register/">Testflight account</a> and setup your app. In order to use the Testflight API you need to get the <a href="https://testflightapp.com/account/#api">api_token</a> and <a href="https://testflightapp.com/dashboard/team/edit/?next=/api/doc/">team_token</a> first. Again we have to make sure to encrypt them. On the command line execute:</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>travis encrypt "TESTFLIGHT_API_TOKEN={api_token}" --add
+</span><span class='line'>travis encrypt "TESTFLIGHT_TEAM_TOKEN={team_token}" --add</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Now we can call the API accordingly. Add this to the <code>sign-and-build.sh</code>:</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>curl http://testflightapp.com/api/builds.json \
+</span><span class='line'>  -F file="@$OUTPUTDIR/$APPNAME.ipa" \
+</span><span class='line'>  -F dsym="@$OUTPUTDIR/$APPNAME.app.dSYM.zip" \
+</span><span class='line'>  -F api_token="$TESTFLIGHT_API_TOKEN" \
+</span><span class='line'>  -F team_token="$TESTFLIGHT_TEAM_TOKEN" \
+</span><span class='line'>  -F distribution_lists='Internal' \
+</span><span class='line'>  -F notes="$RELEASE_NOTES"</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Make sure NOT to use the verbose flag (<code>-v</code>) as this would expose your decrypted tokens!</p>
+
+<h3>Hockeyapp</h3>
+
+<p>Sign up for a <a href="hockeyapp.net/plans">Hockeyapp account</a> and create a new App. Afterwards grab the App ID from the overview page. Next we have to generate an API token. Go to <a href="https://rink.hockeyapp.net/manage/auth_tokens">this page</a> and create a new API token. If you want to automatically distribute new versions to all testers choose the &lsquo;Full Access&rsquo; version.</p>
+
+<p>Encrypt both tokens:</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>travis encrypt "HOCKEY_APP_ID={app_id}" --add
+</span><span class='line'>travis encrypt "HOCKEY_APP_TOKEN={api_token}" --add</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Then call their API from the <code>sign-and-build.sh</code> script:</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>curl https://rink.hockeyapp.net/api/2/apps/$HOCKEY_APP_ID/app_versions \
+</span><span class='line'>  -F status="2" \
+</span><span class='line'>  -F notify="0" \
+</span><span class='line'>  -F notes="$RELEASE_NOTES" \
+</span><span class='line'>  -F notes_type="0" \
+</span><span class='line'>  -F ipa="@$OUTPUTDIR/$APPNAME.ipa" \
+</span><span class='line'>  -F dsym="@$OUTPUTDIR/$APPNAME.app.dSYM.zip" \
+</span><span class='line'>  -H "X-HockeyAppToken: $HOCKEY_APP_TOKEN"</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Note that we also upload the <code>dsym</code> file. If you integrate the <a href="https://testflightapp.com/sdk/ios/doc/">Testflight</a> or <a href="http://hockeyapp.net/releases/">Hockeyapp SDK</a> you can get human-readable crash reports without further ado.</p>
+
+<h2>Troubleshooting Travis</h2>
+
+<p>Using Travis over the last month wasn&rsquo;t always flaw-less. It&rsquo;s important to know how to approach issues with your build without having direct access to the build environment.</p>
+
+<p>As of writing this article there are no VM images available for download. If your build doesn&rsquo;t work anymore, first try to reproduce the problem locally. Run the exact same build commands that Travis executes locally:</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>xctool ...</span></code></pre></td></tr></table></div></figure>
+
+
+<p>For debugging the shell scripts you have to define the environment variables first. What I did for this is create a new shell script that sets all the environment variables. This script is added to the <code>.gitignore</code> file because you don&rsquo;t want it exposed to the public. For the example project my <code>config.sh</code> looks like this:</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>#!/bin/bash
+</span><span class='line'>
+</span><span class='line'># Standard app config
+</span><span class='line'>export APP_NAME=TravisExample
+</span><span class='line'>export DEVELOPER_NAME=iPhone Distribution: Mattes Groeger
+</span><span class='line'>export PROFILE_NAME=TravisExample_Ad_Hoc
+</span><span class='line'>export INFO_PLIST=TravisExample/TravisExample-Info.plist
+</span><span class='line'>export BUNDLE_DISPLAY_NAME=Travis Example CI
+</span><span class='line'>
+</span><span class='line'># Edit this for local testing only, DON'T COMMIT it:
+</span><span class='line'>export ENCRYPTION_SECRET=...
+</span><span class='line'>export KEY_PASSWORD=...
+</span><span class='line'>export TESTFLIGHT_API_TOKEN=...
+</span><span class='line'>export TESTFLIGHT_TEAM_TOKEN=...
+</span><span class='line'>export HOCKEY_APP_ID=...
+</span><span class='line'>export HOCKEY_APP_TOKEN=...
+</span><span class='line'>
+</span><span class='line'># This just emulates Travis vars locally
+</span><span class='line'>export TRAVIS_PULL_REQUEST=false
+</span><span class='line'>export TRAVIS_BRANCH=master
+</span><span class='line'>export TRAVIS_BUILD_NUMBER=0</span></code></pre></td></tr></table></div></figure>
+
+
+<p>In order the expose these environment variables execute this (be sure <code>config.sh</code> has executable rights):</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>. ./config.sh</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Afterwards try <code>echo $APP_NAME</code> to check if it worked. If it did, you can run any of your shell scripts locally without modifications.</p>
+
+<p>If you get different build results locally you might have different versions of your libraries and gems installed. Try to imitate the exact same setup as on the Travis VM. They have a list of their installed software versions <a href="http://about.travis-ci.org/docs/user/osx-ci-environment/">online</a>. You can also figure out the exact versions of all gems and libraries by putting debug information into your travis config:</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>gem cocoapod --version
+</span><span class='line'>brew --version
+</span><span class='line'>xctool -version
+</span><span class='line'>xcodebuild -version -sdk</span></code></pre></td></tr></table></div></figure>
+
+
+<p>After you installed the exact same versions locally re-run the build.</p>
+
+<p>If you still don&rsquo;t get the same results try to do a clean checkout into a new directory. Also make sure all caches are cleared. As Travis sets up a new virtual machine for each build it doesn&rsquo;t have to deal with cache problems – but your local test environment might has to.</p>
+
+<p>Once you can reproduce the exact same behaviour as on the server you can start to investigate what the problem is. It really depends then on your concrete scenario how to approach it. Usually google is a great help in figuring out what could be the cause of your problem.</p>
+
+<p>If after all the problem seems to affect other project on Travis as well it might be an issue with the Travis environment itself. I saw this happening several times (especially in the beginning). In this case try to contact their support. My experience is that they react super fast.</p>
+
+<h2>Criticism</h2>
+
+<p>There are some limitations when using Travis CI compared to other solutions on the market. As Travis runs from a pre-configured VM you have to install custom dependencies for every build. That costs additional time. They put <a href="http://about.travis-ci.org/docs/user/caching/">effort in providing caching mechanisms</a> lately, though.</p>
+
+<p>To some extend you rely on the setup that Travis provides. For example you have to deal with the currently installed version of Xcode. If you use a newer version than Travis CI you probably won&rsquo;t be able to run your build on the server. It would be helpful if there were different VM&rsquo;s setup for each major Xcode version.</p>
+
+<p>For complex projects you might want to split up your build jobs into compiling the app, running integration tests and so forth. This way you get the build artifacts faster, without having to wait for all tests beeing processed. There is <a href="https://github.com/travis-ci/travis-ci/issues/249">no direct support</a> for dependent builds so far.</p>
+
+<p>When pushing your project to GitHub Travis get’s triggered instantly. But builds usually won’t start right away. They will be put in a <a href="http://about.travis-ci.org/blog/2012-07-27-improving-the-quality-of-service-on-travis-ci/">global language-specific build queue</a>. The Pro version allows to have more builds beeing executed concurrently, though.</p>
+
+<h2>Conclusion</h2>
+
+<p>Travis CI provides you with a fully functional continuous integration environment that builds, tests and distributes your iOS apps. For open source projects this service is even free. Community projects benefit from the great GitHub integration. You might have seen <a href="http://about.travis-ci.org/docs/user/status-images/">buttons like this</a> already:</p>
+
+<p><img class="center" src="https://travis-ci.org/MattesGroeger/TravisExample-iOS.png?branch=master"></p>
+
+<p>Even for commercial project their support for private GitHub repositories with Travis Pro opens up an easy and fast way to use continuous integration.</p>
+
+<p>If you didn&rsquo;t try Travis yet, go and do it now. It&rsquo;s awesome!</p>
+
+<h2>Further Links</h2>
+
+<ul>
+<li><a href="https://github.com/MattesGroeger/TravisExample-iOS">Example Project</a></li>
+<li><a href="https://www.travis-ci.com/">Travis CI</a></li>
+<li><a href="https://magnum.travis-ci.com/">Travis CI Pro</a></li>
+<li><a href="https://github.com/facebook/xctool">Xctool</a></li>
+<li><a href="http://hockeyapp.net/">Hockeyapp</a></li>
+<li><a href="https://testflightapp.com/">Testflight</a></li>
+</ul>
+
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[From Wordpress to Octopress]]></title>
