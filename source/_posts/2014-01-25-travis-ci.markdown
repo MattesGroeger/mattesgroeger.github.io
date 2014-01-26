@@ -2,8 +2,8 @@
 layout: post
 title: "Travis CI for iOS"
 date: 2014-01-25 12:00
-comments: false
-categories: 
+comments: true
+categories: Travis CI iOS Howto
 ---
 
 Have you ever tried to setup a [continuous integration](http://en.wikipedia.org/wiki/Continuous_integration) server for iOS? From my personal experience it is not easy. You have to organize a Mac and install software and plugins. You have to manage user accounts and provide security. You have to grant access to the repositories and configure all build steps and certificates. During the project lifetime you have to keep the server healthy and up-to-date.
