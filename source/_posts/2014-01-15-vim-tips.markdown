@@ -1,30 +1,120 @@
 ---
 layout: post
-title: "Vim Tips"
+title: "My Favourite Vim Plugins"
 date: 2014-01-15 00:12
 comments: true
 categories: vim, tip
 ---
 
-Lately I'm working a lot with Vim as I work together with backend engineers. I use it already for a long time but always had a hard time to be fast with it. In this post I want to share what helped me to become productive.
+I use [vim](http://www.vim.org/) for a long time already but always had a hard time to be efficient with it. During the last month I learned a lot from my new coworkers. In this article I want to share vim plugins that helped me to become really productive. I use them all on a daily basis.
 
 <!-- more -->
 
-### Understanding the Vim principle
+## Manage Vim Plugins
 
-Vim as verbs link
+Bundle 'gmarik/vundle'
 
-### Useful Plugins
+## Jump to Declaration (ctags)
 
-* Nerdtree
-* Ack
-* Ctrl-P
+By default vim doesn't know anything about the semantics of your code. But with [ctags](http://ctags.sourceforge.net/) you can generate a `tags` file that contains jump marks for your whole source code. This way you can jump to a method declaration using the `Ctrl + ]` shortcut (`Ctrl + T` to go back). A detailed description on how to setup `ctags` can be found over at [Andrew Stewarts Blog](http://blog.stwrt.ca/2012/10/31/vim-ctags).
 
-### Useful Shortcuts
+## Show Outline (Tagbar)
 
-* ~ (change case)
+The [Tagbar plugin](http://majutsushi.github.io/tagbar/) utilizes the afore mentioned `tags` to show an outline of the current source file. You can then quickly jump to the desired method declaration in the current file.
 
-### Vim Config
+{% codeblock lang:vim .vimrc %}
+Bundle 'majutsushi/tagbar'                           " Add Tagbar plugin with vundle
+
+nmap <F8> :TagbarToggle<CR>                          " Toggle the outline with F8
+let g:tagbar_width = 30                              " Make buffer more narrow
+let g:tagbar_autoclose = 1                           " Automatically close after select
+let g:tagbar_autofocus = 1                           " Move focus into when opening
+let g:tagbar_sort = 0                                " Same order as in file
+let g:tagbar_compact = 1                             " Hide help text
+let g:tagbar_indent = 1                              " Smaller intendation
+let g:tagbar_foldlevel = 2                           " Collapse lower levels
+{% endcodeblock %}
+
+## Tab-Autocompletion (Supertab)
+
+Vim [supports auto-completion](http://vimdoc.sourceforge.net/htmldoc/options.html#'completeopt') by default. It is based on all opened buffers, ctags and included files. But the default shortcuts are a bit cumbersome (`Ctrl + N`/`Ctrl + P`). The [Supertab plugin](https://github.com/ervandew/supertab) utilizes the `Tab` and `Shift+Tab` keys to trigger and navigate the autocompletion popup. It also allows to automatically switch to the smarter context-aware [omni completion](http://vim.wikia.com/wiki/Omni_completion):
+
+{% codeblock lang:vim .vimrc %}
+Bundle 'ervandew/supertab'                           " Add Supertab plugin with vundle
+
+set completeopt=longest,menu                         " No popup when only 1 option
+
+highlight Pmenu ctermfg=25 ctermbg=195               " Improved colors for completion popup
+highlight PmenuSel ctermfg=195 ctermbg=25            " Might be not neccessary for your theme
+
+let g:SuperTabDefaultCompletionType = "context"      " Auto-switch to omni completion
+let g:SuperTabContextDefaultCompletionType = "<c-n>" " Navigate from top to bottom
+let g:SuperTabMappingTabLiteral = "<c-v>"            " Enforce tab with Ctrl + v (e.g. after words)
+let g:SuperTabLongestHighlight = 1                   " Select first suggestion
+{% endcodeblock %}
+
+## Navigate Project Structure (Nerdtree)
+
+Bundle 'scrooloose/nerdtree'
+
+* Compare with built-in file browser
+* Show currently open file in file structure (F3)
+
+## Find Files by Name (CtrlP)
+
+The [CtrlP plugin](https://github.com/kien/ctrlp.vim) allows to quickly search for files in the project. It uses a `fuzzy` logic that allows to enter only parts of the path or file. Trigger the plugin with `Ctrl + P` and type the path or file name you are searching for. If you are searching only for a file name you can switch to the file mode inside the CtrlP buffer using `Ctrl + D`. In order to enter a regular expression press `Ctrl + R`.
+
+{% codeblock lang:vim .vimrc %}
+Bundle 'kien/ctrlp.vim'                           " Add CtrlP plugin with vundle
+
+set wildignore+=*/.git/*,*/.hg/*,*/.svn/*         " Default vcs ignores
+set wildignore+=*/ebin/*,*.beam                   " Erlang ignores
+{% endcodeblock %}
+
+* Fuzzy (?) search by folder/name
+* Ctags integration for methods/classes
+
+## Search within Files (Ack)
+
+Bundle 'mileszs/ack.vim'
+
+* Shift + 8 :Ack
+* :Ack whatever
+
+## Check Syntax (Syntastic)
+
+Bundle 'scrooloose/syntastic'
+
+* Supports all kinds of languages
+* Shows syntax errors inline
+
+## Toggle Comments (TComment)
+
+Bundle 'tomtom/tcomment_vim'
+
+* Toggle multi-line comments with gc
+* Supports all kinds of languages
+
+## Reopen closed Buffers (BufExplorer)
+
+Bundle 'jlanzarotta/bufexplorer'
+
+* Show previously opened buffers
+* Re-open previously closed files/buffers
+
+## Maximize current Buffer (ZoomWindow)
+
+Bundle 'regedarek/ZoomWin'
+
+* When working with multiple panes focus on one
+* Toggles back to previous layout
+* Use specific version for performance reasons!
+
+## Show git changes (GitGutter)
+
+Bundle 'airblade/vim-gitgutter'
+
+* See git changes (add/rm/change) per line
 
 ## Conclusion
 
