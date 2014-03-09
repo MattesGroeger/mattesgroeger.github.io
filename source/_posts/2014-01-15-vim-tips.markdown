@@ -12,15 +12,19 @@ I use [vim](http://www.vim.org/) for a long time already but always had a hard t
 
 ## Manage Vim Plugins
 
-Bundle 'gmarik/vundle'
+{% img right /images/posts/vim-vundle.png %}
+
+Vim gets powerful due to the great plugins people create for it. You can download them from [the vim homepage](http://www.vim.org/scripts/script_search_results.php) and extract them in the `~/.vim/plugin` directory. To make this process easier I recommend using a plugin manager like [Pathogen](http://www.vim.org/scripts/script.php?script_id=2332) or [Vundle](https://github.com/gmarik/Vundle.vim). I prefer [Vundle](https://github.com/gmarik/Vundle.vim) as you can add new plugins by just adding one line to the `.vimrc` and running `:BundleInstall`. In the following sections I show the Vundle install command for each plugin.
 
 ## Jump to Declaration (ctags)
 
-By default vim doesn't know anything about the semantics of your code. But with [ctags](http://ctags.sourceforge.net/) you can generate a `tags` file that contains jump marks for your whole source code. This way you can jump to a method declaration using the `Ctrl + ]` shortcut (`Ctrl + T` to go back). A detailed description on how to setup `ctags` can be found over at [Andrew Stewarts Blog](http://blog.stwrt.ca/2012/10/31/vim-ctags).
+By default vim doesn't know anything about the semantics of your code. But with [exuberant ctags](http://ctags.sourceforge.net/) you can generate a `tags` file that contains jump marks for your whole source code. It supports 41 programming languages. This way you can jump to a method declaration using the `Ctrl + ]` shortcut (`Ctrl + T` to go back). A detailed description on how to setup `ctags` can be found over at [Andrew Stewarts Blog](http://blog.stwrt.ca/2012/10/31/vim-ctags).
 
 ## Show Outline (Tagbar)
 
-The [Tagbar plugin](http://majutsushi.github.io/tagbar/) utilizes the afore mentioned `tags` to show an outline of the current source file. You can then quickly jump to the desired method declaration in the current file.
+{% img right /images/posts/vim-tagbar.png %}
+
+The [Tagbar plugin](http://majutsushi.github.io/tagbar/) utilizes the aforementioned `tags` to show an outline of the current source file. You can then quickly jump to the desired method or class declaration. This way navigation in big files gets much easier.
 
 {% codeblock lang:vim .vimrc %}
 Bundle 'majutsushi/tagbar'                           " Add Tagbar plugin with vundle
@@ -37,7 +41,11 @@ let g:tagbar_foldlevel = 2                           " Collapse lower levels
 
 ## Tab-Autocompletion (Supertab)
 
-Vim [supports auto-completion](http://vimdoc.sourceforge.net/htmldoc/options.html#'completeopt') by default. It is based on all opened buffers, ctags and included files. But the default shortcuts are a bit cumbersome (`Ctrl + N`/`Ctrl + P`). The [Supertab plugin](https://github.com/ervandew/supertab) utilizes the `Tab` and `Shift+Tab` keys to trigger and navigate the autocompletion popup. It also allows to automatically switch to the smarter context-aware [omni completion](http://vim.wikia.com/wiki/Omni_completion):
+{% img right /images/posts/vim-supertab.png %}
+
+Vim [supports auto-completion](http://vimdoc.sourceforge.net/htmldoc/options.html#'completeopt') by default. It is based on all opened buffers, ctags and included files. But the default shortcuts are a bit cumbersome (`Ctrl + N`/`Ctrl + P`).
+
+The [Supertab plugin](https://github.com/ervandew/supertab) utilizes the `Tab` and `Shift+Tab` keys to trigger and navigate the autocompletion popup. It also allows to automatically switch to the smarter context-aware [omni completion](http://vim.wikia.com/wiki/Omni_completion):
 
 {% codeblock lang:vim .vimrc %}
 Bundle 'ervandew/supertab'                           " Add Supertab plugin with vundle
@@ -55,14 +63,30 @@ let g:SuperTabLongestHighlight = 1                   " Select first suggestion
 
 ## Navigate Project Structure (Nerdtree)
 
-Bundle 'scrooloose/nerdtree'
+{% img right /images/posts/vim-nerdtree.png %}
 
-* Compare with built-in file browser
-* Show currently open file in file structure (F3)
+Vim has a pretty good [built-in file explorer](http://vimdoc.sourceforge.net/htmldoc/pi_netrw.html#:Explore). However, the [NERD tree plugin](https://github.com/scrooloose/nerdtree) makes the usage easier by providing sane default configurations. Also the UI is a bit more clean.
+
+Please note that NERD tree also allows to show the currently opened buffer in the file structure (configured as `F3` shortcut below):
+
+{% codeblock lang:vim .vimrc %}
+Bundle 'scrooloose/nerdtree'                         " Add NERD tree plugin with vundle
+
+nnoremap <F2> :NERDTreeToggle<CR>                    " Toggle NERD tree with F2
+nnoremap <F3> :NERDTreeFind<CR>                      " Show current file in NERD tree with F3
+
+let NERDTreeIgnore = ['\.meta$']                     " Ignore *.meta files in NERD tree
+let NERDTreeMinimalUI = 1                            " Remove help and bookmark text
+let NERDTreeAutoDeleteBuffer = 1                     " Don't ask for buffer removal
+{% endcodeblock %}
 
 ## Find Files by Name (CtrlP)
 
-The [CtrlP plugin](https://github.com/kien/ctrlp.vim) allows to quickly search for files in the project. It uses a `fuzzy` logic that allows to enter only parts of the path or file. Trigger the plugin with `Ctrl + P` and type the path or file name you are searching for. If you are searching only for a file name you can switch to the file mode inside the CtrlP buffer using `Ctrl + D`. In order to enter a regular expression press `Ctrl + R`.
+{% img right /images/posts/vim-ctrlp.png %}
+
+The [CtrlP plugin](https://github.com/kien/ctrlp.vim) allows to quickly search for files in the project. It uses a `fuzzy` logic that allows to enter only parts of the path or file. Trigger the plugin with `Ctrl + P` and type the path or file name you are searching for.
+
+If you are searching only for a file name you can switch to the file mode inside the CtrlP buffer using `Ctrl + D`. In order to enter a regular expression press `Ctrl + R`.
 
 {% codeblock lang:vim .vimrc %}
 Bundle 'kien/ctrlp.vim'                           " Add CtrlP plugin with vundle
@@ -71,38 +95,54 @@ set wildignore+=*/.git/*,*/.hg/*,*/.svn/*         " Default vcs ignores
 set wildignore+=*/ebin/*,*.beam                   " Erlang ignores
 {% endcodeblock %}
 
-* Fuzzy (?) search by folder/name
-* Ctags integration for methods/classes
+## Content Search (Ack)
 
-## Search within Files (Ack)
+{% img right /images/posts/vim-ack.png %}
 
-Bundle 'mileszs/ack.vim'
+When it comes to searching within files I can recommend the [Ack plugin](https://github.com/mileszs/ack.vim). [Ack](http://beyondgrep.com/) is the better alternative over [grep](http://en.wikipedia.org/wiki/Grep) for searching. The plugin shows the results in a quickfix window.
 
-* Shift + 8 :Ack
-* :Ack whatever
+Make sure to [install Ack](https://github.com/mileszs/ack.vim) before using the plugin. On OSX use homebrew: `brew install ack`. Then in vim you can type `:Ack searchterm` to start the search. A nice trick is to mark a term with `Shift + 8` and then type `:Ack`. This will directly search for the term without having to re-type it.
 
-## Check Syntax (Syntastic)
+{% codeblock lang:vim .vimrc %}
+Bundle 'mileszs/ack.vim'                          " Add Ack plugin with vundle
+{% endcodeblock %}
 
-Bundle 'scrooloose/syntastic'
+## Syntax Check (Syntastic)
 
-* Supports all kinds of languages
-* Shows syntax errors inline
+{% img right /images/posts/vim-syntastic.png %}
+
+The [Syntastic plugin](https://github.com/scrooloose/syntastic) runs your files through external syntax checkers. If syntax errors are detected, they will show up right inside your code without having to compile it. Syntastic supports a [great amount of languages](https://github.com/scrooloose/syntastic/wiki/Syntax-Checkers).
+
+{% codeblock lang:vim .vimrc %}
+Bundle 'scrooloose/syntastic'                     " Add Syntastic plugin with vundle
+{% endcodeblock %}
 
 ## Toggle Comments (TComment)
 
-Bundle 'tomtom/tcomment_vim'
+{% img right /images/posts/vim-tcomment.png %}
 
-* Toggle multi-line comments with gc
-* Supports all kinds of languages
+TComment is a great little plugin that allows you to toggle comments in your source code. It is smart enough to determine the proper comment notation based on the file type. It supports block comments (Visual selection + `gc` keystroke)  as well as line comments (`gcc` keystroke).
 
-## Reopen closed Buffers (BufExplorer)
+{% codeblock lang:vim .vimrc %}
+Bundle 'tomtom/tcomment_vim'                      " Add TComment plugin with vundle
+{% endcodeblock %}
 
-Bundle 'jlanzarotta/bufexplorer'
+## Reopen Closed Buffers (BufExplorer)
 
-* Show previously opened buffers
-* Re-open previously closed files/buffers
+{% img right /images/posts/vim-bufexplorer.png %}
 
-## Maximize current Buffer (ZoomWindow)
+It happens quite often to me that I open files in existing buffers. When I want to go back to the previous files later I have to remember which buffer they were in or reopen them by name.
+
+[BufExplorer](https://github.com/jlanzarotta/bufexplorer) is a great plugin that helps in that situation. It shows all (previously) opened buffers (files) as a list that you can choose from. When working on many different files this is really helpful.
+
+{% codeblock lang:vim .vimrc %}
+Bundle 'jlanzarotta/bufexplorer'                  " Add BufExplorer plugin with vundle
+
+let g:bufExplorerShowRelativePath = 1             " Shorter file path
+let g:bufExplorerDefaultHelp = 0                  " Remove the help text
+{% endcodeblock %}
+
+## Maximize Current Buffer (ZoomWindow)
 
 Bundle 'regedarek/ZoomWin'
 
@@ -110,9 +150,13 @@ Bundle 'regedarek/ZoomWin'
 * Toggles back to previous layout
 * Use specific version for performance reasons!
 
-## Show git changes (GitGutter)
+## Show Git Changes (GitGutter)
 
-Bundle 'airblade/vim-gitgutter'
+{% img center /images/posts/vim-gitgutter.png %}
+
+{% codeblock lang:vim .vimrc %}
+Bundle 'airblade/vim-gitgutter'                   " Add GitGutter plugin with vundle
+{% endcodeblock %}
 
 * See git changes (add/rm/change) per line
 
