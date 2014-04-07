@@ -4,7 +4,7 @@
   <title><![CDATA[Category: iOS | Mattes Groeger]]></title>
   <link href="http://blog.mattes-groeger.de/categories/ios/atom.xml" rel="self"/>
   <link href="http://blog.mattes-groeger.de/"/>
-  <updated>2014-01-26T18:07:04+01:00</updated>
+  <updated>2014-04-07T22:16:15+02:00</updated>
   <id>http://blog.mattes-groeger.de/</id>
   <author>
     <name><![CDATA[Mattes Groeger]]></name>
@@ -18,7 +18,9 @@
     <link href="http://blog.mattes-groeger.de/travis-ci/"/>
     <updated>2014-01-25T12:00:00+01:00</updated>
     <id>http://blog.mattes-groeger.de/travis-ci</id>
-    <content type="html"><![CDATA[<p>Have you ever tried to setup a <a href="http://en.wikipedia.org/wiki/Continuous_integration">continuous integration</a> server for iOS? From my personal experience it is not easy. You have to organize a Mac and install software and plugins. You have to manage user accounts and provide security. You have to grant access to the repositories and configure all build steps and certificates. During the project lifetime you have to keep the server healthy and up-to-date.</p>
+    <content type="html"><![CDATA[<p><em>Update 2014/04/07:</em> I corrected some sloppy mistakes I made in the code snippets. This was mostly affecting the encryption part. A big thanks to my colleague Jalda who was pointing them out.</p>
+
+<p>Have you ever tried to setup a <a href="http://en.wikipedia.org/wiki/Continuous_integration">continuous integration</a> server for iOS? From my personal experience it is not easy. You have to organize a Mac and install software and plugins. You have to manage user accounts and provide security. You have to grant access to the repositories and configure all build steps and certificates. During the project lifetime you have to keep the server healthy and up-to-date.</p>
 
 <!-- More -->
 
@@ -191,7 +193,7 @@ env:
 <p><code>
 openssl aes-256-cbc -k "foo" -in scripts/profile/TravisExample_Ad_Hoc.mobileprovision -out scripts/profile/TravisExample_Ad_Hoc.mobileprovision.enc -a
 openssl aes-256-cbc -k "foo" -in scripts/certs/dist.cer -out scripts/certs/dist.cer.enc -a
-openssl aes-256-cbc -k "foo" -in scripts/certs/dist.p12 -out scripts/certs/dist.cer.p12 -a
+openssl aes-256-cbc -k "foo" -in scripts/certs/dist.p12 -out scripts/certs/dist.p12.enc -a
 </code></p>
 
 <p>This will create encrypted versions of our files with the ending <code>.enc</code>. You can now remove or ignore the original files. At least make sure not to commit them, otherwise they would show up on GitHub. If you accedentially commited or pushed them already <a href="https://help.github.com/articles/remove-sensitive-data">get some help</a>.</p>
@@ -207,7 +209,7 @@ travis encrypt "ENCRYPTION_SECRET=foo" --add
 <p><code>
 before_script:
 - openssl aes-256-cbc -k "$ENCRYPTION_SECRET" -in scripts/profile/TravisExample_Ad_Hoc.mobileprovision.enc -d -a -out scripts/profile/TravisExample_Ad_Hoc.mobileprovision
-- openssl aes-256-cbc -k "$ENCRYPTION_SECRET" -in scripts/certs/dist.p12.enc -d -a -out scripts/certs/dist.p12
+- openssl aes-256-cbc -k "$ENCRYPTION_SECRET" -in scripts/certs/dist.cer.enc -d -a -out scripts/certs/dist.cer
 - openssl aes-256-cbc -k "$ENCRYPTION_SECRET" -in scripts/certs/dist.p12.enc -d -a -out scripts/certs/dist.p12
 </code></p>
 
@@ -321,10 +323,8 @@ xctool -workspace TravisExample.xcworkspace -scheme TravisExample -sdk iphoneos 
 <span class='line-number'>6</span>
 <span class='line-number'>7</span>
 <span class='line-number'>8</span>
-<span class='line-number'>9</span>
 </pre></td><td class='code'><pre><code class='yaml'><span class='line'><span class="l-Scalar-Plain">before_script</span><span class="p-Indicator">:</span>
 </span><span class='line'><span class="nl">&amp;ndash</span><span class="l-Scalar-Plain">; ./scripts/add-key.sh</span>
-</span><span class='line'><span class="nl">&amp;ndash</span><span class="l-Scalar-Plain">; ./scripts/update-bundle.sh</span>
 </span><span class='line'><span class="l-Scalar-Plain">script</span><span class="p-Indicator">:</span>
 </span><span class='line'><span class="nl">&amp;ndash</span><span class="l-Scalar-Plain">; xctool -workspace TravisExample.xcworkspace -scheme TravisExample -sdk iphoneos -configuration Release OBJROOT=$PWD/build SYMROOT=$PWD/build ONLY_ACTIVE_ARCH=NO</span>
 </span><span class='line'><span class="l-Scalar-Plain">after_success</span><span class="p-Indicator">:</span>
