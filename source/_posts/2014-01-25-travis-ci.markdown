@@ -6,6 +6,8 @@ comments: true
 categories: Travis CI iOS Howto
 ---
 
+*Update 2014/04/07:* I corrected some sloppy mistakes I made in the code snippets. This was mostly affecting the encryption part. A big thanks to my colleague Jalda who was pointing them out.
+
 Have you ever tried to setup a [continuous integration](http://en.wikipedia.org/wiki/Continuous_integration) server for iOS? From my personal experience it is not easy. You have to organize a Mac and install software and plugins. You have to manage user accounts and provide security. You have to grant access to the repositories and configure all build steps and certificates. During the project lifetime you have to keep the server healthy and up-to-date.
 
 <!-- More -->
@@ -178,7 +180,7 @@ First we have to come up with a password that encrypts all our files (the secret
 ```
 openssl aes-256-cbc -k "foo" -in scripts/profile/TravisExample_Ad_Hoc.mobileprovision -out scripts/profile/TravisExample_Ad_Hoc.mobileprovision.enc -a
 openssl aes-256-cbc -k "foo" -in scripts/certs/dist.cer -out scripts/certs/dist.cer.enc -a
-openssl aes-256-cbc -k "foo" -in scripts/certs/dist.p12 -out scripts/certs/dist.cer.p12 -a
+openssl aes-256-cbc -k "foo" -in scripts/certs/dist.p12 -out scripts/certs/dist.p12.enc -a
 ```
 
 This will create encrypted versions of our files with the ending `.enc`. You can now remove or ignore the original files. At least make sure not to commit them, otherwise they would show up on GitHub. If you accedentially commited or pushed them already [get some help](https://help.github.com/articles/remove-sensitive-data).
@@ -194,7 +196,7 @@ Lastly, we have to tell Travis which files to decrypt. Therefore add the followi
 ```
 before_script:
 - openssl aes-256-cbc -k "$ENCRYPTION_SECRET" -in scripts/profile/TravisExample_Ad_Hoc.mobileprovision.enc -d -a -out scripts/profile/TravisExample_Ad_Hoc.mobileprovision
-- openssl aes-256-cbc -k "$ENCRYPTION_SECRET" -in scripts/certs/dist.p12.enc -d -a -out scripts/certs/dist.p12
+- openssl aes-256-cbc -k "$ENCRYPTION_SECRET" -in scripts/certs/dist.cer.enc -d -a -out scripts/certs/dist.cer
 - openssl aes-256-cbc -k "$ENCRYPTION_SECRET" -in scripts/certs/dist.p12.enc -d -a -out scripts/certs/dist.p12
 ```
 
@@ -260,7 +262,6 @@ As a last step we have to tell Travis when to execute these 3 scripts. The keys 
 {% codeblock .travis.yml %}
 before_script:
 - ./scripts/add-key.sh
-- ./scripts/update-bundle.sh
 script:
 - xctool -workspace TravisExample.xcworkspace -scheme TravisExample -sdk iphoneos -configuration Release OBJROOT=$PWD/build SYMROOT=$PWD/build ONLY_ACTIVE_ARCH=NO
 after_success:
