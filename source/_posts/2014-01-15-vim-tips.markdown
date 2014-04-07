@@ -14,7 +14,7 @@ I use [vim](http://www.vim.org/) for a long time already but always had a hard t
 
 {% img right /images/posts/vim-vundle.png %}
 
-Vim gets powerful due to the great plugins people create for it. You can download them from [the vim homepage](http://www.vim.org/scripts/script_search_results.php) and extract them in the `~/.vim/plugin` directory. To make this process easier I recommend using a plugin manager like [Pathogen](http://www.vim.org/scripts/script.php?script_id=2332) or [Vundle](https://github.com/gmarik/Vundle.vim). I prefer [Vundle](https://github.com/gmarik/Vundle.vim) as you can add new plugins by just adding one line to the `.vimrc` and running `:BundleInstall`. In the following sections I show the Vundle install command for each plugin.
+Vim gets powerful due to the great plugins people create. I recommend using a plugin manager like [Pathogen](http://www.vim.org/scripts/script.php?script_id=2332) or [Vundle](https://github.com/gmarik/Vundle.vim). I prefer [Vundle](https://github.com/gmarik/Vundle.vim) as it allows to add new plugins by adding one line to the `.vimrc` and running `:BundleInstall`. In the following sections I show the Vundle install command for each plugin.
 
 ## Jump to Declaration (ctags)
 
@@ -154,11 +154,11 @@ Bundle 'regedarek/ZoomWin'
 
 {% img center /images/posts/vim-gitgutter.png %}
 
+* See git changes (add/rm/change) per line
+
 {% codeblock lang:vim .vimrc %}
 Bundle 'airblade/vim-gitgutter'                   " Add GitGutter plugin with vundle
 {% endcodeblock %}
-
-* See git changes (add/rm/change) per line
 
 ## Conclusion
 
