@@ -142,24 +142,26 @@ let g:bufExplorerShowRelativePath = 1             " Shorter file path
 let g:bufExplorerDefaultHelp = 0                  " Remove the help text
 {% endcodeblock %}
 
-## Maximize Current Buffer (ZoomWindow)
-
-Bundle 'regedarek/ZoomWin'
-
-* When working with multiple panes focus on one
-* Toggles back to previous layout
-* Use specific version for performance reasons!
-
 ## Show Git Changes (GitGutter)
 
-{% img center /images/posts/vim-gitgutter.png %}
+{% img right /images/posts/vim-gitgutter.png %}
 
-* See git changes (add/rm/change) per line
+GitGutter has one main feature which is indicating added, removed and changed lines of code in the vim sign column. On top of that it allows to jump between these changesets (hunks) via shortcuts and directly stage or reset them from within vim.
 
 {% codeblock lang:vim .vimrc %}
 Bundle 'airblade/vim-gitgutter'                   " Add GitGutter plugin with vundle
 {% endcodeblock %}
 
+## Maximize Current Buffer (ZoomWindow)
+
+This plugin is really simple but yet powerful. It allows to maximize the current buffer. Really useful if you have lots of buffers open and need more space/focus for one of them. Just use the shortcut `Ctrl` + `w` and then `o` to toggle the current buffer. Use the linked version as the original one has some performance issues.
+
+{% codeblock lang:vim .vimrc %}
+Bundle 'regedarek/ZoomWin'                        " Add ZoomWin plugin with vundle
+{% endcodeblock %}
+
 ## Conclusion
 
-Check out my config on GitHub.
+Having all these plugins allows me to be much faster with vim. So far I didn't notice any performance impact. By hosting all [.dotfiles on GitHub](https://github.com/MattesGroeger/dotfiles) I can use the same vim setup including all plugins on any machine.
+
+Finally some shameless self promotion: I wrote a [bookmark plugin](https://github.com/MattesGroeger/vim-bookmarks) that I would love to get some feedback on.
