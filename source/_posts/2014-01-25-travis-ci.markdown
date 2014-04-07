@@ -6,8 +6,6 @@ comments: true
 categories: Travis CI iOS Howto
 ---
 
-*Update 2014/04/07:* I corrected some sloppy mistakes I made in the code snippets. This was mostly affecting the encryption part. A big thanks to my colleague Jalda who was pointing them out.
-
 Have you ever tried to setup a [continuous integration](http://en.wikipedia.org/wiki/Continuous_integration) server for iOS? From my personal experience it is not easy. You have to organize a Mac and install software and plugins. You have to manage user accounts and provide security. You have to grant access to the repositories and configure all build steps and certificates. During the project lifetime you have to keep the server healthy and up-to-date.
 
 <!-- More -->
@@ -17,6 +15,8 @@ In the end you will spend a lot of time maintaining the server – time you want
 In this article I want to show you how to setup your project for Travis. This does not only include building and running unit tests, but also shipping the app to all your test devices. For demonstration purposes I put an [example project](https://github.com/MattesGroeger/TravisExample-iOS) on GitHub. At the end of this article I will give some tips on how to tackle problems with Travis.
 
 Please note that this is a more up-to-date version of my [original article on objc.io](http://www.objc.io/issue-6/travis-ci.html) from November 2013. Feel free to comment on this article if you have questions.
+
+*Update 2014/04/07:* I corrected some sloppy mistakes I made in the code snippets. This was mostly affecting the encryption part. A big thanks to my colleague Jalda who was pointing them out.
 
 ### GitHub Integration
 
