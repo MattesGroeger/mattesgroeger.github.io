@@ -18,6 +18,8 @@ Please note that this is a more up-to-date version of my [original article on ob
 
 *Update 2014/04/07:* I corrected some sloppy mistakes I made in the code snippets. This was mostly affecting the encryption part. A big thanks to my colleague Jalda who was pointing them out.
 
+*Update 2014/04/19:* Added hint regarding encryption of strings that contain special characters. Thanks to [Jann Driessen](http://janndriessen.com/) for pointing it out.
+
 ### GitHub Integration
 
 What I really like about Travis is how well it is embedded in the GitHub web UI. One example is pull requests. Travis will run the build for each request. The pull request on GitHub will look like this if everything is ok:
@@ -175,7 +177,9 @@ There are 2 more environment variables declared. The `APP_NAME` (line 3) is usua
 
 If your GitHub project is public you might want to encrypt your certificates and profiles if they contain sensitive data. If you have a private repository you can move on to the next section.
 
-First we have to come up with a password that encrypts all our files (the secret). In our example let's choose "foo". But you should come up with a more secure password for your project ;-). On the command line encrypt all 3 sensitive files using `openssl`:
+First we have to come up with a password that encrypts all our files (the secret). In our example let's choose "foo". But you should come up with a more secure password for your project ;-). Please note that you have to escape (some) special characters as they will be interpreted as bash statement otherwise. See the [official docs](http://docs.travis-ci.com/user/encryption-keys/#Note-on-escaping-certain-symbols) for more information on this matter.
+
+On the command line encrypt all 3 sensitive files using the password and `openssl`:
 
 ```
 openssl aes-256-cbc -k "foo" -in scripts/profile/TravisExample_Ad_Hoc.mobileprovision -out scripts/profile/TravisExample_Ad_Hoc.mobileprovision.enc -a
