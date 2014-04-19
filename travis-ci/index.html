@@ -119,6 +119,8 @@
 
 <p><em>Update 2014/04/07:</em> I corrected some sloppy mistakes I made in the code snippets. This was mostly affecting the encryption part. A big thanks to my colleague Jalda who was pointing them out.</p>
 
+<p><em>Update 2014/04/19:</em> Added hint regarding encryption of strings that contain special characters. Thanks to <a href="http://janndriessen.com/">Jann Driessen</a> for pointing it out.</p>
+
 <h3>GitHub Integration</h3>
 
 <p>What I really like about Travis is how well it is embedded in the GitHub web UI. One example is pull requests. Travis will run the build for each request. The pull request on GitHub will look like this if everything is ok:</p>
@@ -287,7 +289,9 @@
 
 <p>If your GitHub project is public you might want to encrypt your certificates and profiles if they contain sensitive data. If you have a private repository you can move on to the next section.</p>
 
-<p>First we have to come up with a password that encrypts all our files (the secret). In our example let&rsquo;s choose &ldquo;foo&rdquo;. But you should come up with a more secure password for your project ;&ndash;). On the command line encrypt all 3 sensitive files using <code>openssl</code>:</p>
+<p>First we have to come up with a password that encrypts all our files (the secret). In our example let&rsquo;s choose &ldquo;foo&rdquo;. But you should come up with a more secure password for your project ;&ndash;). Please note that you have to escape (some) special characters as they will be interpreted as bash statement otherwise. See the <a href="http://docs.travis-ci.com/user/encryption-keys/#Note-on-escaping-certain-symbols">official docs</a> for more information on this matter.</p>
+
+<p>On the command line encrypt all 3 sensitive files using the password and <code>openssl</code>:</p>
 
 <figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
